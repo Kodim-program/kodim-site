@@ -1,0 +1,56 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Психологічний тест</title>
+    <link rel="stylesheet" href="{% static 'psycho/style.css' %}">
+</head>
+<body>
+    <div class="container">
+    <div class="input_user">
+        <form action="">
+            <label for="name">Ваше ім'я</label>
+            <br>
+            <input type="text" id="name" placeholder="Ім'я" required>
+            <br>
+            <label for="birthday">Ваша дата народження</label>
+            <br>            
+            <input type="date" id = "birthday" required>
+            <br>
+            <input type="button" onclick="calculateResults()" value="Розрахувати">
+
+        </form>
+    </div>
+    <div class="output_user">
+        <div class="btn orange pv"><span>Професійний вектор</span><p>-</p></div>
+        
+        <div class="btn orange tm"><span>Темперамент</span><br><p>-</p></div>
+
+        <div class="btn white chr"><span>Характер</span><br><p>__</p></div>
+        <div class="btn white zd"><span>Здоров'я</span><br><p>__</p></div>
+        <div class="btn white ud"><span>Удача</span><br><p>__</p></div>
+        <div class="btn orange cl"><span>Ціль</span><br><p>-</p></div>
+
+        <div class="btn white en"><span>Енергія</span><br><p>__</p></div>
+        <div class="btn white lg"><span>Логіка</span><br><p>__</p></div>
+        <div class="btn white ob"><span>Обов'язок</span><br><p>__</p></div>
+        <div class="btn orange sm"><span>Сім'я</span><br><p>-</p></div>
+        
+        <div class="btn white ck"><span>Інтерес</span><br><p>__</p></div>
+        <div class="btn white pr"><span>Праця</span><br><p>__</p></div>
+        <div class="btn white pm"><span>Пам'ять</span><br><p>__</p></div>
+        <div class="btn orange zv"><span>Звички</span><br><p>-</p></div>
+        
+        <div class="btn white so"><span></span><br><p></p></div>
+        <div class="btn orange pb"><span>Побут</span><br><p>__</p></div>
+        <div class="btn white dch"><span></span><br><p></p></div>
+        <div class="btn white dch"><span></span><br><p></p></div>
+    </div>
+    </div>
+<script src="{% static 'psycho/script.js' %}"></script>
+</body>
+</html>
+

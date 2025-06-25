@@ -1,0 +1,96 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+body {
+    background-color: #d2ebd6;
+}
+.container {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 520px;
+    height: 100vh;
+}
+.input_user {
+    margin-bottom: 20px;
+    display: flexbox;
+    
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.input_user input {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid rgb(69, 68, 68);
+    padding-left: 10px;
+    font-size: 16px;
+    margin: 5px 0;
+}
+.input_user input[type="button"] {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid rgb(69, 68, 68);
+    background-color: rgb(237, 158, 22);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+.input_user input[type="button"]:hover {
+    background-color: rgb(135, 91, 21);
+}
+.output_user {
+    display: grid;
+    grid-template-areas: 
+    "pv pv pv tm"
+    "chr zd ud cl"
+    "en lg ob sm"
+    "ck pr pm zv"
+    "so pb dch dch"
+    ;
+    grid-gap: 1px ;
+    justify-items: center;
+    background-color: antiquewhite;
+    border-radius: 10%;
+    width: auto;
+    
+}
+.btn.orange {
+    background-color: rgb(237, 158, 22);
+}
+
+.btn.pv {
+    grid-area: pv;
+    width: 100%;
+    border-radius: 1%;
+}
+.btn {
+    padding: 10px;
+    width: 130px;
+    height: 80px;
+    background-color: rgb(239, 233, 233);
+    border-radius: 5%;
+    text-align: center;
+    /*line-height: 60px;*/
+}
+.btn p {
+    font-size: 22px;
+    font-weight: bold;
+    color: rgb(29, 29, 29);
+}
+
+.btn:hover {
+    background-color: rgb(135, 91, 21);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
