@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title_name %}{{ course.name }}{% endblock %}
-
+{% block description %} {{course.description_short}} {% endblock %}
 {% block content %}
 
 <section class="breadcrumbs-custom-inset">
@@ -28,7 +28,7 @@
       </div>
       <div class="col-lg-6 wow fadeInRight" data-wow-delay=".1s">
         <div class="box-width-lg-470">
-          <h3>{{ course.name }}</h3>
+          <h1>{{ course.name }}</h1>
           <!-- Bootstrap tabs-->
           <div class="tabs-custom tabs-horizontal tabs-line tabs-line-big tabs-line-style-2 text-center text-md-left" id="tabs-7">
             <!-- Nav tabs-->
@@ -40,16 +40,16 @@
             <!-- Tab panes-->
             <div class="tab-content">
               <div class="tab-pane fade show active" id="tabs-7-1">
-                <p>{{ course.description }}</p>
-                <div class="group-md group-middle"><a class="button button-secondary button-pipaluk" href="/contact-us/">Отримати</a></div>
+                <p>{{ course.description|safe }}</p>
+                <div class="group-md group-middle"><a class="button button-secondary button-pipaluk" href="/contact-us/">Забронювати</a></div>
               </div>
               <div class="tab-pane fade" id="tabs-7-2">
                 <p>{{ course.price }}</p>
-                <div class="group-md group-middle"><a class="button button-secondary button-pipaluk" href="/contact-us/">Отримати</a></div>
+                <div class="group-md group-middle"><a class="button button-secondary button-pipaluk" href="/contact-us/">Забронювати</a></div>
               </div>
               <div class="tab-pane fade" id="tabs-7-3">
                 <p>{{ course.kid_age }}</p>
-                <div class="group-md group-middle"><a class="button button-secondary button-pipaluk" href="/contact-us/">Отримати</a></div>
+                <div class="group-md group-middle"><a class="button button-secondary button-pipaluk" href="/contact-us/">Забронювати</a></div>
               </div><a class="link-classic wow fadeInUp" href="/courses/">Інші курси<span></span></a>
             </div>
           </div>
@@ -67,5 +67,7 @@
   <li class="rd-nav-item active"><a class="rd-nav-link" href="/courses/">Курси</a>
   </li>
   <li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a>
+  </li>
+  <li class="rd-nav-item"><a class="rd-nav-link" href="/projects/">Проєкти</a>
   </li>
 {% endblock %}

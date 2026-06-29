@@ -2,8 +2,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title_name %}Курси{% endblock %}
-
+{% block title_name %}Курси програмування і робототехніки для дітей — KODIM Первомайськ{% endblock %}
+{% block description %}Всі курси школи KODIM: Python, Minecraft, Scratch, Roblox Studio, C++, Java, Arduino, Web-розробка, 3D-моделювання, графічний дизайн, LEGO робототехніка. Офлайн-навчання для
+дітей у Первомайську. Обирайте свій курс!{% endblock %}
 
 {% block content %}
 <!-- Breadcrumbs -->
@@ -29,7 +30,7 @@
             {% for course in courses %}
             <div class="col-md-4 wow fadeInDown col-9" data-wow-delay=".2s">
               <ul class="list-marked-2 box-categories-list">
-                <li><a href="/course/{{ course.id }}"><img src="{{ course.image.url }}" alt="" width="368" height="420"/></a>
+                <li><a href="/course/{{ course.name_url }}"><img src="{{ course.image.url }}" alt="" width="368" height="420"/></a>
                   <h5 class="box-categories-title">{{ course.name }}</h5>
                 </li>
               </ul>
@@ -52,5 +53,7 @@
   <li class="rd-nav-item active"><a class="rd-nav-link" href="/courses/">Курси</a>
   </li>
   <li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a>
+  </li>
+  <li class="rd-nav-item"><a class="rd-nav-link" href="/projects/">Проєкти</a>
   </li>
 {% endblock %}

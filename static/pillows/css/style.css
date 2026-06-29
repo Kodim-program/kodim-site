@@ -1,0 +1,78 @@
+*{
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root{
+    --border-value: 1px solid rgb(0, 0, 0);
+    --border-radius-value: 10px;
+    --box-shadow-value: 0 4 8px #000000;
+    --rubashka-image: radial-gradient(circle,#106837,#75ffbe 50%); 
+}
+.card{
+    width: 100px;
+    height: 100px;
+    background-image: var(--rubashka-image);
+    border: 2px solid rgb(175, 218, 255);
+    border-radius: var(--border-radius-value);
+    box-shadow: var(--box-shadow-value);
+    cursor: pointer;
+    transition: all 600ms;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    &.flipped{
+        transform: rotateY(180deg);
+        background-image: repeating-linear-gradient(to left,rgb(255, 255, 255), rgb(200, 200, 200) 10%);
+    }
+    &.matched{
+        background: conicgradie nt(from 45deg, #a8ff78, #78ffd6, #a8ff78);
+        cursor: default;
+    }
+}
+.controls{
+    border-radius:var(--border-radius-value);
+    box-shadow: var(--box-shadow-value);
+    width: 80dvw;
+    height: 8dvh;
+    border:var(--border-value);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+label{
+    font-size: 1.2rem;
+    color: rgb(58, 145, 112);
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+input{
+    border-radius: var(--border-radius-value);
+    box-shadow: var(--box-shadow-value);
+    border: var(--border-value);
+    text-align: center;
+    font-size: 1.2rem;
+    margin-left: 10px;
+}
+.start-succes{
+    box-shadow: 0 0 5px rgb(0, 40, 42), 0 0 25px rgb(0, 206, 168);
+    width: 120px;
+    height: 45px;
+    font-size: 1.5rem;
+    color: rgb(0, 206, 168);
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin-top: 10px;
+       &.hover{
+        background-color: rgb(191, 255, 182);
+        box-shadow: 0 0px 4px rgb(0, 40, 42);
+    }}
+    .board{
+        display: grid;
+        grid-gap: 10px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+    }
+.start-succes:hover{
+    box-shadow: 0 0px 5px rgb(0, 31, 33), 0 0px 25px rgb(0, 54, 44), 0 0 50px rgb(0, 71, 58), 0 0 100px rgb(0, 145, 119);
+}

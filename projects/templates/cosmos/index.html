@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>КОСМОС — Безмежний Всесвіт</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #02020a;
+    --deep: #060616;
+    --nebula-blue: #0a1628;
+    --star-white: #e8eeff;
+    --gold: #f5c842;
+    --cyan: #00d4ff;
+    --magenta: #ff3d8b;
+    --purple: #7b2fff;
+    --orange: #ff6b2b;
+    --green: #00ff9d;
+    --text-dim: #8892b0;
+    --glow-cyan: 0 0 20px rgba(0,212,255,0.5), 0 0 60px rgba(0,212,255,0.2);
+    --glow-gold: 0 0 20px rgba(245,200,66,0.5);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--star-white);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ── STARFIELD ── */
+  #starfield {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+  }
+  #starfield canvas { width: 100%; height: 100%; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: linear-gradient(to bottom, rgba(2,2,10,0.95), transparent);
+    backdrop-filter: blur(4px);
+  }
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.3rem; font-weight: 900;
+    letter-spacing: 0.3em; color: var(--cyan);
+    text-shadow: var(--glow-cyan);
+    text-decoration: none;
+  }
+  .logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.15em;
+    color: var(--text-dim); text-decoration: none; text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+  }
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.4em; color: var(--cyan);
+    text-transform: uppercase; margin-bottom: 24px;
+    opacity: 0; animation: fadeUp 1s 0.3s forwards;
+  }
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 900; line-height: 1;
+    letter-spacing: 0.05em;
+    background: linear-gradient(135deg, #fff 0%, var(--cyan) 40%, var(--purple) 80%, var(--magenta) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    opacity: 0; animation: fadeUp 1s 0.5s forwards;
+  }
+  .hero-sub {
+    font-size: 1.2rem; color: var(--text-dim);
+    max-width: 560px; margin: 28px auto 0;
+    opacity: 0; animation: fadeUp 1s 0.7s forwards;
+  }
+  .hero-stats {
+    display: flex; gap: 60px; margin-top: 64px;
+    opacity: 0; animation: fadeUp 1s 1s forwards;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem; font-weight: 700; color: var(--gold);
+    text-shadow: var(--glow-gold);
+  }
+  .stat-label {
+    font-size: 0.75rem; letter-spacing: 0.15em;
+    color: var(--text-dim); text-transform: uppercase; margin-top: 4px;
+  }
+  .scroll-hint {
+    position: absolute; bottom: 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.3em; color: var(--text-dim);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    opacity: 0; animation: fadeUp 1s 1.4s forwards;
+  }
+  .scroll-line {
+    width: 1px; height: 48px;
+    background: linear-gradient(to bottom, var(--cyan), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+
+  /* ── SECTION BASE ── */
+  section { position: relative; z-index: 1; }
+  .section-header {
+    text-align: center; padding: 100px 24px 60px;
+  }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.4em;
+    color: var(--cyan); text-transform: uppercase;
+    margin-bottom: 16px; display: block;
+  }
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700; letter-spacing: 0.05em;
+  }
+  .section-desc {
+    max-width: 580px; margin: 16px auto 0;
+    color: var(--text-dim); font-size: 1.05rem;
+  }
+
+  /* ── PLANETS ── */
+  #planets { background: linear-gradient(to bottom, var(--void), var(--deep), var(--void)); }
+  .planets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2px; padding: 0 2px 2px;
+    max-width: 1400px; margin: 0 auto;
+  }
+  .planet-card {
+    position: relative; overflow: hidden;
+    background: var(--deep);
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.4s;
+  }
+  .planet-card:hover { transform: scale(1.02); z-index: 2; }
+  .planet-visual {
+    width: 100%; height: 220px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .planet-sphere {
+    width: 120px; height: 120px; border-radius: 50%;
+    position: relative; flex-shrink: 0;
+    box-shadow: inset -20px -10px 40px rgba(0,0,0,0.6);
+    transition: transform 0.6s;
+  }
+  .planet-card:hover .planet-sphere { transform: rotate(15deg) scale(1.1); }
+
+  /* Planet colors */
+  .mercury .planet-sphere { background: radial-gradient(circle at 35% 35%, #9e9e9e, #5a5a5a 60%, #2d2d2d); }
+  .venus   .planet-sphere { background: radial-gradient(circle at 35% 35%, #f5deb3, #d4a574 50%, #8b6914); }
+  .earth   .planet-sphere {
+    background: radial-gradient(circle at 35% 35%, #1e90ff, #228b22 40%, #006400 60%, #1e90ff 80%, #87ceeb);
+  }
+  .mars    .planet-sphere { background: radial-gradient(circle at 35% 35%, #cd5c5c, #8b0000 55%, #4a0000); }
+  .jupiter .planet-sphere {
+    background: radial-gradient(circle at 35% 35%, #c8a96e, #a0522d 30%, #d2691e 50%, #8b4513 70%, #cd853f);
+  }
+  .saturn  .planet-sphere { background: radial-gradient(circle at 35% 35%, #fad7a0, #d4a574 50%, #8b6914); }
+  .uranus  .planet-sphere { background: radial-gradient(circle at 35% 35%, #7fffd4, #40e0d0 50%, #008b8b); }
+  .neptune .planet-sphere { background: radial-gradient(circle at 35% 35%, #4169e1, #00008b 50%, #000066); }
+
+  .saturn-ring {
+    position: absolute;
+    width: 180px; height: 40px;
+    border-radius: 50%;
+    border: 10px solid rgba(210,180,140,0.55);
+    transform: rotateX(70deg);
+    pointer-events: none;
+  }
+
+  .planet-info { padding: 24px 28px 28px; }
+  .planet-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.25rem; font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .planet-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em;
+    padding: 3px 10px; border-radius: 20px;
+    display: inline-block; margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .rocky .planet-tag   { background: rgba(205,92,92,0.2); color: #cd5c5c; border: 1px solid rgba(205,92,92,0.3); }
+  .gas .planet-tag     { background: rgba(210,105,30,0.2); color: #d2691e; border: 1px solid rgba(210,105,30,0.3); }
+  .ice .planet-tag     { background: rgba(127,255,212,0.15); color: #7fffd4; border: 1px solid rgba(127,255,212,0.3); }
+  .planet-desc { color: var(--text-dim); font-size: 0.95rem; line-height: 1.6; }
+  .planet-facts {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-top: 16px;
+  }
+  .fact {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 10px 12px; border-radius: 4px;
+  }
+  .fact-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.15em;
+    color: var(--text-dim); text-transform: uppercase; display: block;
+  }
+  .fact-val {
+    font-size: 0.9rem; font-weight: 600; color: var(--star-white);
+    margin-top: 2px;
+  }
+
+  /* ── METEORITES ── */
+  #meteorites {
+    background: var(--void);
+    padding-bottom: 100px;
+  }
+  .meteorites-layout {
+    max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    align-items: start;
+  }
+  .meteor-visual {
+    position: sticky; top: 120px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .meteor-diagram {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 2px; padding: 32px;
+    position: relative; overflow: hidden;
+    min-height: 320px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .meteor-diagram::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 30%, rgba(255,107,43,0.12), transparent 60%);
+  }
+  .meteor-rock {
+    width: 100px; height: 85px;
+    background: radial-gradient(circle at 35% 30%, #7a6650, #3d2e20 60%, #1a1008);
+    border-radius: 38% 62% 55% 45% / 42% 38% 62% 58%;
+    box-shadow: 0 0 30px rgba(255,107,43,0.3), inset -10px -8px 20px rgba(0,0,0,0.7);
+    position: relative;
+  }
+  .meteor-trail {
+    position: absolute; right: 100%;
+    top: 40%; width: 200px; height: 2px;
+    background: linear-gradient(to left, rgba(255,107,43,0.8), transparent);
+    transform: translateY(-50%);
+  }
+  .meteor-trail::after {
+    content: '';
+    position: absolute; top: -6px; right: 0;
+    width: 80px; height: 14px;
+    background: radial-gradient(ellipse, rgba(255,200,50,0.3), transparent);
+  }
+
+  .meteor-types { display: flex; flex-direction: column; gap: 12px; }
+  .meteor-type-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-left: 3px solid var(--orange);
+    padding: 16px 20px; border-radius: 0 4px 4px 0;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .meteor-type-card:nth-child(2) { border-left-color: var(--cyan); }
+  .meteor-type-card:nth-child(3) { border-left-color: var(--gold); }
+  .meteor-type-card:hover {
+    background: rgba(255,255,255,0.06);
+    border-left-width: 5px;
+  }
+  .meteor-type-name {
+    font-family: 'Orbitron', monospace; font-size: 0.85rem;
+    font-weight: 700; color: var(--star-white); margin-bottom: 6px;
+  }
+  .meteor-type-desc { color: var(--text-dim); font-size: 0.9rem; }
+
+  .meteor-content h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem; font-weight: 700; margin-bottom: 20px;
+  }
+  .meteor-content p { color: var(--text-dim); margin-bottom: 20px; line-height: 1.75; }
+  .meteor-facts-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 32px 0;
+  }
+  .m-fact-card {
+    background: linear-gradient(135deg, rgba(255,107,43,0.08), rgba(0,0,0,0));
+    border: 1px solid rgba(255,107,43,0.2);
+    padding: 20px; border-radius: 4px;
+  }
+  .m-fact-num {
+    font-family: 'Orbitron', monospace; font-size: 1.6rem;
+    font-weight: 900; color: var(--orange);
+    text-shadow: 0 0 20px rgba(255,107,43,0.4);
+  }
+  .m-fact-label { color: var(--text-dim); font-size: 0.85rem; margin-top: 4px; }
+
+  /* ── OTHER OBJECTS ── */
+  #objects { padding-bottom: 100px; }
+  .objects-container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .objects-tabs {
+    display: flex; gap: 0; margin-bottom: 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    overflow-x: auto;
+  }
+  .tab-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 14px 28px; border: none; background: none;
+    color: var(--text-dim); cursor: pointer;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color 0.3s, border-color 0.3s; white-space: nowrap;
+  }
+  .tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+  .tab-btn:hover { color: var(--star-white); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeUp 0.4s ease; }
+
+  .object-hero {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    align-items: center; margin-bottom: 60px;
+  }
+  .object-visual-wrap {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 280px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 2px; position: relative; overflow: hidden;
+  }
+  .object-visual-wrap::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(123,47,255,0.1), transparent 70%);
+  }
+
+  /* Black hole */
+  .blackhole-viz {
+    width: 150px; height: 150px; position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bh-core {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: #000;
+    box-shadow: 0 0 0 10px rgba(0,0,0,0.9),
+                0 0 0 20px rgba(123,47,255,0.3),
+                0 0 0 35px rgba(255,107,43,0.15),
+                0 0 60px rgba(123,47,255,0.4);
+    z-index: 2;
+  }
+  .bh-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(123,47,255,0.4);
+    animation: bh-spin 4s linear infinite;
+  }
+  .bh-ring:nth-child(2) { width: 110px; height: 40px; animation-duration: 3s; border-color: rgba(255,107,43,0.5); }
+  .bh-ring:nth-child(3) { width: 140px; height: 55px; animation-duration: 5s; animation-direction: reverse; }
+  .bh-ring:nth-child(4) { width: 160px; height: 70px; animation-duration: 7s; border-color: rgba(255,200,50,0.2); }
+
+  /* Nebula */
+  .nebula-viz {
+    width: 200px; height: 160px;
+    background:
+      radial-gradient(ellipse 100px 70px at 40% 40%, rgba(255,61,139,0.3), transparent),
+      radial-gradient(ellipse 80px 60px at 70% 60%, rgba(123,47,255,0.3), transparent),
+      radial-gradient(ellipse 120px 80px at 50% 50%, rgba(0,212,255,0.15), transparent);
+    filter: blur(2px);
+    border-radius: 50%;
+  }
+
+  /* Comet */
+  .comet-viz { position: relative; width: 200px; height: 80px; }
+  .comet-head {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: radial-gradient(circle, #fff, #7fffd4 40%, transparent 70%);
+    box-shadow: 0 0 20px rgba(127,255,212,0.8);
+    position: absolute; right: 20px; top: 50%;
+    transform: translateY(-50%);
+  }
+  .comet-tail {
+    position: absolute; right: 50px; top: 50%;
+    transform: translateY(-50%);
+    width: 140px; height: 20px;
+    background: linear-gradient(to left,
+      rgba(127,255,212,0.6) 0%,
+      rgba(0,212,255,0.2) 50%,
+      transparent 100%);
+    clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  }
+
+  /* Asteroid */
+  .asteroid-viz {
+    position: relative; width: 180px; height: 160px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ast-rock {
+    width: 80px; height: 65px;
+    background: radial-gradient(circle at 30% 30%, #6b5a4a, #2d2116);
+    border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%;
+    box-shadow: inset -8px -6px 15px rgba(0,0,0,0.7);
+  }
+  .ast-small {
+    position: absolute;
+    background: radial-gradient(circle at 30% 30%, #5a4a3a, #1e1410);
+    border-radius: 50%;
+  }
+  .ast-s1 { width: 25px; height: 20px; top: 20px; left: 20px; border-radius: 50% 40% 60% 50%/45% 55% 45% 55%; }
+  .ast-s2 { width: 16px; height: 14px; bottom: 20px; right: 25px; }
+  .ast-s3 { width: 10px; height: 8px; top: 30px; right: 40px; }
+
+  .object-text h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.6rem; font-weight: 700; margin-bottom: 16px;
+  }
+  .object-text p { color: var(--text-dim); line-height: 1.75; margin-bottom: 16px; }
+  .highlight-box {
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 4px; padding: 16px 20px; margin-top: 20px;
+  }
+  .highlight-box .hb-label {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan);
+    margin-bottom: 6px;
+  }
+  .highlight-box p { color: var(--star-white); margin: 0; font-size: 0.95rem; }
+
+  .object-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  .obj-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 20px; border-radius: 4px;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .obj-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(0,212,255,0.2); }
+  .obj-card-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .obj-card-name { font-family: 'Orbitron', monospace; font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; }
+  .obj-card-desc { color: var(--text-dim); font-size: 0.88rem; }
+
+  /* ── UNIVERSE SCALE ── */
+  #scale { padding-bottom: 120px; }
+  .scale-container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  .scale-timeline { position: relative; padding-left: 40px; }
+  .scale-timeline::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--cyan) 10%, var(--purple) 50%, var(--magenta) 90%, transparent);
+  }
+  .scale-item {
+    position: relative; margin-bottom: 48px;
+    opacity: 0; transform: translateX(-20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .scale-item.visible { opacity: 1; transform: translateX(0); }
+  .scale-dot {
+    position: absolute; left: -46px; top: 6px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 12px var(--cyan), 0 0 24px rgba(0,212,255,0.3);
+  }
+  .scale-distance {
+    font-family: 'Orbitron', monospace; font-size: 0.75rem;
+    letter-spacing: 0.15em; color: var(--cyan); margin-bottom: 6px;
+  }
+  .scale-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.3rem; font-weight: 600; margin-bottom: 6px;
+  }
+  .scale-desc { color: var(--text-dim); font-size: 0.95rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 60px 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: var(--text-dim); font-size: 0.88rem;
+  }
+  footer .logo { display: inline-block; margin-bottom: 16px; font-size: 1.1rem; }
+  .footer-links { display: flex; gap: 32px; justify-content: center; margin: 24px 0; }
+  .footer-links a { color: var(--text-dim); text-decoration: none; transition: color 0.3s; font-size: 0.85rem; }
+  .footer-links a:hover { color: var(--cyan); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%,100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  @keyframes bh-spin {
+    from { transform: rotateX(70deg) rotate(0deg); }
+    to   { transform: rotateX(70deg) rotate(360deg); }
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero-stats { gap: 32px; }
+    .meteorites-layout { grid-template-columns: 1fr; }
+    .meteor-visual { position: static; }
+    .object-hero { grid-template-columns: 1fr; }
+    .object-cards { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .planets-grid { grid-template-columns: 1fr; }
+    .hero-stats { flex-direction: column; gap: 20px; }
+    .object-cards { grid-template-columns: 1fr; }
+    .meteor-facts-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="starfield"><canvas id="stars"></canvas></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">КОС<span>МОС</span></a>
+  <ul class="nav-links">
+    <li><a href="#planets">Планети</a></li>
+    <li><a href="#meteorites">Метеорити</a></li>
+    <li><a href="#objects">Об'єкти</a></li>
+    <li><a href="#scale">Масштаб</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">// Досліджуй безмежне</p>
+  <h1>ВСЕСВІТ</h1>
+  <p class="hero-sub">13,8 мільярдів років еволюції. Мільярди галактик. Нескінченні таємниці. Поринь у глибини космосу.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">2 трлн</div>
+      <div class="stat-label">Галактик</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">8</div>
+      <div class="stat-label">Планет Сонячної системи</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">13,8 млрд</div>
+      <div class="stat-label">Років Всесвіту</div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Скролл</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- PLANETS -->
+<section id="planets">
+  <div class="section-header">
+    <span class="section-tag">// Сонячна система</span>
+    <h2 class="section-title">ПЛАНЕТИ</h2>
+    <p class="section-desc">Вісім унікальних світів, що обертаються навколо нашої зірки — Сонця.</p>
+  </div>
+
+  <div class="planets-grid">
+
+    <!-- Mercury -->
+    <div class="planet-card rocky">
+      <div class="planet-visual mercury">
+        <div class="planet-sphere"></div>
+      </div>
+      <div class="planet-info">
+        <div class="planet-name">Меркурій</div>
+        <span class="planet-tag">Кам'яна планета</span>
+        <p class="planet-desc">Найменша планета Сонячної системи і найближча до Сонця. Поверхня вкрита кратерами та скелями.</p>
+        <div class="planet-facts">
+          <div class="fact"><span class="fact-label">Відстань від Сонця</span><div class="fact-val">57,9 млн км</div></div>
+          <div class="fact"><span class="fact-label">Діаметр</span><div class="fact-val">4 879 км</div></div>
+          <div class="fact"><span class="fact-label">Тривалість дня</span><div class="fact-val">58,6 земних днів</div></div>
+          <div class="fact"><span class="fact-label">Температура</span><div class="fact-val">-180°C до +430°C</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Venus -->
+    <div class="planet-card rocky">
+      <div class="planet-visual venus">
+        <div class="planet-sphere"></div>
+      </div>
+      <div class="planet-info">
+        <div class="planet-name">Венера</div>
+        <span class="planet-tag">Кам'яна планета</span>
+        <p class="planet-desc">Найгарячіша планета системи завдяки щільній CO₂-атмосфері. Обертається у зворотньому напрямку.</p>
+        <div class="planet-facts">
+          <div class="fact"><span class="fact-label">Відстань від Сонця</span><div class="fact-val">108,2 млн км</div></div>
+          <div class="fact"><span class="fact-label">Діаметр</span><div class="fact-val">12 104 км</div></div>
+          <div class="fact"><span class="fact-label">Тривалість дня</span><div class="fact-val">243 земних дні</div></div>
+          <div class="fact"><span class="fact-label">Температура</span><div class="fact-val">+465°C</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Earth -->
+    <div class="planet-card rocky">
+      <div class="planet-visual earth">
+        <div class="planet-sphere"></div>
+      </div>
+      <div class="planet-info">
+        <div class="planet-name">Земля</div>
+        <span class="planet-tag">Кам'яна планета</span>
+        <p class="planet-desc">Наш дім — єдина відома планета з рідкою водою на поверхні та підтвердженим розумним життям.</p>
+        <div class="planet-facts">
+          <div class="fact"><span class="fact-label">Відстань від Сонця</span><div class="fact-val">149,6 млн км</div></div>
+          <div class="fact"><span class="fact-label">Діаметр</span><div class="fact-val">12 742 км</div></div>
+          <div class="fact"><span class="fact-label">Тривалість дня</span><div class="fact-val">24 години</div></div>
+          <div class="fact"><span class="fact-label">Температура</span><div class="fact-val">-88°C до +58°C</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mars -->
+    <div class="planet-card rocky">
+      <div class="planet-visual mars">
+        <div class="planet-sphere"></div>
+      </div>
+      <div class="planet-info">
+        <div class="planet-name">Марс</div>
+        <span class="planet-tag">Кам'яна планета</span>
+        <p class="planet-desc">Червона планета з найбільшим вулканом у Сонячній системі — Олімп Монс (27 км заввишки).</p>
+        <div class="planet-facts">
+          <div class="fact"><span class="fact-label">Відстань від Сонця</span><div class="fact-val">227,9 млн км</div></div>
+          <div class="fact"><span class="fact-label">Діаметр</span><div class="fact-val">6 779 км</div></div>
+          <div class="fact"><span class="fact-label">Тривалість дня</span><div class="fact-val">24 год 37 хв</div></div>
+          <div class="fact"><span class="fact-label">Супутники</span><div class="fact-val">Фобос, Деймос</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jupiter -->
+    <div class="planet-card gas">
+      <div class="planet-visual jupiter">
+        <div class="planet-sphere"></div>
+      </div>
+      <div class="planet-info">
+        <div class="planet-name">Юпітер</div>
+        <span class="planet-tag">Газовий гігант</span>
+        <p class="planet-desc">Найбільша планета системи. Велика Червона Пляма — шторм, що існує понад 400 років. Має 95 супутників.</p>
+        <div class="planet-facts">
+          <div class="fact"><span class="fact-label">Відстань від Сонця</span><div class="fact-val">778,5 млн км</div></div>
+          <div class="fact"><span class="fact-label">Діаметр</span><div class="fact-val">139 820 км</div></div>
+          <div class="fact"><span class="fact-label">Тривалість дня</span><div class="fact-val">9 год 56 хв</div></div>
+          <div class="fact"><span class="fact-label">Маса</span><div class="fact-val">318× Земля</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saturn -->
+    <div class="planet-card gas">
+      <div class="planet-visual saturn">
+        <div class="saturn-ring"></div>
+        <div class="planet-sphere"></div>
+      </div>
+      <div class="planet-info">
+        <div class="planet-name">Сатурн</div>
+        <span class="planet-tag">Газовий гігант</span>
+        <p class="planet-desc">Прикраса Сонячної системи з видовищною системою кілець із льоду та пилу. Найлегший з гігантів — плавав би у воді.</p>
+        <div class="planet-facts">
+          <div class="fact"><span class="fact-label">Відстань від Сонця</span><div class="fact-val">1,43 млрд км</div></div>
+          <div class="fact"><span class="fact-label">Діаметр</span><div class="fact-val">116 460 км</div></div>
+          <div class="fact"><span class="fact-label">Кільця</span><div class="fact-val">7 груп кілець</div></div>
+          <div class="fact"><span class="fact-label">Супутники</span><div class="fact-val">146 супутників</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Uranus -->
+    <div class="planet-card ice">
+      <div class="planet-visual uranus">
+        <div class="planet-sphere"></div>
+      </div>
+      <div class="planet-info">
+        <div class="planet-name">Уран</div>
+        <span class="planet-tag">Льодяний гігант</span>
+        <p class="planet-desc">Обертається «на боці» — вісь нахилена на 98°. Найхолодніша атмосфера серед усіх планет: −224°C.</p>
+        <div class="planet-facts">
+          <div class="fact"><span class="fact-label">Відстань від Сонця</span><div class="fact-val">2,87 млрд км</div></div>
+          <div class="fact"><span class="fact-label">Діаметр</span><div class="fact-val">50 724 км</div></div>
+          <div class="fact"><span class="fact-label">Тривалість дня</span><div class="fact-val">17 год 14 хв</div></div>
+          <div class="fact"><span class="fact-label">Температура</span><div class="fact-val">-224°C</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Neptune -->
+    <div class="planet-card ice">
+      <div class="planet-visual neptune">
+        <div class="planet-sphere"></div>
+      </div>
+      <div class="planet-info">
+        <div class="planet-name">Нептун</div>
+        <span class="planet-tag">Льодяний гігант</span>
+        <p class="planet-desc">Найдальша планета. Вітри сягають 2 100 км/год — найшвидші у Сонячній системі. Один рік — 165 земних років.</p>
+        <div class="planet-facts">
+          <div class="fact"><span class="fact-label">Відстань від Сонця</span><div class="fact-val">4,5 млрд км</div></div>
+          <div class="fact"><span class="fact-label">Діаметр</span><div class="fact-val">49 244 км</div></div>
+          <div class="fact"><span class="fact-label">Швидкість вітру</span><div class="fact-val">2 100 км/год</div></div>
+          <div class="fact"><span class="fact-label">Рік</span><div class="fact-val">165 земних років</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- METEORITES -->
+<section id="meteorites">
+  <div class="section-header">
+    <span class="section-tag">// Камені з неба</span>
+    <h2 class="section-title">МЕТЕОРИТИ</h2>
+    <p class="section-desc">Посланці з глибин Всесвіту, що долають мільйони кілометрів, щоб потрапити на Землю.</p>
+  </div>
+
+  <div class="meteorites-layout">
+    <div class="meteor-visual">
+      <div class="meteor-diagram">
+        <div class="meteor-trail"></div>
+        <div class="meteor-rock"></div>
+      </div>
+      <div class="meteor-types">
+        <div class="meteor-type-card">
+          <div class="meteor-type-name">Кам'яні (Хондрити)</div>
+          <p class="meteor-type-desc">Найпоширеніший тип — 86% усіх знахідок. Зберігають первинний склад Сонячної системи віком 4,5 млрд років.</p>
+        </div>
+        <div class="meteor-type-card">
+          <div class="meteor-type-name">Залізні</div>
+          <p class="meteor-type-desc">Уламки ядер зруйнованих астероїдів. Складаються із заліза та нікелю, мають характерний візерунок Відманштеттена.</p>
+        </div>
+        <div class="meteor-type-card">
+          <div class="meteor-type-name">Кам'яно-залізні</div>
+          <p class="meteor-type-desc">Рідкісні — лише 1–2%. Найкрасивіші: паласіти містять кристали олівіну в залізній матриці.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="meteor-content">
+      <h2>Подорож крізь простір</h2>
+      <p>Метеорит — це космічне тіло, яке пережило прольот крізь атмосферу Землі і впало на поверхню. До входу в атмосферу такий об'єкт називається метеороїдом, а яскравий спалах під час падіння — метеором або «падаючою зіркою».</p>
+      <p>Щороку на Землю випадає близько 500 метеоритів масою понад 100 грамів. Більшість із них потрапляє в океан або важкодоступні місця. Знаходять лише близько 10 на рік.</p>
+      <p>Вивчаючи метеорити, вчені дізнаються про склад ранньої Сонячної системи, формування планет та навіть про умови, що передували виникненню Сонця.</p>
+
+      <div class="meteor-facts-grid">
+        <div class="m-fact-card">
+          <div class="m-fact-num">~500</div>
+          <div class="m-fact-label">метеоритів падає на Землю щороку</div>
+        </div>
+        <div class="m-fact-card">
+          <div class="m-fact-num">60 т</div>
+          <div class="m-fact-label">— маса Челябінського метеорита (2013)</div>
+        </div>
+        <div class="m-fact-card">
+          <div class="m-fact-num">4,5 млрд</div>
+          <div class="m-fact-label">років — вік більшості метеоритів</div>
+        </div>
+        <div class="m-fact-card">
+          <div class="m-fact-num">60 км/с</div>
+          <div class="m-fact-label">максимальна швидкість входу в атмосферу</div>
+        </div>
+      </div>
+
+      <p>Найбільший відомий метеорит на Землі — <strong>Гоба</strong> з Намібії. Він важить близько 60 тонн і досі знаходиться на місці падіння, бо занадто великий для переміщення.</p>
+    </div>
+  </div>
+</section>
+
+<!-- OTHER OBJECTS -->
+<section id="objects">
+  <div class="section-header">
+    <span class="section-tag">// Дивовижні об'єкти</span>
+    <h2 class="section-title">КОСМІЧНІ ОБ'ЄКТИ</h2>
+    <p class="section-desc">Чорні діри, туманності, комети та астероїди — Всесвіт сповнений дивовижних явищ.</p>
+  </div>
+
+  <div class="objects-container">
+    <div class="objects-tabs">
+      <button class="tab-btn active" onclick="showTab('blackhole')">Чорні діри</button>
+      <button class="tab-btn" onclick="showTab('nebula')">Туманності</button>
+      <button class="tab-btn" onclick="showTab('comet')">Комети</button>
+      <button class="tab-btn" onclick="showTab('asteroid')">Астероїди</button>
+    </div>
+
+    <!-- BLACK HOLE -->
+    <div id="tab-blackhole" class="tab-content active">
+      <div class="object-hero">
+        <div class="object-visual-wrap">
+          <div class="blackhole-viz">
+            <div class="bh-ring"></div>
+            <div class="bh-ring"></div>
+            <div class="bh-ring"></div>
+            <div class="bh-core"></div>
+          </div>
+        </div>
+        <div class="object-text">
+          <h3>Чорні Діри</h3>
+          <p>Чорна діра — це область простору-часу з настільки потужним гравітаційним полем, що жодна частинка, включаючи фотони світла, не може вирватися за межу, яку називають горизонтом подій.</p>
+          <p>Утворюються після гравітаційного колапсу масивних зірок. У центрі нашої Галактики знаходиться надмасивна чорна діра Стрілець A* масою 4 мільйони сонячних мас.</p>
+          <div class="highlight-box">
+            <div class="hb-label">// Факт</div>
+            <p>У 2019 році вчені вперше сфотографували чорну діру в галактиці M87 — завдяки телескопу Event Horizon Telescope розміром з усю Землю.</p>
+          </div>
+        </div>
+      </div>
+      <div class="object-cards">
+        <div class="obj-card">
+          <div class="obj-card-icon">⭐</div>
+          <div class="obj-card-name">Зіркові ЧД</div>
+          <p class="obj-card-desc">Утворюються після вибуху наднової. Маса: 3–20 сонячних мас. Радіус: 5–15 км.</p>
+        </div>
+        <div class="obj-card">
+          <div class="obj-card-icon">🌌</div>
+          <div class="obj-card-name">Надмасивні ЧД</div>
+          <p class="obj-card-desc">В центрах галактик. Маса: мільйони–мільярди сонячних мас. Механізм утворення досі вивчається.</p>
+        </div>
+        <div class="obj-card">
+          <div class="obj-card-icon">🔮</div>
+          <div class="obj-card-name">Проміжні ЧД</div>
+          <p class="obj-card-desc">Маса: тисячі сонячних мас. Рідкісний клас, знайдено небагато кандидатів.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEBULA -->
+    <div id="tab-nebula" class="tab-content">
+      <div class="object-hero">
+        <div class="object-visual-wrap">
+          <div class="nebula-viz"></div>
+        </div>
+        <div class="object-text">
+          <h3>Туманності</h3>
+          <p>Туманність — це хмара газу та пилу у космосі. Одні туманності є «колисками зірок», де народжуються нові сонця, інші — «могилами», залишками вибухів наднових.</p>
+          <p>Найвідоміша туманність — Орел (NGC 6611), де знаходяться «Стовпи Творіння» — хмари газу висотою 4–5 світлових років, зфотографовані телескопом Хаббл у 1995 році.</p>
+          <div class="highlight-box">
+            <div class="hb-label">// Розмір</div>
+            <p>Туманність Тарантул у Великій Магеллановій Хмарі простягається на 1 000 світлових років — якби вона знаходилася на місці туманності Оріон, покривала б 30° неба.</p>
+          </div>
+        </div>
+      </div>
+      <div class="object-cards">
+        <div class="obj-card">
+          <div class="obj-card-icon">💫</div>
+          <div class="obj-card-name">Емісійні</div>
+          <p class="obj-card-desc">Іонізовані гарячими зірками. Світяться власним світлом. Приклад: Туманність Оріон.</p>
+        </div>
+        <div class="obj-card">
+          <div class="obj-card-icon">🪐</div>
+          <div class="obj-card-name">Планетарні</div>
+          <p class="obj-card-desc">Оболонки, скинуті вмираючими зірками. Приклад: Туманність Кільце (M57).</p>
+        </div>
+        <div class="obj-card">
+          <div class="obj-card-icon">💥</div>
+          <div class="obj-card-name">Залишки наднових</div>
+          <p class="obj-card-desc">Розширюються після вибуху зірки. Приклад: Крабовидна туманність — від вибуху 1054 р.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMET -->
+    <div id="tab-comet" class="tab-content">
+      <div class="object-hero">
+        <div class="object-visual-wrap">
+          <div class="comet-viz">
+            <div class="comet-tail"></div>
+            <div class="comet-head"></div>
+          </div>
+        </div>
+        <div class="object-text">
+          <h3>Комети</h3>
+          <p>Комета — це невелике тіло Сонячної системи, що складається з льоду, пилу та твердих порід. При наближенні до Сонця лід випаровується, утворюючи яскраву кому та хвіст, спрямований від зірки.</p>
+          <p>Комети з'являлись зі хмари Оорта або пояса Койпера. Деякі мають орбітальні цикли в тисячі років. Комета Галлея, найвідоміша, повертається кожні ~76 років — наступний прогін у 2061 році.</p>
+          <div class="highlight-box">
+            <div class="hb-label">// Місія Розетта</div>
+            <p>У 2014 р. апарат ESA «Розетта» вийшов на орбіту комети 67P/Чурюмова-Герасименко і висадив зонд «Філи» на її поверхню — перше в історії м'яке приземлення на комету.</p>
+          </div>
+        </div>
+      </div>
+      <div class="object-cards">
+        <div class="obj-card">
+          <div class="obj-card-icon">☄️</div>
+          <div class="obj-card-name">Короткоперіодичні</div>
+          <p class="obj-card-desc">Орбітальний період менше 200 років. Походять із пояса Койпера. Приклад: комета Галлея.</p>
+        </div>
+        <div class="obj-card">
+          <div class="obj-card-icon">🌠</div>
+          <div class="obj-card-name">Довгоперіодичні</div>
+          <p class="obj-card-desc">Орбітальний період від тисяч до мільйонів років. Приходять зі хмари Оорта.</p>
+        </div>
+        <div class="obj-card">
+          <div class="obj-card-icon">🌊</div>
+          <div class="obj-card-name">Хвости комет</div>
+          <p class="obj-card-desc">Іонний хвіст завжди вказує від Сонця. Пиловий хвіст може вигинатись по орбіті.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASTEROID -->
+    <div id="tab-asteroid" class="tab-content">
+      <div class="object-hero">
+        <div class="object-visual-wrap">
+          <div class="asteroid-viz">
+            <div class="ast-small ast-s1"></div>
+            <div class="ast-rock"></div>
+            <div class="ast-small ast-s2"></div>
+            <div class="ast-small ast-s3"></div>
+          </div>
+        </div>
+        <div class="object-text">
+          <h3>Астероїди</h3>
+          <p>Астероїди — кам'яні або металеві тіла, що обертаються навколо Сонця. Більшість зосереджені в Головному поясі між Марсом та Юпітером.</p>
+          <p>Церера — найбільший астероїд і єдина карликова планета в Головному поясі: діаметр 940 км. Місія Dawn досліджувала її у 2015–2018 рр.</p>
+          <div class="highlight-box">
+            <div class="hb-label">// Asteroïd Defense</div>
+            <p>У 2022 р. NASA успішно змінила орбіту астероїда Діморф, направивши в нього зонд DART. Перший успішний тест планетарного захисту Землі.</p>
+          </div>
+        </div>
+      </div>
+      <div class="object-cards">
+        <div class="obj-card">
+          <div class="obj-card-icon">🪨</div>
+          <div class="obj-card-name">Тип C (вуглецеві)</div>
+          <p class="obj-card-desc">75% усіх астероїдів. Темні, вуглецеві. Зберігають дані про ранню Сонячну систему.</p>
+        </div>
+        <div class="obj-card">
+          <div class="obj-card-icon">⚙️</div>
+          <div class="obj-card-name">Тип S (силікатні)</div>
+          <p class="obj-card-desc">17% астероїдів. Складаються із силікатів та металів. Помірно яскраві.</p>
+        </div>
+        <div class="obj-card">
+          <div class="obj-card-icon">🔩</div>
+          <div class="obj-card-name">Тип M (металеві)</div>
+          <p class="obj-card-desc">Залізно-нікелеві. Мета місії Psyche — дослідити металевий астероїд Психея.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SCALE OF THE UNIVERSE -->
+<section id="scale">
+  <div class="section-header">
+    <span class="section-tag">// Від Землі до краю Всесвіту</span>
+    <h2 class="section-title">МАСШТАБ ВСЕСВІТУ</h2>
+    <p class="section-desc">Подорож від поверхні Землі до меж спостережуваного Всесвіту.</p>
+  </div>
+
+  <div class="scale-container">
+    <div class="scale-timeline">
+
+      <div class="scale-item">
+        <div class="scale-dot"></div>
+        <div class="scale-distance">0 км</div>
+        <div class="scale-name">Поверхня Землі</div>
+        <p class="scale-desc">Початок подорожі. Радіус Землі — 6 371 км.</p>
+      </div>
+
+      <div class="scale-item">
+        <div class="scale-dot"></div>
+        <div class="scale-distance">384 400 км</div>
+        <div class="scale-name">Місяць</div>
+        <p class="scale-desc">Єдиний природний супутник Землі. Відстань, яку перелетіли люди. Місяць видаляється від Землі на 3,8 см щороку.</p>
+      </div>
+
+      <div class="scale-item">
+        <div class="scale-dot"></div>
+        <div class="scale-distance">149,6 млн км (1 а.о.)</div>
+        <div class="scale-name">Сонце</div>
+        <p class="scale-desc">Наша зірка — жовтий карлик. Світло від неї летить 8 хвилин 20 секунд. Маса — 99,86% всієї маси Сонячної системи.</p>
+      </div>
+
+      <div class="scale-item">
+        <div class="scale-dot"></div>
+        <div class="scale-distance">7,5 млрд км (50 а.о.)</div>
+        <div class="scale-name">Пояс Койпера</div>
+        <p class="scale-desc">Зона транснептунових об'єктів. Тут знаходиться Плутон, Ерида та тисячі інших тіл із льоду та скель.</p>
+      </div>
+
+      <div class="scale-item">
+        <div class="scale-dot"></div>
+        <div class="scale-distance">~1 св. рік (63 000 а.о.)</div>
+        <div class="scale-name">Хмара Оорта</div>
+        <p class="scale-desc">Сферична оболонка з мільярдів кометних ядер — зовнішній кордон Сонячної системи. Простягається до ~2 св. років.</p>
+      </div>
+
+      <div class="scale-item">
+        <div class="scale-dot"></div>
+        <div class="scale-distance">4,24 св. роки</div>
+        <div class="scale-name">Проксима Центавра</div>
+        <p class="scale-desc">Найближча до Сонця зірка. Червоний карлик з планетою в зоні проживання — Проксима b. Відстань, яку Вояджер-1 подолає через 70 000 років.</p>
+      </div>
+
+      <div class="scale-item">
+        <div class="scale-dot"></div>
+        <div class="scale-distance">26 000 св. років</div>
+        <div class="scale-name">Центр Чумацького Шляху</div>
+        <p class="scale-desc">Надмасивна чорна діра Стрілець A*, навколо якої обертається вся наша Галактика зі ~400 млрд зірок.</p>
+      </div>
+
+      <div class="scale-item">
+        <div class="scale-dot"></div>
+        <div class="scale-distance">100 000 св. років</div>
+        <div class="scale-name">Діаметр Чумацького Шляху</div>
+        <p class="scale-desc">Наша Галактика — спіральна, типу SBbc. Товщина диска ~1 000 св. років, гало простягається на ~250 000 св. років.</p>
+      </div>
+
+      <div class="scale-item">
+        <div class="scale-dot"></div>
+        <div class="scale-distance">2,537 млн св. років</div>
+        <div class="scale-name">Галактика Андромеди (M31)</div>
+        <p class="scale-desc">Найближча велика галактика. За ~4,5 млрд років зіткнеться з Чумацьким Шляхом, утворивши нову галактику «Молочемеда».</p>
+      </div>
+
+      <div class="scale-item">
+        <div class="scale-dot"></div>
+        <div class="scale-distance">93 млрд св. років</div>
+        <div class="scale-name">Спостережуваний Всесвіт</div>
+        <p class="scale-desc">Межа того, що ми можемо побачити — сфера радіусом 46,5 млрд св. років. Містить ~2 трильйони галактик. А за цим горизонтом Всесвіт продовжується — можливо, нескінченно.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo">КОС<span>МОС</span></a>
+  <div class="footer-links">
+    <a href="#planets">Планети</a>
+    <a href="#meteorites">Метеорити</a>
+    <a href="#objects">Об'єкти</a>
+    <a href="#scale">Масштаб</a>
+  </div>
+  <p>Досліджуй безмежне — адже Всесвіт занадто великий, щоб ігнорувати.</p>
+</footer>
+
+<script>
+// ── STARFIELD ──
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function initStars() {
+  stars = [];
+  const count = Math.floor((canvas.width * canvas.height) / 1200);
+  for (let i = 0; i < count; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.2,
+      alpha: Math.random(),
+      speed: Math.random() * 0.003 + 0.001,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function drawStars(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const a = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(t * s.speed * 1000 + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(232,238,255,${a})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+
+resizeCanvas(); initStars(); requestAnimationFrame(drawStars);
+window.addEventListener('resize', () => { resizeCanvas(); initStars(); });
+
+// ── TABS ──
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.scale-item').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

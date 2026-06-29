@@ -1,0 +1,9 @@
+Fonts used in this design:
+
+Font: Asap Condensed
+Author: Omnibus-Type
+Url: https://fonts.google.com/specimen/Asap+Condensed
+
+Font: Ranchers
+Author: Impallari Type
+Url: https://fonts.google.com/specimen/Ranchers

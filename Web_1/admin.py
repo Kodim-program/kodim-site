@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Customer, Category, Course
+from django import forms
 
 # Register your models here.
 @admin.register(Customer)
@@ -13,10 +14,23 @@ class CategoryAdmin(admin.ModelAdmin):
 #@admin.register(Age)
 #class AgeAdmin(admin.ModelAdmin):
 #    ...
+class CourseAdminForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = '__all__'
+        widgets = {
+            'description': forms.Textarea(attrs={
+                'rows': 15,
+                'cols': 80,
+                'style': 'width: 100%; min-height: 300px;'
+            }),
+        }
+
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ("category", "name", 'kid_age', 'price', 'date_price', 'image',)
+    form = CourseAdminForm
+    list_display = ("category", "name", 'kid_age', 'price', 'date_price', 'image', 'description_short', 'description',)
     
     @admin.display()
     def category(self, obj):

@@ -2,8 +2,10 @@ from .models import Customer, Course
 from .forms import ContactForm
 from django.http import HttpResponseRedirect
 from django.core.mail import EmailMultiAlternatives
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template.loader import get_template
+
+
 
 # Create your views here.
 def index(request):
@@ -12,8 +14,12 @@ def index(request):
 def courses(request):
     return render(request, 'courses.html', {'courses': Course.objects.all()})
 
-def course(request, id):
-    return render(request, 'course.html', {'course': Course.objects.get(id=id)})
+def course(request, name_url):
+    return render(request, 'course.html', {'course': Course.objects.get(name_url=name_url)})
+
+def course_detail(request, pk):
+    course = get_object_or_404(Course, pk=pk, is_active=True)
+    return render(request, 'course_detail.html', {'course': course})
 
 def about(request):
     return render(request, 'about.html')

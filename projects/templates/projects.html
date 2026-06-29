@@ -1,0 +1,691 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
+<title>Проєкти учнів KODIM — Програмування для дітей</title>
+<meta name="description" content="Дивіться реальні проєкти, які створили учні школи KODIM у Первомайську. Графіка, програмування, веб-розробка, 3D моделювання та робототехніка — результат навчання програмуванню на практиці.">
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #16161f;
+  --surface: #1c1c28;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f0eee8;
+  --muted: #8a8798;
+  --muted2: #5a5870;
+
+  --blue: #4a9eff;
+  --blue-bg: rgba(74,158,255,0.1);
+  --blue-glow: rgba(74,158,255,0.25);
+
+  --green: #3dd68c;
+  --green-bg: rgba(61,214,140,0.1);
+
+  --purple: #a78bfa;
+  --purple-bg: rgba(167,139,250,0.1);
+
+  --amber: #f59e0b;
+  --amber-bg: rgba(245,158,11,0.1);
+
+  --coral: #f97066;
+  --coral-bg: rgba(249,112,102,0.1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.4;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 2.5rem;
+  background: rgba(10,10,15,0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 18px;
+  letter-spacing: -0.02em;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 12px var(--blue);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.6; transform:scale(0.8); }
+}
+.nav-links { display: flex; gap: 2rem; }
+.nav-link {
+  font-size: 14px; color: var(--muted); text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-link:hover { color: var(--text); }
+.nav-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 500;
+  padding: 7px 18px; border-radius: 20px;
+  border: 1px solid var(--border2);
+  background: transparent; color: var(--text);
+  cursor: pointer; transition: all 0.2s;
+}
+.nav-btn:hover { background: var(--surface); border-color: var(--blue); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 8rem 2rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated background orbs */
+.orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px);
+  animation: orb-float 8s ease-in-out infinite;
+  pointer-events: none;
+}
+.orb-1 { width: 500px; height: 500px; top: -100px; left: -150px; background: radial-gradient(circle, rgba(74,158,255,0.15), transparent 70%); animation-delay: 0s; }
+.orb-2 { width: 400px; height: 400px; bottom: -80px; right: -100px; background: radial-gradient(circle, rgba(167,139,250,0.12), transparent 70%); animation-delay: 3s; }
+.orb-3 { width: 300px; height: 300px; top: 50%; left: 50%; transform: translate(-50%,-50%); background: radial-gradient(circle, rgba(61,214,140,0.07), transparent 70%); animation-delay: 1.5s; }
+@keyframes orb-float {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(30px,-20px) scale(1.05); }
+  66% { transform: translate(-20px,15px) scale(0.95); }
+}
+
+/* Particle canvas */
+#particles { position: absolute; inset: 0; pointer-events: none; }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--blue-bg); color: var(--blue);
+  border: 1px solid rgba(74,158,255,0.2);
+  border-radius: 20px; padding: 6px 16px;
+  margin-bottom: 1.5rem;
+  animation: fade-up 0.6s ease both;
+}
+.hero-badge-star { font-size: 10px; }
+
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.2rem;
+  animation: fade-up 0.6s 0.1s ease both;
+}
+.hero-title span {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--green) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+@keyframes gradient-shift {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.hero-sub {
+  font-size: 17px; font-weight: 300;
+  color: var(--muted); line-height: 1.65;
+  max-width: 520px; margin: 0 auto 2.5rem;
+  animation: fade-up 0.6s 0.2s ease both;
+}
+
+.hero-search {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 28px; padding: 10px 10px 10px 20px;
+  max-width: 420px; width: 100%; margin: 0 auto 3rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  animation: fade-up 0.6s 0.3s ease both;
+}
+.hero-search:focus-within {
+  border-color: rgba(74,158,255,0.5);
+  box-shadow: 0 0 0 4px rgba(74,158,255,0.08);
+}
+.hero-search input {
+  flex: 1; background: none; border: none; outline: none;
+  font-family: 'DM Sans', sans-serif; font-size: 15px;
+  color: var(--text);
+}
+.hero-search input::placeholder { color: var(--muted2); }
+.search-btn {
+  background: var(--blue); color: #fff;
+  border: none; border-radius: 20px; padding: 8px 18px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.search-btn:hover { background: #3a8eef; transform: scale(1.02); }
+
+.stats-row {
+  display: flex; gap: 3rem; justify-content: center;
+  animation: fade-up 0.6s 0.4s ease both;
+}
+.stat { text-align: center; }
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px; font-weight: 700;
+  color: var(--text);
+  counter-reset: n;
+}
+.stat-lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+
+.scroll-hint {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: var(--muted2); font-size: 12px; letter-spacing: 0.05em;
+  animation: fade-up 1s 1s ease both;
+}
+.scroll-arrow {
+  width: 20px; height: 20px; border-right: 1.5px solid var(--muted2); border-bottom: 1.5px solid var(--muted2);
+  transform: rotate(45deg);
+  animation: bounce-down 1.5s ease infinite;
+}
+@keyframes bounce-down {
+  0%,100% { transform: rotate(45deg) translateY(0); }
+  50% { transform: rotate(45deg) translateY(4px); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION COMMON ── */
+section {
+  position: relative; z-index: 1;
+  padding: 5rem 2.5rem;
+  max-width: 1200px; margin: 0 auto;
+}
+.section-eyebrow {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--blue); margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem;
+}
+.section-sub { font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+/* ── CATEGORIES ── */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px; margin-top: 2.5rem;
+}
+@media (max-width: 900px) { .cat-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.cat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 1.4rem 1.2rem;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), border-color 0.2s, background 0.2s;
+  position: relative; overflow: hidden;
+}
+.cat-card::before {
+  content: ''; position: absolute;
+  inset: 0; border-radius: 20px;
+  opacity: 0; transition: opacity 0.3s;
+}
+.cat-card:hover { transform: translateY(-5px) scale(1.01); }
+.cat-card:hover::before { opacity: 1; }
+.cat-card.active { border-color: var(--cat-color, var(--blue)); }
+.cat-card.active::after {
+  content: ''; position: absolute;
+  bottom: 0; left: 0; right: 0; height: 3px;
+  background: var(--cat-color, var(--blue));
+  border-radius: 0 0 20px 20px;
+}
+
+.cat-icon {
+  font-size: 26px; margin-bottom: 12px;
+  display: block;
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+.cat-card:hover .cat-icon { transform: scale(1.2) rotate(5deg); }
+.cat-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.cat-count { font-size: 12px; color: var(--muted); }
+.cat-bar-wrap { height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-top: 14px; overflow: hidden; }
+.cat-bar { height: 100%; border-radius: 2px; transition: width 1s cubic-bezier(.4,0,.2,1); width: 0; }
+
+/* ── FILTER TABS ── */
+.tabs-wrap {
+  display: flex; gap: 8px; margin-bottom: 2rem;
+  overflow-x: auto; scrollbar-width: none; flex-wrap: wrap;
+}
+.filter-tab {
+  font-size: 13px; padding: 7px 18px; border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent; color: var(--muted);
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
+}
+.filter-tab:hover { border-color: var(--border2); color: var(--text); }
+.filter-tab.active {
+  background: var(--cat-active-bg, var(--blue-bg));
+  color: var(--cat-active-color, var(--blue));
+  border-color: transparent;
+}
+.tab-pip { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* ── PROJECTS GRID ── */
+.proj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px;
+}
+.proj-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px; overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), border-color 0.2s, box-shadow 0.3s;
+  opacity: 0; transform: translateY(24px);
+}
+.proj-card.visible {
+  animation: card-in 0.5s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes card-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+.proj-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  border-color: rgba(255,255,255,0.15);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.proj-thumb {
+  height: 140px; display: flex; align-items: center; justify-content: center;
+  font-size: 40px; position: relative; overflow: hidden;
+}
+.proj-thumb-grid {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 30px, rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 31px
+  ),
+  repeating-linear-gradient(
+    90deg, transparent, transparent 30px, rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 31px
+  );
+}
+.proj-thumb-icon {
+  position: relative; z-index: 1; font-size: 42px;
+  transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+  filter: drop-shadow(0 4px 20px var(--proj-color, rgba(74,158,255,0.4)));
+}
+.proj-card:hover .proj-thumb-icon { transform: scale(1.2) rotate(-5deg); }
+
+.proj-body { padding: 14px 16px 16px; }
+.proj-tag {
+  display: inline-block; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 10px; margin-bottom: 8px;
+}
+.proj-name { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 3px; line-height: 1.3; }
+.proj-author { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+.proj-footer { display: flex; align-items: center; justify-content: space-between; }
+.proj-likes { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+.like-icon { font-size: 13px; transition: transform 0.2s; cursor: pointer; }
+.like-icon:hover { transform: scale(1.3); }
+.proj-view-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 500;
+  padding: 5px 14px; border-radius: 12px;
+  border: 1px solid var(--border2);
+  background: transparent; color: var(--muted);
+  cursor: pointer; transition: all 0.2s;
+}
+.proj-view-btn:hover { border-color: var(--proj-color, var(--blue)); color: var(--proj-color, var(--blue)); }
+
+/* ── HIDDEN / FILTER ── */
+.proj-card[data-hidden] { display: none; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 2.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  color: var(--muted2); font-size: 13px;
+  position: relative; z-index: 1;
+}
+.footer-logo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: var(--text); }
+
+/* ── REVEAL ANIMATION ── */
+.reveal {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.in-view { opacity: 1; transform: none; }
+
+/* ── COUNTER ANIMATION ── */
+.count-target { display: inline-block; }
+
+/* ── CURSOR GLOW ── */
+.cursor-glow {
+  position: fixed; width: 300px; height: 300px;
+  border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(74,158,255,0.04), transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: left 0.1s ease, top 0.1s ease;
+  z-index: 0;
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="glow"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    StudentsHub
+  </div>
+  <div class="nav-links">
+    <a href="#categories" class="nav-link">Категорії</a>
+    <a href="#projects" class="nav-link">Проєкти</a>
+    <a href="#" class="nav-link">Учні</a>
+  </div>
+  <button class="nav-btn">Увійти</button>
+</nav>
+
+<!-- PARTICLE CANVAS -->
+<canvas id="particles"></canvas>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="hero-badge"><span class="hero-badge-star">★</span> Виставка учнівських робіт</div>
+  <h1 class="hero-title">Проєкти<br><span>наших учнів</span></h1>
+  <p class="hero-sub">Графіка, програмування, веб-розробка, 3D моделювання та робототехніка — все в одному місці</p>
+
+  <div class="hero-search">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style="color:var(--muted2);flex-shrink:0;">
+      <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input type="text" id="searchInput" placeholder="Знайти проєкт або автора..." />
+    <button class="search-btn">Пошук</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-num"><span class="count-target" data-target="84">0</span></div>
+      <div class="stat-lbl">Проєктів</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span class="count-target" data-target="36">0</span></div>
+      <div class="stat-lbl">Авторів</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span class="count-target" data-target="5">0</span></div>
+      <div class="stat-lbl">Категорій</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Гортайте вниз</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section id="categories">
+  <div class="reveal">
+    <div class="section-eyebrow">Напрямки</div>
+    <h2 class="section-title">Категорії проєктів</h2>
+    <p class="section-sub">Оберіть напрямок, щоб побачити роботи учнів</p>
+  </div>
+  <div class="cat-grid reveal" id="catGrid"></div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="reveal" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;">
+    <div>
+      <div class="section-eyebrow">Роботи</div>
+      <h2 class="section-title" id="projTitle">Всі проєкти</h2>
+    </div>
+    <div class="tabs-wrap" id="filterTabs"></div>
+  </div>
+  <div class="proj-grid" id="projGrid"></div>
+</section>
+
+<footer>
+  <div class="footer-logo">StudentsHub</div>
+  <div>© 2025 — Виставка учнівських робіт</div>
+</footer>
+
+<script>
+// ── DATA ──
+const cats = [
+  { id:'graphic', name:'Графіка та анімація', icon:'🎨', count:18, color:'var(--blue)',   bg:'var(--blue-bg)',   bar:'#4a9eff' },
+  { id:'code',    name:'Програмування',       icon:'💻', count:22, color:'var(--green)',  bg:'var(--green-bg)', bar:'#3dd68c' },
+  { id:'web',     name:'Веб / Frontend',       icon:'🌐', count:20, color:'var(--purple)', bg:'var(--purple-bg)',bar:'#a78bfa' },
+  { id:'3d',      name:'3D моделювання',       icon:'🧊', count:14, color:'var(--amber)',  bg:'var(--amber-bg)', bar:'#f59e0b' },
+  { id:'robot',   name:'Робототехніка',        icon:'🤖', count:10, color:'var(--coral)',  bg:'var(--coral-bg)', bar:'#f97066' },
+];
+const catMap = Object.fromEntries(cats.map(c=>[c.id,c]));
+//graphic   web  code  3d  robot
+const projects = [
+  { cat:'web', name:'Анімована веб-сторінка Summer',      author:'Катя Пак',    likes:24, icon:'/summer/img/preview.jpg' , link_page:'/projects/summer/'},
+  { cat:'web', name:'Гра Memory',   author:'Катя Пак',   likes:19, icon:'🖼️', link_page: '/projects/memory' },
+  { cat:'web', name:'Анімована веб-сторінка Easter',     author:'Ніка Майданюк',    likes:32, icon:'▶️', link_page:'/projects/easter' },
+  { cat:'web', name:'Анімована сторінка Miami',            author:'Катя Пак',   likes:31, icon:'🐍', link_page:'/projects/miami' },
+  { cat:'web',    name:'Гра Подушечки',                 author:'Ніка Майданюк',  likes:20, icon:'🤖', link_page: '/projects/pillows' },
+  { cat:'web',    name:'Анімована веб-сторінка Космос',     author:'Ніка Майданюк', likes:15, icon:'📊',  link_page: '/projects/cosmos'},
+  { cat:'web',     name:'Веб-сторінка Sakura Soul',          author:'Ніка Майданюк',    likes:18, icon:'💼', link_page: '/projects/sakura_soul'},
+ 
+];
+
+let selectedCat = 'all';
+let searchQuery = '';
+
+// ── PARTICLES ──
+(function(){
+  const c = document.getElementById('particles');
+  const ctx = c.getContext('2d');
+  let W, H, pts = [];
+  function resize(){ W=c.width=window.innerWidth; H=c.height=window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  for(let i=0;i<55;i++){
+    pts.push({
+      x: Math.random()*2000, y: Math.random()*800,
+      vx:(Math.random()-.5)*0.25, vy:(Math.random()-.5)*0.2,
+      r: Math.random()*1.2+0.3,
+      a: Math.random()*0.4+0.1
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(74,158,255,${p.a})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── CURSOR GLOW ──
+const glow = document.getElementById('glow');
+document.addEventListener('mousemove', e=>{
+  glow.style.left = e.clientX+'px';
+  glow.style.top = e.clientY+'px';
+});
+
+// ── COUNTER ANIMATION ──
+function animateCounter(el, target, duration=1800){
+  const start = performance.now();
+  function step(now){
+    const p = Math.min((now-start)/duration, 1);
+    const ease = 1-Math.pow(1-p,3);
+    el.textContent = Math.round(ease*target);
+    if(p<1) requestAnimationFrame(step);
+    else el.textContent = target;
+  }
+  requestAnimationFrame(step);
+}
+const counters = document.querySelectorAll('.count-target');
+let counted = false;
+function runCounters(){
+  if(counted)return; counted=true;
+  counters.forEach(el=>{
+    animateCounter(el, +el.dataset.target);
+  });
+}
+setTimeout(runCounters, 600);
+
+// ── SCROLL REVEAL ──
+const revealObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in-view'); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+// ── RENDER CATEGORIES ──
+function renderCats(){
+  const g = document.getElementById('catGrid');
+  g.innerHTML = cats.map(c=>`
+    <div class="cat-card${selectedCat===c.id?' active':''}" data-id="${c.id}" style="--cat-color:${c.color}; --cat-bg:${c.bg};">
+      <span class="cat-icon">${c.icon}</span>
+      <div class="cat-name">${c.name}</div>
+      <div class="cat-count">${c.count} проєктів</div>
+      <div class="cat-bar-wrap"><div class="cat-bar" style="background:${c.bar};" data-w="${Math.round(c.count/22*100)}"></div></div>
+    </div>
+  `).join('');
+  g.querySelectorAll('.cat-card').forEach(el=>{
+    el.addEventListener('click',()=>{ selectCat(el.dataset.id); });
+  });
+  setTimeout(()=>{
+    g.querySelectorAll('.cat-bar').forEach(b=>{
+      b.style.width = b.dataset.w+'%';
+    });
+  },300);
+}
+
+// ── RENDER TABS ──
+function renderTabs(){
+  const wrap = document.getElementById('filterTabs');
+  const all = [{id:'all',name:'Всі',color:'var(--blue)',bg:'var(--blue-bg)'},...cats];
+  wrap.innerHTML = all.map(c=>`
+    <button class="filter-tab${selectedCat===c.id?' active':''}" data-id="${c.id}"
+      style="--cat-active-bg:${c.bg};--cat-active-color:${c.color};">
+      <span class="tab-pip"></span>${c.name}
+    </button>
+  `).join('');
+  wrap.querySelectorAll('.filter-tab').forEach(el=>{
+    el.addEventListener('click',()=>selectCat(el.dataset.id));
+  });
+}
+
+// ── RENDER PROJECTS ──
+function renderProjects(){
+  const g = document.getElementById('projGrid');
+  const title = document.getElementById('projTitle');
+  title.textContent = selectedCat==='all'?'Всі проєкти':(catMap[selectedCat]?.name||'');
+
+  let filtered = projects.filter(p=>{
+    const catOk = selectedCat==='all' || p.cat===selectedCat;
+    const q = searchQuery.toLowerCase();
+    const searchOk = !q || p.name.toLowerCase().includes(q) || p.author.toLowerCase().includes(q);
+    return catOk && searchOk;
+  });
+
+  g.innerHTML = filtered.map((p,i)=>{
+    const c = catMap[p.cat];
+    return `
+    <div class="proj-card" style="animation-delay:${i*60}ms; --proj-color:${c.color};" data-cat="${p.cat}">
+      <div class="proj-thumb" style="background:${c.bg};">
+        <div class="proj-thumb-grid"></div>
+        <span class="proj-thumb-icon"><img href="{% static '${p.icon}' %}"></span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-tag" style="background:${c.bg};color:${c.color};">${c.name}</div>
+        <div class="proj-name"><a href=${p.link_page}>${p.name}</a></div>
+        <div class="proj-author">${p.author}</div>
+        <div class="proj-footer">
+          <span class="proj-likes"><span class="like-icon">♥</span> ${p.likes}</span>
+          <button class="proj-view-btn"><a href=${p.link_page}>Переглянути</a></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  requestAnimationFrame(()=>{
+    g.querySelectorAll('.proj-card').forEach(c=>c.classList.add('visible'));
+  });
+
+  g.querySelectorAll('.like-icon').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      const span = this.closest('.proj-likes');
+      const num = parseInt(span.textContent.match(/\d+/)[0]);
+      span.innerHTML = `<span class="like-icon" style="color:var(--coral)">♥</span> ${num+1}`;
+    });
+  });
+}
+
+function selectCat(id){
+  selectedCat = id;
+  renderCats(); renderTabs(); renderProjects();
+  document.getElementById('projects')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── SEARCH ──
+document.getElementById('searchInput').addEventListener('input', e=>{
+  searchQuery = e.target.value;
+  renderProjects();
+});
+
+// ── INIT ──
+renderCats(); renderTabs(); renderProjects();
+</script>
+</body>
+</html>

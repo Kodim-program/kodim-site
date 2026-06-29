@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="UK-ua">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+
+    <!--=============== FAVICON ===============-->
+      <link rel="shortcut icon" href="{% static 'easter/img/favicon.png' %}" type="image/x-icon">
+
+      <!--=============== REMIXICONS ===============-->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
+
+      <!--=============== CSS ===============-->
+      <link rel="stylesheet" href="{% static 'easter/css/styles.css' %}">
+
+    <title>Easter day</title>
+</head>
+<body>
+      <!--==================== HEADER ====================-->
+      <header class="header" id="header">
+         <nav class="nav container">
+            <a href="index.html" class="nav__logo">LOGO</a>
+            <div class="nav__menu" id="nav-menu">
+               <ul class="nav__list">
+                  <li>
+                     <a href="#" class="nav__link">Home</a>
+                  </li>
+
+                  <li>
+                     <a href="#" class="nav__link">About Us</a>
+                  </li>
+
+                  <li>
+                     <a href="#" class="nav__link">Shop</a>
+                  </li>
+
+                  <li>
+                     <a href="#" class="nav__link">Contact</a>
+                  </li>
+
+               </ul>
+               <!--close button-->
+               <div class="nav__close" id="nav-close">
+                  <i class="ri-close-large-line"></i>
+               </div>
+            </div>
+            <div class="nav__toggle" id="nav-toggle">
+               <i class="ri-apps-2-add-line"></i>
+            </div>
+         </nav>
+      </header>
+
+           <!--==================== MAIN ====================-->
+      <main class="main">
+         <!--==================== HOME ====================-->
+         <section class="home">
+            <div class="home__container container">
+
+               <div class="home__images">
+                  <img src="{% static 'easter/img/flower5.svg' %}" alt="image" class="home__flower5">
+                  <img src="{% static 'easter/img/flower4.svg' %}" alt="image" class="home__flower4">
+                  <img src="{% static 'easter/img/flower3.svg' %}" alt="image" class="home__flower3">
+                  <img src="{% static 'easter/img/flower2.svg' %}" alt="image" class="home__flower2">
+                  <img src="{% static 'easter/img/lotos.svg' %}" alt="image" class="home__lotos">
+                  <img src="{% static 'easter/img/smart_flower.svg' %}" alt="image" class="home__flower1">
+                  <img src="{% static 'easter/img/bunny_bg.svg' %}" alt="image" class="home__bunnysbg">
+                  <img src="{% static 'easter/img/bunny.svg' %}" alt="image" class="home__bunny">
+               </div>
+
+               <img src="{% static 'easter/img/egg1.svg' %}" alt="image" class="home__egg-2">
+               <img src="{% static 'easter/img/egg2.svg' %}" alt="image" class="home__egg-1">
+               <img src="{% static 'easter/img/egg3.svg' %}" alt="image" class="home__egg-3">
+
+               <h1 class="home__title"> Happy <br> Easter day </h1>
+
+               <div class="new-container">
+                  <div class="text-content">
+                     <h2 class="easter-title">The meaning of Easter</h2>
+                     <p class="easter-description">Easter is a Christian festival which marks the resurrection of Jesus Christ.</p>
+                  </div>
+               </div>
+            </div>
+         </section>
+      </main>
+      
+      <!--=============== GSAP JS ===============-->
+      <script src="{% static 'easter/js/gsap.min.js' %}"></script>
+
+      <!--=============== CONFETTI JS ===============-->
+      <script src="https://app.embed.im/confetti.js" defer></script>
+
+      <!--=============== MAIN JS ===============-->
+      <script src="{% static 'easter/js/main.js' %}"></script>
+ 
+    
+</body>
+</html>

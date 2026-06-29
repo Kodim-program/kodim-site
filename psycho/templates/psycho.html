@@ -1,7 +1,6 @@
-{% load static %}
-
 <!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<html lang="uk-UA">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,15 +15,80 @@
             <br>
             <input type="text" id="name" placeholder="Ім'я" required>
             <br>
-            <label for="birthday">Ваша дата народження</label>
+            <label for="birth-day">Ваша дата народження</label>
             <br>            
-            <input type="date" id = "birthday" required>
+            <select id="birth-day" name="birth-day" required >
+                <option value="" disabled selected>День</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+            </select>
+            <select id="birth-month" name="birth-month" required >
+                <option value="" disabled selected>Місяць</option>
+                <option value="1">Січень</option>
+                <option value="2">Лютий</option>
+                <option value="3">Березень</option>
+                <option value="4">Квітень</option>
+                <option value="5">Травень</option>
+                <option value="6">Червень</option>
+                <option value="7">Липень</option>
+                <option value="8">Серпень</option>
+                <option value="9">Вересень</option>
+                <option value="10">Жовтень</option>
+                <option value="11">Листопад</option>
+                <option value="12">Грудень</option>
+            </select>
+            <select id="birth-year" name="birth-year" required >
+                <option value="" disabled selected>Рік</option>
+            </select>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const yearSelect = document.getElementById('birth-year');
+                const startYear = 1800;
+                const endYear = new Date().getFullYear();
+                for (let y = endYear; y >= startYear; y--) {
+                    const opt = document.createElement('option');
+                    opt.value = y;
+                    opt.textContent = y;
+                    yearSelect.appendChild(opt);
+                }
+            });
+            </script>
             <br>
             <input type="button" onclick="calculateResults()" value="Розрахувати">
 
         </form>
     </div>
     <div class="output_user">
+        <div class="watermark">nadiia_numerology</div>
         <div class="btn orange pv"><span>Професійний вектор</span><p>-</p></div>
         
         <div class="btn orange tm"><span>Темперамент</span><br><p>-</p></div>
@@ -50,10 +114,20 @@
         <div class="btn white dch"><span></span><br><p></p></div>
     </div>
     <div class="text_psycho">
-        <p></p>
+        <p>-/-/-/-/-/-/-/-/-/-</p>
+        <p>
+            <a href="https://www.instagram.com/nadiia_numerology?igsh=MWc5OXI5MTF2OG45bg==" target="_blank" rel="noopener noreferrer">
+                <img src="https://www.google.com/s2/favicons?domain=instagram.com" alt="Instagram" style="vertical-align:middle; width:40px; height:40px; margin-right:8px;">
+                Сторінка в Instagram
+            </a>
+        </p>
+        
     </div>
+    <!--<button onclick="saveResults()">Зберегти результат як зображення</button>-->
+
     </div>
 <script src="{% static 'psycho/script.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 </body>
 </html>
-

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JapanLegacy — Сакура та Традиції</title>
+    <style>
+        @import url('https://googleapis.com');
+
+        :root {
+            --crimson: #bc002d;
+            --gold: #d4af37;
+            --dark: #121212;
+            --white: #fffcf9;
+            --pink: #ffb7c5;
+        }
+
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+
+        /* Текстурний фон для всього сайту */
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background-color: var(--white);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23bc002d' fill-opacity='0.03'%3E%3Cpath d='M0 0h80v80H0V0zm40 40L0 80h80L40 40zm0 0L0 0h80L40 40z'/%3E%3C/g%3E%3C/svg%3E");
+            color: var(--dark); 
+            line-height: 1.8; 
+            overflow-x: hidden; 
+        }
+
+        /* Анімація появи */
+        .reveal { transform: translateY(60px); opacity: 0; transition: all 1.2s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        .reveal.active { transform: translateY(0); opacity: 1; }
+
+        /* САКУРА: Створення пелюсток через JS */
+        .sakura-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+        .petal {
+            position: absolute;
+            background: var(--pink);
+            border-radius: 150% 0 150% 0;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 5px white);
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg) translateX(100px); opacity: 0; }
+        }
+
+        /* HERO SECTION */
+        .hero {
+            height: 100vh;
+            background: var(--dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 10px solid var(--gold);
+        }
+
+        .sun-bg {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: var(--crimson);
+            border-radius: 50%;
+            box-shadow: 0 0 150px rgba(188, 0, 45, 0.5);
+            animation: sun-pulse 6s infinite ease-in-out;
+        }
+        @keyframes sun-pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+
+        .hero-content { z-index: 10; text-align: center; color: white; }
+        .hero h1 { font-family: 'Noto Serif JP', serif; font-size: 10rem; margin: 0; line-height: 1; text-shadow: 10px 10px 0px rgba(0,0,0,0.2); }
+        .hero h2 { font-size: 2.5rem; letter-spacing: 20px; color: var(--gold); text-transform: uppercase; margin-top: 20px; }
+
+        /* ДЕКОРАТИВНІ ПАНЕЛІ */
+        .side-panel {
+            position: absolute;
+            width: 150px;
+            height: 100%;
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 1px solid var(--gold);
+            border-right: 1px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            color: var(--gold);
+            font-size: 1.5rem;
+            writing-mode: vertical-rl;
+        }
+        .left-p { left: 0; }
+        .right-p { right: 0; }
+
+        /* НАВІГАЦІЯ */
+        nav {
+            background: rgba(18, 18, 18, 0.95);
+            padding: 25px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--gold);
+        }
+        nav a { color: var(--gold); text-decoration: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* КОНТЕНТ */
+        .container { max-width: 1200px; margin: auto; padding: 100px 20px; }
+        .info-block { 
+            display: flex; 
+            gap: 80px; 
+            align-items: center; 
+            margin-bottom: 150px; 
+            background: white; 
+            padding: 50px; 
+            border-radius: 2px;
+            box-shadow: 30px 30px 0 var(--gold);
+            border: 1px solid #eee;
+        }
+        .info-block:nth-child(even) { flex-direction: row-reverse; box-shadow: -30px 30px 0 var(--crimson); }
+        
+        .text h3 { font-size: 3rem; color: var(--crimson); font-family: 'Noto Serif JP', serif; margin-bottom: 30px; position: relative; }
+        .text h3::after { content: ""; position: absolute; bottom: -10px; left: 0; width: 100px; height: 4px; background: var(--gold); }
+        
+        .illustration-box {
+            flex: 1;
+            min-height: 400px;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* SVG ДЕТАЛІ */
+        .svg-icon { width: 80%; filter: drop-shadow(0 0 20px var(--gold)); }
+
+        footer { background: var(--dark); color: var(--gold); text-align: center; padding: 80px; }
+    </style>
+</head>
+<body>
+
+<div class="sakura-container" id="sakura"></div>
+
+<section class="hero">
+    <div class="side-panel left-p"><span>侍 SPIRIT</span><span>伝統 TRADITION</span><span>平和 PEACE</span></div>
+    <div class="sun-bg"></div>
+    <div class="hero-content">
+        <h1>日本</h1>
+        <h2>Sakura Soul</h2>
+        <p style="letter-spacing: 8px; color: var(--pink); font-weight: bold;">КРАСА В КОЖНІЙ ПЕЛЮСТЦІ</p>
+    </div>
+    <div class="side-panel right-p"><span>調和 HARMONY</span><span>勇気 COURAGE</span><span>名誉 HONOR</span></div>
+</section>
+
+<nav>
+    <a href="#bushido">Бусідо</a>
+    <a href="#zen">Дзен</a>
+    <a href="#soul">Душа</a>
+</nav>
+
+<div class="container">
+    <!-- СЕКЦІЯ 1 -->
+    <div class="info-block reveal" id="bushido">
+        <div class="text">
+            <h3>Сталь та Честь</h3>
+            <p>Японія — це земля легендарних воїнів. Самураї не просто билися, вони плекали мистецтво смерті та життя. Їхні обладунки були шедеврами інженерної думки, а мечі — найгострішими у світі.</p>
+            <p><strong>Бусідо</strong> навчало, що справжня перемога — це перемога над самим собою. Честь була дорожчою за золото, а вірність — міцнішою за камінь.</p>
+        </div>
+        <div class="illustration-box">
+             <svg class="svg-icon" viewBox="0 0 100 100" fill="none" xmlns="http://w3.org">
+                <path d="M20 80 L50 20 L80 80" stroke="white" stroke-width="2"/>
+                <circle cx="50" cy="50" r="10" fill="var(--crimson)"/>
+                <path d="M10 90 H90" stroke="var(--gold)" stroke-width="4"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- СЕКЦІЯ 2 -->
+    <div class="info-block reveal" id="zen">
+        <div class="illustration-box" style="background: var(--crimson);">
+            <svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://w3.org">
+                <circle cx="50" cy="50" r="30" stroke="white" stroke-width="1" fill="none"/>
+                <circle cx="50" cy="50" r="20" stroke="var(--gold)" stroke-width="2" fill="none"/>
+                <line x1="50" y1="20" x2="50" y2="80" stroke="white"/>
+            </svg>
+        </div>
+        <div class="text">
+            <h3>Шлях Дзен</h3>
+            <p>У хаосі сучасного світу Японія зберігає острівці абсолютного спокою. Сади каменів, де кожна лінія на піску символізує океан, та чайна церемонія, де кожна крапля — це вічність.</p>
+            <p><strong>Вабі-сабі</strong> вчить нас цінувати старі речі. Тріщина на чаші — це не дефект, це її гордість, заповнена золотом майстра.</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <h2 style="font-family: 'Noto Serif JP', serif; font-size: 3rem;">サヨナラ</h2>
+    <p>JapanLegacy © 2024 — Гармонія всередині вас</p>
+</footer>
+
+<script>
+    // Генерація сакури
+    const sakuraContainer = document.getElementById('sakura');
+    for (let i = 0; i < 30; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        const size = Math.random() * 15 + 10 + 'px';
+        petal.style.width = size;
+        petal.style.height = size;
+        petal.style.left = Math.random() * 100 + 'vw';
+        petal.style.animationDuration = Math.random() * 5 + 5 + 's';
+        petal.style.animationDelay = Math.random() * 5 + 's';
+        sakuraContainer.appendChild(petal);
+    }
+
+    // Анімація появи
+    function reveal() {
+        const reveals = document.querySelectorAll(".reveal");
+        reveals.forEach(el => {
+            const windowHeight = window.innerHeight;
+            const elementTop = el.getBoundingClientRect().top;
+            if (elementTop < windowHeight - 100) el.classList.add("active");
+        });
+    }
+    window.addEventListener("scroll", reveal);
+    reveal();
+</script>
+
+</body>
+</html>

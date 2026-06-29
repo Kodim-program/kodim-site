@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="UK-ua">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!--=============== FAVICON ===============-->
+        <link rel="shortcut icon" href="{% static 'summer/img/icon.png' %}" type="image/x-icon">
+
+        <!--=============== REMIXICONS ===============-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.css">
+
+        <!--=============== CSS ===============-->
+        <link rel="stylesheet" href="{% static 'summer/css/style.css' %}">
+
+        <title>Summer</title>
+    </head>
+    <body>
+        <!--HEADER-->
+        <header class="header" id="header">
+            <nav class="nav container">
+                <a href="/projects/" class="nav__logo">
+                    Summer
+                </a>
+                <div class="nav__menu" id="nav-menu">
+                    <ul class="nav__list">
+                        <li>
+                            <a href="#" class="nav__link">Home</a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav__link">About</a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav__link">Gifts</a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav__link">Share</a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav__link">Contact</a>
+                        </li>
+                    </ul>
+               <!--Close button-->
+               <div class="nav__close" id="nav-close">
+                  <i class="ri-rest-time-fill"></i>
+               </div>
+                </div>
+                <div class="nav__toggle" id="nav-toggle">
+                    <i class="ri-sun-fill"></i>
+                </div>
+            </nav>
+        </header>
+        <!--MAIN-->
+        <main class="main">
+            <!--HOME-->
+            <section class="home">
+                <div class="home__container container">
+                    <div class="home__images">
+                        <img src="{% static 'summer/img/waterback.svg' %}" alt="image" class="home__waterback">
+                        <img src="{% static 'summer/img/watertop.svg' %}" alt="image" class="home__watertop">
+                        <img src="{% static 'summer/img/stars.svg' %}" alt="image" class="home__stars">
+                        <img src="{% static 'summer/img/lemonade.svg' %}" alt="image" class="home__lemonade">
+                        <img src="{% static 'summer/img/glasses.svg' %}" alt="image" class="home__glasses">
+                        <img src="{% static 'summer/img/flamingo.svg' %}" alt="image" class="home__flamingo">
+                        <img src="{% static 'summer/img/water.svg' %}" alt="image" class="home__water" id="home__water">
+                        <img src="{% static 'summer/img/topflamingo.svg' %}" alt="image" class="home__topflamingo">
+                    </div>
+                    <h1 class="home__title">Summer <br> pool party</h1>
+                </div>
+            </section>
+        </main>
+        <!--GSAP JS-->
+        <script src="{% static 'summer/js/gsap.min.js' %}"></script>
+        <!--<script src="Assets/js/gsap.splashes.js"></script>-->
+        <!--MAIN JS-->
+        <script src="{% static 'summer/js/main.js' %}"></script>
+    </body>
+</html>
