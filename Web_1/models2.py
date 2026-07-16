@@ -203,17 +203,6 @@ class Course(models.Model):
         ),
     )
 
-    advantages = models.JSONField(
-        verbose_name='Переваги напряму',
-        null=True,
-        blank=True,
-        help_text=(
-            'Список нумерованих переваг курсу/професії. Приклад: '
-            '[{"title": "Висока затребуваність", '
-            '"text": "Python — одна з найпопулярніших мов програмування у світі"}]'
-        ),
-    )
-
     program_modules = models.JSONField(
         verbose_name='Програма (модулі)',
         null=True,

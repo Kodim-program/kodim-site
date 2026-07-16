@@ -15,11 +15,8 @@ def courses(request):
     return render(request, 'courses.html', {'courses': Course.objects.all()})
 
 def course(request, name_url):
-    return render(request, 'course.html', {'course': Course.objects.get(name_url=name_url)})
-
-def course_detail(request, pk):
-    course = get_object_or_404(Course, pk=pk, is_active=True)
-    return render(request, 'course_detail.html', {'course': course})
+    course = get_object_or_404(Course, name_url=name_url, is_active=True)
+    return render(request, 'course.html', {'course': course})
 
 def about(request):
     return render(request, 'about.html')

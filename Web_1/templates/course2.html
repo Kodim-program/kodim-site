@@ -1,38 +1,37 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title_name %}{{ course.name }} — KODIM{% endblock %}
+{% block title %}{{ course.name }} — KODIM{% endblock %}
 
-{% block description %}{% if course.meta_description %}{{ course.meta_description }}{% elif course.description_short
-%}{{ course.description_short }}{% endif %}{% endblock %}
+{% block meta_description %}
+{% if course.meta_description %}
+<meta name="description" content="{{ course.meta_description }}">
+{% elif course.description_short %}
+<meta name="description" content="{{ course.description_short }}">
+{% endif %}
+{% endblock %}
 
-
-{% block content %}
+{% block extra_css %}
 <style>
     /* ════════════════════════════════════════════
    KODIM — course detail page styles
-   Retheme: matches actual site brand from style.css
-   (primary teal #01b3a7, dark navy #162e44, green #50ba87)
+   White-background, itstep-inspired layout
    ════════════════════════════════════════════ */
 
-    /* ── tokens (aligned with site brand) ── */
+    /* ── tokens ── */
     :root {
-        --red: #01b3a7;
-        /* primary brand teal (was invented red) */
-        --red-dark: #017d74;
-        /* darker teal for hover states */
-        --blue: #162e44;
-        /* site's real dark navy (matches footer) */
-        --blue-mid: #0aa79c;
-        --blue-light: #7fd9d1;
-        --green: #50ba87;
-        /* site's real green */
+        --red: #e63946;
+        --red-dark: #c1121f;
+        --blue: #1d3557;
+        --blue-mid: #457b9d;
+        --blue-light: #a8dadc;
+        --green: #2a9d5c;
         --yellow: #f4a227;
         --body: #3d3d3d;
         --muted: #6b7280;
         --bg: #ffffff;
         --bg-alt: #f7f9fc;
-        --bg-dark: #162e44;
+        --bg-dark: #1d3557;
         --border: #e5e7eb;
         --radius: 10px;
         --radius-lg: 18px;
@@ -75,30 +74,13 @@
         background: var(--red);
         color: #fff;
         border-color: var(--red);
-        position: relative;
-        overflow: hidden;
-        isolation: isolate;
-    }
-
-    .cd-btn-red::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, .35) 48%, transparent 66%);
-        transform: translateX(-120%);
-        transition: transform .6s ease;
-    }
-
-    .cd-btn-red:hover::before {
-        transform: translateX(120%);
     }
 
     .cd-btn-red:hover {
         background: var(--red-dark);
         border-color: var(--red-dark);
         transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(1, 179, 167, .35);
+        box-shadow: 0 6px 18px rgba(230, 57, 70, .3);
     }
 
     .cd-btn-outline {
@@ -218,32 +200,10 @@
    HERO
 ════════════════════ */
     .cd-hero {
-        background: linear-gradient(120deg, #0d2136 0%, #162e44 40%, #0a5c56 78%, #01b3a7 100%);
-        background-size: 180% 180%;
-        animation: cdHeroFlow 14s ease-in-out infinite;
+        background: linear-gradient(135deg, #1d3557 0%, #2b5f8a 55%, #3a7ca5 100%);
         padding: 60px 0 0;
         overflow: hidden;
         position: relative;
-    }
-
-    @keyframes cdHeroFlow {
-        0% {
-            background-position: 0% 50%;
-        }
-
-        50% {
-            background-position: 100% 50%;
-        }
-
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .cd-hero {
-            animation: none;
-        }
     }
 
     .cd-hero::before {
@@ -284,29 +244,7 @@
         width: 7px;
         height: 7px;
         border-radius: 50%;
-        background: var(--green);
-        box-shadow: 0 0 0 0 rgba(80, 186, 135, .6);
-        animation: cdDotPulse 2s ease-out infinite;
-    }
-
-    @keyframes cdDotPulse {
-        0% {
-            box-shadow: 0 0 0 0 rgba(80, 186, 135, .55);
-        }
-
-        70% {
-            box-shadow: 0 0 0 8px rgba(80, 186, 135, 0);
-        }
-
-        100% {
-            box-shadow: 0 0 0 0 rgba(80, 186, 135, 0);
-        }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .cd-hero-badge-dot {
-            animation: none;
-        }
+        background: #4ade80;
     }
 
     .cd-hero h1 {
@@ -415,8 +353,8 @@
     }
 
     .cd-hero-card .tag {
-        background: #e3f7f5;
-        color: #017d74;
+        background: #eef2ff;
+        color: #3730a3;
         border-radius: 50px;
         padding: 3px 12px;
         font-size: .78rem;
@@ -495,7 +433,7 @@
     }
 
     .cd-how-image-placeholder {
-        background: linear-gradient(135deg, var(--bg-alt), #d3f3ef);
+        background: linear-gradient(135deg, var(--bg-alt), #dbeafe);
         border-radius: var(--radius-lg);
         height: 300px;
         display: flex;
@@ -822,7 +760,7 @@
 
     .cd-price-card.featured {
         border-color: var(--red);
-        box-shadow: 0 0 0 4px rgba(1, 179, 167, .1);
+        box-shadow: 0 0 0 4px rgba(230, 57, 70, .07);
     }
 
     .cd-price-badge {
@@ -970,7 +908,7 @@
    CTA SECTION
 ════════════════════ */
     .cd-cta-section {
-        background: linear-gradient(135deg, var(--blue) 0%, #0a5c56 55%, var(--red) 100%);
+        background: linear-gradient(135deg, var(--blue) 0%, #2d6a8f 100%);
         padding: var(--section-py) 0;
         text-align: center;
         color: #fff;
@@ -1090,7 +1028,9 @@
         }
     }
 </style>
+{% endblock %}
 
+{% block content %}
 <div class="cd-wrap">
 
     <!-- ── BREADCRUMB ── -->
@@ -1292,32 +1232,6 @@
     {% endif %}
 
     <!-- ══════════════════════════════════════
-     ADVANTAGES (numbered)
-══════════════════════════════════════ -->
-    {% if course.advantages %}
-    <section class="cd-section">
-        <div class="cd-container">
-            <div class="cd-section-head">
-                <div class="cd-label">Переваги</div>
-                <h2 class="cd-title">Чому саме цей напрям</h2>
-                <p class="cd-section-desc">Ключові причини, чому варто обрати цей курс саме зараз.</p>
-            </div>
-            <div class="cd-advantages-list">
-                {% for item in course.advantages %}
-                <div class="cd-adv-item">
-                    <div class="cd-adv-num">{{ forloop.counter|stringformat:"02d" }}</div>
-                    <div class="cd-adv-body">
-                        <h3>{{ item.title }}</h3>
-                        <p>{{ item.text }}</p>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-    {% endif %}
-
-    <!-- ══════════════════════════════════════
      RESULTS
 ══════════════════════════════════════ -->
     {% if course.results %}
@@ -1326,8 +1240,7 @@
             <div class="cd-section-head">
                 <div class="cd-label">Результати</div>
                 <h2 class="cd-title">Що дитина отримає після курсу</h2>
-                <p class="cd-section-desc" style="color:rgba(255,255,255,.65);">Конкретні навички та проєкти, які
-                    залишаться назавжди.</p>
+                <p class="cd-section-desc" style="color:rgba(255,255,255,.65);">Конкретні навички та проєкти, які залишаться назавжди.</p>
             </div>
             <div class="cd-results-grid">
                 {% for item in course.results %}
@@ -1351,10 +1264,7 @@
                 <div class="cd-label">Програма курсу</div>
                 <h2 class="cd-title">Що вивчатимемо?</h2>
                 <p class="cd-section-desc">
-                    {{ course.program_modules|length }} модулів практичних занять
-                    {% if course.duration %}, 
-                        {{ course.duration }}
-                    {% endif %}.
+                    {{ course.program_modules|length }} модулів практичних занять{% if course.duration %}, {{ course.duration }}{% endif %}.
                 </p>
             </div>
             <div class="cd-program-grid">
@@ -1551,50 +1461,5 @@
             io.observe(el);
         });
     }
-
-    /* Count-up animation for stats bar numbers */
-    const statNums = document.querySelectorAll('.cd-stat-num');
-    function animateCount(el) {
-        const raw = el.textContent.trim();
-        const match = raw.match(/^(\d+(?:[.,]\d+)?)(.*)$/);
-        if (!match) return;
-        const target = parseFloat(match[1].replace(',', '.'));
-        const suffix = match[2] || '';
-        const decimals = match[1].includes('.') || match[1].includes(',') ? 1 : 0;
-        const duration = 1100;
-        const start = performance.now();
-        function tick(now) {
-            const p = Math.min((now - start) / duration, 1);
-            const eased = 1 - Math.pow(1 - p, 3);
-            const value = target * eased;
-            el.textContent = value.toFixed(decimals) + suffix;
-            if (p < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-    }
-    if ('IntersectionObserver' in window && statNums.length) {
-        const statIo = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCount(entry.target);
-                    statIo.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.4 });
-        statNums.forEach(el => statIo.observe(el));
-    }
 </script>
-{% endblock %}
-
-{% block navbar %}
-<li class="rd-nav-item "><a class="rd-nav-link" href="/">Головна</a>
-</li>
-<li class="rd-nav-item "><a class="rd-nav-link" href="/about/">Про нас</a>
-</li>
-<li class="rd-nav-item active"><a class="rd-nav-link" href="/courses/">Курси</a>
-</li>
-<li class="rd-nav-item "><a class="rd-nav-link" href="/contact-us/">Зв'язок</a>
-</li>
-<li class="rd-nav-item"><a class="rd-nav-link" href="/projects/">Проєкти</a>
-</li>
 {% endblock %}
