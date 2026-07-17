@@ -1,3 +1,4 @@
+from django.utils import timezone 
 import os
 from io import BytesIO
 from django.db import models
@@ -304,4 +305,107 @@ class Course(models.Model):
                 # Сягаємо save=False, щоб не викликати рекурсивний save()
                 self.image.save(new_name, File(img_io), save=False)
                 
+        super().save(*args, **kwargs)
+def slugify_uk(value):
+    """Транслітерація кирилиці в латиницю для ЧПУ (slug), бо slugify()
+    сам по собі вирізає кириличні символи і лишає порожній рядок."""
+    table = {
+        'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g', 'д': 'd', 'е': 'e',
+        'є': 'ie', 'ж': 'zh', 'з': 'z', 'и': 'y', 'і': 'i', 'ї': 'i', 'й': 'i',
+        'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r',
+        'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch',
+        'ш': 'sh', 'щ': 'shch', 'ь': '', 'ю': 'iu', 'я': 'ia', "'": '',
+    }
+    value = value.lower()
+    value = ''.join(table.get(ch, ch) for ch in value)
+    return slugify(value, allow_unicode=False)
+
+
+class News(models.Model):
+    title = models.CharField(max_length=200, verbose_name='Заголовок')
+    slug = models.SlugField(
+        max_length=220,
+        unique=True,
+        blank=True,
+        verbose_name='URL (slug)',
+        help_text='Залиште порожнім — згенерується автоматично з заголовка. '
+                   'Використовується у людино-зрозумілому URL новини.',
+    )
+    image = models.ImageField(
+        upload_to='news_images',
+        verbose_name='Зображення',
+        null=True,
+        blank=True,
+        validators=[validate_image_size],
+    )
+    description_short = models.CharField(
+        max_length=300,
+        verbose_name='Короткий опис',
+        help_text='Використовується в анонсі на сторінці "Новини" та як SEO-опис, '
+                   'якщо окремий meta-опис не вказано.',
+    )
+    content = models.TextField(
+        verbose_name='Текст новини',
+        help_text='Основний текст. Порожні рядки утворюють нові абзаци.',
+    )
+    published_date = models.DateTimeField(default=timezone.now,
+        verbose_name='Дата публікації',
+    )
+
+    # ── Мета (SEO) ─────────────────────────────────────────────
+    meta_description = models.CharField(
+        max_length=300,
+        verbose_name='Meta опис (SEO)',
+        null=True,
+        blank=True,
+        help_text='Якщо не вказано — використовується короткий опис.',
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name='Активна',
+        help_text='Якщо знято — новина не відображається на сайті',
+    )
+
+    class Meta:
+        verbose_name = 'Новина'
+        verbose_name_plural = 'Новини'
+        ordering = ['-published_date']
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('news-detail', args=[self.slug])
+
+    def get_meta_description(self):
+        return self.meta_description or self.description_short
+
+    def save(self, *args, **kwargs):
+        # Автогенерація slug з заголовка, якщо не задано вручну
+        if not self.slug:
+            base_slug = slugify_uk(self.title) or 'novyna'
+            slug = base_slug
+            counter = 1
+            while News.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                counter += 1
+                slug = f'{base_slug}-{counter}'
+            self.slug = slug
+
+        # Автоконвертація зображення в WebP (як у Web_1.models.Course)
+        if self.image and hasattr(self.image, 'file'):
+            img = Image.open(self.image)
+
+            if img.format != 'WEBP':
+                img_io = BytesIO()
+
+                if img.mode in ('RGBA', 'LA'):
+                    background = Image.new('RGBA', img.size, (255, 255, 255, 0))
+                    img = Image.alpha_composite(background, img)
+
+                img.save(img_io, format='WEBP', quality=85)
+
+                current_name = os.path.splitext(self.image.name)[0]
+                new_name = f'{current_name}.webp'
+                self.image.save(new_name, File(img_io), save=False)
+
         super().save(*args, **kwargs)

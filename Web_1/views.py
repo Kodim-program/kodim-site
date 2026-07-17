@@ -1,10 +1,10 @@
-from .models import Customer, Course
+from .models import Customer, Course, News
 from .forms import ContactForm
 from django.http import HttpResponseRedirect
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import get_template
-
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -47,3 +47,18 @@ def send_message(name, email, text, phone):
     msg = EmailMultiAlternatives(theme, text_content, from_email, ['kodim.pervomaisk@gmail.com'])
     msg.attach_alternative(html_content, 'text/html')
     msg.send()
+def news_list(request):
+    news_qs = News.objects.filter(is_active=True)
+    paginator = Paginator(news_qs, 9)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'news.html', {'page_obj': page_obj})
+
+
+def news_detail(request, slug):
+    news = get_object_or_404(News, slug=slug, is_active=True)
+    related_news = News.objects.filter(is_active=True).exclude(pk=news.pk)[:3]
+    return render(request, 'news_detail.html', {
+        'news': news,
+        'related_news': related_news,
+    })

@@ -2,6 +2,7 @@
 venv/
 .venv/
 env/
+news_app_only/
 
 # Кеш Python
 __pycache__/

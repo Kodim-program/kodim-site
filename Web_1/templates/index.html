@@ -57,7 +57,7 @@
           {% for course in courses %}
           <div class="col-md-4 wow fadeInDown col-9" data-wow-delay=".2s">
             <ul class="list-marked-2 box-categories-list">
-              <li><a href="/course/{{ course.id }}"><img src="{{ course.image.url }}" alt="" width="368" height="420"/></a>
+              <li><a href="/course/{{ course.name_url }}/"><img src="{{ course.image.url }}" alt="" width="368" height="420"/></a>
                 <h5 class="box-categories-title">{{ course.name }}</h5>
               </li>
             </ul>
@@ -225,7 +225,8 @@
   </li>
   <li class="rd-nav-item"><a class="rd-nav-link" href="/about/">Про нас</a>
   </li>
-  <li class="rd-nav-item"><a class="rd-nav-link" href="/courses/">Курси</a>
+  <li class="rd-nav-item"><a class="rd-nav-link" href="/courses/">Курси</a></li>
+    <li class="rd-nav-item "><a class="rd-nav-link" href="/news/">Новини</a>
   </li>
   <li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a>
   </li>
