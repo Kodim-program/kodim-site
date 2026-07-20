@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from django.core.files import File
 from django.urls import reverse
 from PIL import Image
+from django_ckeditor_5.fields import CKEditor5Field
 
 # ── Валідатор розміру файлу ──────────────────────────────────
 def validate_image_size(fieldfile_obj):
@@ -344,10 +345,10 @@ class News(models.Model):
         help_text='Використовується в анонсі на сторінці "Новини" та як SEO-опис, '
                    'якщо окремий meta-опис не вказано.',
     )
-    content = models.TextField(
-        verbose_name='Текст новини',
-        help_text='Основний текст. Порожні рядки утворюють нові абзаци.',
-    )
+    content = CKEditor5Field(
+    "Текст новини",
+    config_name="news"
+)
     published_date = models.DateTimeField(default=timezone.now,
         verbose_name='Дата публікації',
     )

@@ -31,13 +31,11 @@
           </div>
           {% if news.image %}
           <figure class="post-classic-figure">
-            <img src="{{ news.image.url }}" alt="{{ news.title }}" width="800" height="500"/>
+            <img src="{{ news.image.url }}" alt="{{ news.title }}" class="img-fluid rounded-4" loading="lazy">
           </figure>
           {% endif %}
-          <div class="post-classic-text">
-            {% for paragraph in news.content.splitlines %}
-              {% if paragraph %}<p>{{ paragraph }}</p>{% endif %}
-            {% endfor %}
+          <div class="post-classic-text ck-content">
+            {{ news.content|safe }}
           </div>
         </article>
 

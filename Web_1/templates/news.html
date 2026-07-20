@@ -2,90 +2,201 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title_name %}Новини школи програмування KODIM у Первомайську{% endblock %}
-{% block description %}Останні новини школи KODIM: анонси наборів на курси, події, досягнення учнів та оновлення програм навчання
-програмування для дітей у Первомайську.{% endblock %}
+{% block title_name %}
+Новини школи програмування KODIM у Первомайську
+{% endblock %}
+
+{% block description %}
+Останні новини школи KODIM: програмування, робототехніка, Minecraft, Roblox, Python, Scratch, Arduino, 3D моделювання,
+досягнення учнів та анонси курсів.
+{% endblock %}
 
 {% block content %}
-<!-- Breadcrumbs -->
-<section class="breadcrumbs-custom-inset">
-  <div class="breadcrumbs-custom context-dark bg-overlay-60">
-    <div class="container">
-      <h2 class="breadcrumbs-custom-title">Новини</h2>
-      <ul class="breadcrumbs-custom-path">
-        <li><a href="/">Дім</a></li>
-        <li class="active">Новини</li>
-      </ul>
+
+
+
+<section class="news-hero">
+
+  <div class="container">
+
+    <h1>Новини KODIM</h1>
+
+    <p>
+
+      Останні події школи програмування, робототехніки, 3D-моделювання,
+
+      Minecraft Education, Roblox Studio та досягнення наших учнів.
+
+    </p>
+
+    <div class="news-breadcrumb">
+
+      <a href="/">Головна</a>
+
+      <span> / </span>
+
+      Новини
+
     </div>
-    <div class="box-position" style="background-image: url({% static 'images/breadcrumbs-bg.png' %});"></div>
+
   </div>
+
 </section>
 
-<section class="section section-lg section-top-1 bg-gray-4">
-  <div class="container offset-negative-1">
-    <div class="box-categories cta-box-wrap">
-      <div class="box-categories-content">
-        <div class="row row-30 justify-content-center">
-          {% for item in page_obj %}
-          <div class="col-md-6 col-lg-4 wow fadeInDown col-10" data-wow-delay=".2s">
-            <ul class="list-marked-2 box-categories-list">
-              <li>
-                <a href="{% url 'news-detail' item.slug %}">
-                  {% if item.image %}
-                  <img src="{{ item.image.url }}" alt="{{ item.title }}" width="368" height="240"/>
-                  {% else %}
-                  <img src="{% static 'images/breadcrumbs-bg.png' %}" alt="{{ item.title }}" width="368" height="240"/>
-                  {% endif %}
-                </a>
-                <div class="post-minimal-2-time">
-                  <time datetime="{{ item.published_date|date:'Y-m-d' }}">{{ item.published_date|date:'d.m.Y' }}</time>
-                </div>
-                <h5 class="box-categories-title"><a href="{% url 'news-detail' item.slug %}">{{ item.title }}</a></h5>
-                <p>{{ item.description_short }}</p>
-              </li>
-            </ul>
+<section class="news-wrapper">
+
+  <div class="container">
+
+    <div class="news-grid">
+      {% for item in page_obj %}
+      
+      <article class="news-card wow fadeInUp" data-wow-delay=".1s">
+      
+        <a href="{% url 'news-detail' item.slug %}" class="news-image" aria-label="{{ item.title }}">
+      
+          {% if item.image %}
+      
+          <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy" decoding="async">
+      
+          {% else %}
+      
+          <img src="{% static 'images/breadcrumbs-bg.png' %}" alt="{{ item.title }}" loading="lazy" decoding="async">
+      
+          {% endif %}
+      
+          <div class="news-date">
+            {{ item.published_date|date:"d.m.Y" }}
           </div>
-          {% empty %}
-          <div class="col-12 text-center">
-            <p>Новин поки немає. Слідкуйте за оновленнями!</p>
-          </div>
-          {% endfor %}
+      
+        </a>
+      
+        <div class="news-content">
+      
+          <h3>
+            <a href="{% url 'news-detail' item.slug %}">
+              {{ item.title }}
+            </a>
+          </h3>
+      
+          {% if item.description_short %}
+          <p>
+            {{ item.description_short }}
+          </p>
+          {% else %}
+          <p>
+            Детальніше про подію, новий курс або досягнення учнів школи KODIM.
+          </p>
+          {% endif %}
+      
+          <a href="{% url 'news-detail' item.slug %}" class="news-btn">
+            Читати →
+          </a>
+      
         </div>
-
-        {% if page_obj.paginator.num_pages > 1 %}
-        <nav aria-label="Сторінки новин">
-          <ul class="pagination">
-            {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-            {% endif %}
-            {% for num in page_obj.paginator.page_range %}
-            <li class="page-item{% if num == page_obj.number %} active{% endif %}">
-              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-            </li>
-            {% endfor %}
-            {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-            {% endif %}
-          </ul>
-        </nav>
-        {% endif %}
+      
+      </article>
+      
+      {% empty %}
+      
+      <div class="news-empty">
+      
+        <h3>Новин поки немає</h3>
+      
+        <p>
+          Ми вже готуємо нові цікаві матеріали.
+          Слідкуйте за оновленнями KODIM.
+        </p>
+      
       </div>
+      
+      {% endfor %}
+      {% if page_obj.paginator.num_pages > 1 %}
+      
+      <nav class="news-pagination" aria-label="Навігація по сторінках новин">
+      
+        <ul class="pagination">
+      
+          {% if page_obj.has_previous %}
+      
+          <li class="page-item">
+      
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Попередня сторінка">
+      
+              ←
+      
+            </a>
+      
+          </li>
+      
+          {% endif %}
+      
+      
+      
+          {% for num in page_obj.paginator.page_range %}
+      
+          {% if num == page_obj.number %}
+      
+          <li class="page-item active">
+      
+            <span class="page-link">
+      
+              {{ num }}
+      
+            </span>
+      
+          </li>
+      
+          {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %} <li class="page-item">
+      
+            <a class="page-link" href="?page={{ num }}">
+      
+              {{ num }}
+      
+            </a>
+      
+            </li>
+      
+            {% endif %}
+      
+            {% endfor %}
+      
+      
+      
+            {% if page_obj.has_next %}
+      
+            <li class="page-item">
+      
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Наступна сторінка">
+      
+                →
+      
+              </a>
+      
+            </li>
+      
+            {% endif %}
+      
+        </ul>
+      
+      </nav>
+      
+      {% endif %}
     </div>
-  </div>
-</section>
-{% endblock content %}
+    
+    </section>
+    
+    {% endblock content %}
 
-{% block navbar %}
-<li class="rd-nav-item "><a class="rd-nav-link" href="/">Головна</a>
-</li>
-<li class="rd-nav-item"><a class="rd-nav-link" href="/about/">Про нас</a>
-</li>
-<li class="rd-nav-item"><a class="rd-nav-link" href="/courses/">Курси</a>
-</li>
-<li class="rd-nav-item active"><a class="rd-nav-link" href="/news/">Новини</a>
-</li>
-<li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a>
-</li>
-<li class="rd-nav-item"><a class="rd-nav-link" href="/projects/">Проєкти</a>
-</li>
-{% endblock %}
+    {% block navbar %}
+    <li class="rd-nav-item "><a class="rd-nav-link" href="/">Головна</a>
+    </li>
+    <li class="rd-nav-item"><a class="rd-nav-link" href="/about/">Про нас</a>
+    </li>
+    <li class="rd-nav-item "><a class="rd-nav-link" href="/courses/">Курси</a></li>
+    <li class="rd-nav-item active"><a class="rd-nav-link" href="/news/">Новини</a>
+    </li>
+    <li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a>
+    </li>
+    <li class="rd-nav-item"><a class="rd-nav-link" href="/projects/">Проєкти</a>
+    </li>
+    {% endblock %}

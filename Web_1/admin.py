@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Customer, Category, Course, News
 from django import forms
+from django_ckeditor_5.widgets import CKEditor5Widget
 
 # Register your models here.
 @admin.register(Customer)
@@ -41,16 +42,20 @@ class CourseAdmin(admin.ModelAdmin):
 #class PriceAdmin(admin.ModelAdmin):
 #    ...
 class NewsAdminForm(forms.ModelForm):
+
     class Meta:
         model = News
-        fields = '__all__'
+        fields = "__all__"
+
         widgets = {
-            'content': forms.Textarea(attrs={
-                'rows': 15,
-                'cols': 80,
-                'style': 'width: 100%; min-height: 300px;'
-            }),
-            'description_short': forms.Textarea(attrs={'rows': 3}),
+            "content": CKEditor5Widget(
+                config_name="news"
+            ),
+            "description_short": forms.Textarea(
+                attrs={
+                    "rows": 3
+                }
+            ),
         }
 
 

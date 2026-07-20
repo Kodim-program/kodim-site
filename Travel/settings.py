@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'psycho',
     'projects',
     'widget_tweaks',
+    'django_ckeditor_5',
 ]
 
 
@@ -137,3 +138,36 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+CKEDITOR_5_CONFIGS = {
+    "news": {
+        "toolbar": [
+            "heading",
+            "|",
+            "alignment",
+            "|",
+            "bold",
+            "italic",
+            "underline",
+            "strikethrough",
+            "|",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "|",
+            "insertTable",
+            "blockQuote",
+            "imageUpload",
+            "|",
+            "undo",
+            "redo",
+        ],
+        "image": {
+            "toolbar": [
+                "imageTextAlternative",
+                "imageStyle:inline",
+                "imageStyle:block",
+                "imageStyle:side"
+            ]
+        }
+    }
+}
