@@ -31,7 +31,7 @@ class CourseAdminForm(forms.ModelForm):
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     form = CourseAdminForm
-    list_display = ("category", "name", 'kid_age', 'price', 'date_price', 'image', 'description_short', 'description',)
+    list_display = ("category", "name", "order", 'kid_age', 'price', 'date_price', 'image', 'description_short', 'description',)
     
     @admin.display()
     def category(self, obj):

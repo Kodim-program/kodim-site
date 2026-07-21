@@ -22,11 +22,8 @@
 .news-hero::after {
 
     content: "";
-
     position: absolute;
-
     inset: 0;
-
     background: url("/static/images/pattern.svg");
 
     opacity: .04;
@@ -46,7 +43,7 @@
 
 .news-hero p {
     font-size: 20px;
-    max-width: 760px;
+    /* max-width: 760px; */
     opacity: .9;
 }
 
