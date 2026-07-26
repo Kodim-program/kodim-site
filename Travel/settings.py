@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'users',
     'psycho',
     'projects',
+    'learning',
     'widget_tweaks',
     'django_ckeditor_5',
 ]
