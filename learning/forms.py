@@ -1,6 +1,26 @@
 from django import forms
 
 
+class QuestionImportForm(forms.Form):
+    """Форма завантаження Excel-файлу з питаннями для конкретного тесту."""
+
+    file = forms.FileField(
+        label='Excel-файл (.xlsx)',
+        help_text='Заповніть за шаблоном: колонки order, question_type, question, '
+                   'answer_1, correct_1, answer_2, correct_2 ...',
+    )
+    replace_existing = forms.BooleanField(
+        label='Видалити наявні питання цього тесту перед імпортом',
+        required=False, initial=False,
+    )
+
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        if not file.name.lower().endswith('.xlsx'):
+            raise forms.ValidationError('Потрібен файл у форматі .xlsx (Excel).')
+        return file
+
+
 class TestAttemptForm(forms.Form):
     """Форма будується динамічно під питання конкретного тесту."""
 
