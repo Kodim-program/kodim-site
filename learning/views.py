@@ -21,15 +21,14 @@ def _get_enrollment_or_403(request, course_id):
 
 @login_required
 def course_materials(request, course_id):
-    """Список матеріалів курсу зі статусами прочитано/заблоковано + прогрес-бар."""
+    """Список матеріалів курсу зі статусами прочитано/заблоковано + прогрес-бар.
+    Тест (якщо є) належить конкретному матеріалу — див. materials_with_status()."""
     enrollment = _get_enrollment_or_403(request, course_id)
     materials_status = enrollment.materials_with_status()
-    test = Test.objects.filter(course=enrollment.course).first()
 
     return render(request, 'learning/course_materials.html', {
         'enrollment': enrollment,
         'materials_status': materials_status,
-        'test': test,
     })
 
 
@@ -62,31 +61,37 @@ def material_detail(request, material_id):
 
 
 @login_required
-def take_test(request, course_id):
-    enrollment = _get_enrollment_or_403(request, course_id)
-    test = get_object_or_404(Test, course_id=course_id)
+def take_test(request, material_id):
+    material = get_object_or_404(Material, id=material_id)
+    enrollment = _get_enrollment_or_403(request, material.course_id)
+    test = get_object_or_404(Test, material_id=material_id)
 
-    if not enrollment.all_materials_read():
-        messages.warning(request, 'Спершу прочитайте всі матеріали курсу.')
-        return redirect('learning:course_materials', course_id=course_id)
+    is_read = MaterialProgress.objects.filter(
+        user=request.user, material=material, is_read=True
+    ).exists()
+    if not is_read:
+        messages.warning(request, f'Спершу прочитайте матеріал «{material.title}».')
+        return redirect('learning:course_materials', course_id=material.course_id)
 
     if test.attempts_left(request.user) <= 0:
         messages.error(request, 'Ви вичерпали кількість спроб для цього тесту.')
-        return redirect('learning:course_materials', course_id=course_id)
+        return redirect('learning:course_materials', course_id=material.course_id)
 
     if request.method == 'POST':
         form = TestAttemptForm(request.POST, test=test)
         if form.is_valid():
             score, passed = form.score()
-            TestResult.objects.create(
+            result = TestResult.objects.create(
                 user=request.user, test=test, score=score, passed=passed,
             )
-            return redirect('learning:test_result', course_id=course_id)
+            form.save_answers(result)
+            return redirect('learning:test_result', material_id=material_id)
     else:
         form = TestAttemptForm(test=test)
 
     return render(request, 'learning/test.html', {
         'test': test,
+        'material': material,
         'form': form,
         'enrollment': enrollment,
         'attempts_left': test.attempts_left(request.user),
@@ -94,13 +99,15 @@ def take_test(request, course_id):
 
 
 @login_required
-def test_result(request, course_id):
-    enrollment = _get_enrollment_or_403(request, course_id)
-    test = get_object_or_404(Test, course_id=course_id)
+def test_result(request, material_id):
+    material = get_object_or_404(Material, id=material_id)
+    enrollment = _get_enrollment_or_403(request, material.course_id)
+    test = get_object_or_404(Test, material_id=material_id)
     last_result = TestResult.objects.filter(user=request.user, test=test).first()
 
     return render(request, 'learning/test_result.html', {
         'enrollment': enrollment,
+        'material': material,
         'test': test,
         'result': last_result,
         'attempts_left': test.attempts_left(request.user),

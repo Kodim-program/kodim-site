@@ -12,7 +12,7 @@ from django_ckeditor_5.widgets import CKEditor5Widget
 from .forms import QuestionImportForm
 from .models import (
     Material, Enrollment, MaterialProgress,
-    Test, Question, Answer, TestResult,
+    Test, Question, Answer, TestResult, TestResultAnswer,
 )
 
 # Значення в колонці question_type Excel-файлу (формат "пар"), які розпізнаються
@@ -45,6 +45,7 @@ class MaterialAdmin(admin.ModelAdmin):
     list_display = ('course', 'order', 'title')
     list_filter = ('course',)
     ordering = ('course', 'order')
+    search_fields = ('title', 'course__name')
 
 
 # ── Призначення курсів учням ───────────────────────────────────
@@ -88,7 +89,9 @@ class QuestionInline(admin.TabularInline):
 
 @admin.register(Test)
 class TestAdmin(admin.ModelAdmin):
-    list_display = ('course', 'title', 'passing_score', 'max_attempts', 'import_link')
+    list_display = ('material', 'title', 'passing_score', 'max_attempts', 'import_link')
+    list_filter = ('material__course',)
+    autocomplete_fields = ('material',)
     inlines = [QuestionInline]
 
     # ── Кнопка "Імпортувати з Excel" у списку тестів ──────────────
@@ -327,8 +330,25 @@ class TestAdmin(admin.ModelAdmin):
         return created_questions, created_answers
 
 
+class TestResultAnswerInline(admin.TabularInline):
+    """Показує вчителю, що саме обрав учень по кожному питанню цієї спроби."""
+    model = TestResultAnswer
+    extra = 0
+    can_delete = False
+    fields = ('question', 'selected_answers_display', 'is_correct')
+    readonly_fields = ('question', 'selected_answers_display', 'is_correct')
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    @admin.display(description='Обрані варіанти')
+    def selected_answers_display(self, obj):
+        return ', '.join(a.text for a in obj.selected_answers.all()) or '—'
+
+
 @admin.register(TestResult)
 class TestResultAdmin(admin.ModelAdmin):
     list_display = ('user', 'test', 'score', 'passed', 'completed_at')
     list_filter = ('test', 'passed')
     search_fields = ('user__username',)
+    inlines = [TestResultAnswerInline]

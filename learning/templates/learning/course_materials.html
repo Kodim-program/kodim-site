@@ -86,14 +86,21 @@
             <div>
               <p class="mb-1"><strong>{{ test.title }}</strong></p>
               <p class="small text-muted mb-0">
-                Прохідний бал: {{ test.passing_score }}% · Максимум спроб: {{ test.max_attempts }}
+                Прохідний бал: {{ test.passing_score }}%
+                {% if test_attempts_left is not None %}
+                · Спроб залишилось: <strong>{{ test_attempts_left }}</strong> з {{ test.max_attempts }}
+                {% else %}
+                · Максимум спроб: {{ test.max_attempts }}
+                {% endif %}
               </p>
             </div>
-            {% if enrollment.all_materials_read %}
+            {% if not enrollment.all_materials_read %}
+              <span class="badge badge-pill learning-badge-progress">Спочатку пройдіть усі матеріали</span>
+            {% elif test_attempts_left == 0 %}
+              <span class="badge badge-pill learning-badge-danger">Спроби вичерпано</span>
+            {% else %}
               <a href="{% url 'learning:take_test' enrollment.course.id %}"
                  class="button button-primary button-ujarak mt-2 mt-sm-0">Пройти тест</a>
-            {% else %}
-              <span class="badge badge-pill learning-badge-progress">Спочатку пройдіть усі матеріали</span>
             {% endif %}
           </div>
         </div>
@@ -120,6 +127,7 @@
 .learning-step-done { background: #01b3a7; color: #fff; }
 .learning-step-locked { background: #f1f1f1; color: #adb5bd; }
 .learning-badge-progress { background-color: #f2f2f2; color: #555; padding: 8px 14px; }
+.learning-badge-danger { background-color: #fdeceb; color: #f5543f; padding: 8px 14px; }
 </style>
 {% endblock content %}
 

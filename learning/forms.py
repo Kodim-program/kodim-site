@@ -53,21 +53,46 @@ class TestAttemptForm(forms.Form):
 
         correct_count = 0
         for question in questions:
-            field_name = f'question_{question.id}'
-            correct_ids = set(
-                str(a.id) for a in question.answers.filter(is_correct=True)
-            )
-            given = self.cleaned_data.get(field_name)
-            if given is None:
-                given_ids = set()
-            elif isinstance(given, list):
-                given_ids = set(given)
-            else:
-                given_ids = {given}
-
+            given_ids, correct_ids = self._given_and_correct_ids(question)
             if given_ids == correct_ids and given_ids:
                 correct_count += 1
 
         score = round(correct_count / len(questions) * 100)
         passed = score >= self.test.passing_score
         return score, passed
+
+    def _given_and_correct_ids(self, question):
+        """Повертає (given_ids, correct_ids) — набори id варіантів відповіді (як рядки)."""
+        field_name = f'question_{question.id}'
+        correct_ids = set(
+            str(a.id) for a in question.answers.filter(is_correct=True)
+        )
+        given = self.cleaned_data.get(field_name)
+        if given is None:
+            given_ids = set()
+        elif isinstance(given, list):
+            given_ids = set(given)
+        else:
+            given_ids = {given}
+        return given_ids, correct_ids
+
+    def save_answers(self, result):
+        """
+        Зберігає, що саме обрав учень по кожному питанню (TestResultAnswer),
+        прив'язане до вже створеного TestResult. Викликати після form.score()
+        і створення TestResult, з тими самими cleaned_data.
+        """
+        from .models import Answer, TestResultAnswer  # локальний імпорт — без циклів
+
+        for question in self.test.questions.all():
+            given_ids, correct_ids = self._given_and_correct_ids(question)
+
+            given_answer = TestResultAnswer.objects.create(
+                result=result,
+                question=question,
+                is_correct=bool(given_ids) and given_ids == correct_ids,
+            )
+            if given_ids:
+                given_answer.selected_answers.set(
+                    Answer.objects.filter(id__in=given_ids)
+                )

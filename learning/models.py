@@ -93,15 +93,19 @@ class Enrollment(models.Model):
         return total > 0 and self.read_materials_count() == total
 
     def materials_with_status(self):
-        """Список матеріалів з позначками read/unlocked — зручно для шаблону."""
+        """Список матеріалів з позначками read/unlocked + тест уроку (якщо є) — зручно для шаблону."""
         result = []
         for material in self.course.materials.all():
+            test = getattr(material, 'test', None)
             result.append({
                 'material': material,
                 'is_read': MaterialProgress.objects.filter(
                     user=self.user, material=material, is_read=True
                 ).exists(),
                 'is_unlocked': material.is_unlocked_for(self.user),
+                'test': test,
+                'test_attempts_left': test.attempts_left(self.user) if test else None,
+                'test_best_result': test.best_result(self.user) if test else None,
             })
         return result
 
@@ -125,9 +129,9 @@ class MaterialProgress(models.Model):
 #  Тестування (тільки варіанти відповідей, авто-перевірка)
 # ──────────────────────────────────────────────────────────────
 class Test(models.Model):
-    course = models.OneToOneField(
-        Course, on_delete=models.CASCADE, related_name='test',
-        verbose_name='Курс',
+    material = models.OneToOneField(
+        Material, on_delete=models.CASCADE, related_name='test',
+        verbose_name='Матеріал (урок)',
     )
     title = models.CharField('Назва тесту', max_length=200, default='Підсумковий тест')
     passing_score = models.PositiveSmallIntegerField(
@@ -142,7 +146,12 @@ class Test(models.Model):
         verbose_name_plural = 'Тести'
 
     def __str__(self):
-        return f'{self.course.name} — {self.title}'
+        return f'{self.material.course.name} — {self.material.title} — {self.title}'
+
+    @property
+    def course(self):
+        """Сумісність з рештою коду: курс береться через матеріал (урок)."""
+        return self.material.course
 
     def attempts_used(self, user):
         return TestResult.objects.filter(user=user, test=self).count()
@@ -207,3 +216,30 @@ class TestResult(models.Model):
 
     def __str__(self):
         return f'{self.user.username} — {self.test} — {self.score}%'
+
+
+class TestResultAnswer(models.Model):
+    """
+    Що саме обрав учень по кожному питанню в межах конкретної спроби (TestResult).
+    Дозволяє вчителю перевірити не лише бал, а й реальні відповіді учня.
+    """
+    result = models.ForeignKey(
+        TestResult, on_delete=models.CASCADE, related_name='given_answers',
+        verbose_name='Спроба тесту',
+    )
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, related_name='given_answers',
+        verbose_name='Питання',
+    )
+    selected_answers = models.ManyToManyField(
+        Answer, blank=True, related_name='+', verbose_name='Обрані варіанти',
+    )
+    is_correct = models.BooleanField('Відповідь правильна', default=False)
+
+    class Meta:
+        unique_together = ('result', 'question')
+        verbose_name = 'Відповідь учня на питання'
+        verbose_name_plural = 'Відповіді учнів на питання'
+
+    def __str__(self):
+        return f'{self.result} — {self.question}'
