@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title_name %}Результат тесту — {{ enrollment.course.name }} — KODIM{% endblock %}
+{% block description %}Результат проходження тесту курсу «{{ enrollment.course.name }}».{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs -->
+<section class="breadcrumbs-custom-inset">
+  <div class="breadcrumbs-custom context-dark bg-overlay-60">
+    <div class="container">
+      <h2 class="breadcrumbs-custom-title">Результат тесту</h2>
+      <ul class="breadcrumbs-custom-path">
+        <li><a href="/">Дім</a></li>
+        <li><a href="{% url 'learning:my_courses' %}">Мої курси</a></li>
+        <li><a href="{% url 'learning:course_materials' enrollment.course.id %}">{{ enrollment.course.name }}</a></li>
+        <li class="active">Результат тесту</li>
+      </ul>
+    </div>
+    <div class="box-position" style="background-image: url({% static 'images/breadcrumbs-bg.png' %});"></div>
+  </div>
+</section>
+
+<section class="section section-lg bg-default">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-7 text-center">
+
+        {% if result %}
+          {% if result.passed %}
+          <div class="learning-result-icon learning-result-icon-success">&#10003;</div>
+          <h3 class="mb-2">Вітаємо, тест складено!</h3>
+          {% else %}
+          <div class="learning-result-icon learning-result-icon-fail">&#10007;</div>
+          <h3 class="mb-2">Тест не складено</h3>
+          {% endif %}
+
+          <p class="lead mb-1">Ваш результат: <strong>{{ result.score }}%</strong></p>
+          <p class="text-muted mb-4">Прохідний бал: {{ test.passing_score }}% · Пройдено {{ result.completed_at|date:"d.m.Y о H:i" }}</p>
+
+          {% if result.passed %}
+          <a class="button button-lg button-primary button-ujarak" href="{% url 'learning:my_courses' %}">До моїх курсів</a>
+          {% else %}
+            {% if attempts_left > 0 %}
+            <p class="mb-3">Спроб залишилось: <strong>{{ attempts_left }}</strong></p>
+            <a class="button button-lg button-primary button-ujarak" href="{% url 'learning:take_test' enrollment.course.id %}">Спробувати ще раз</a>
+            {% else %}
+            <p class="text-danger mb-3">Ви вичерпали кількість спроб для цього тесту.</p>
+            <a class="button button-lg button-default button-pipaluk" href="{% url 'learning:course_materials' enrollment.course.id %}">Повернутись до курсу</a>
+            {% endif %}
+          {% endif %}
+
+        {% else %}
+        <h3>Ви ще не проходили цей тест</h3>
+        <a class="button button-lg button-primary button-ujarak mt-3" href="{% url 'learning:take_test' enrollment.course.id %}">Пройти тест</a>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.learning-result-icon {
+  width: 80px; height: 80px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; margin: 0 auto 24px; color: #fff;
+}
+.learning-result-icon-success { background-color: #01b3a7; }
+.learning-result-icon-fail { background-color: #f5543f; }
+</style>
+{% endblock content %}
+
+{% block navbar %}
+<li class="rd-nav-item"><a class="rd-nav-link" href="/">Головна</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/about/">Про нас</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/courses/">Курси</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/news/">Новини</a></li>
+<li class="rd-nav-item active"><a class="rd-nav-link" href="{% url 'learning:my_courses' %}">Мої курси</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a></li>
+{% endblock %}

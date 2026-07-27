@@ -22,26 +22,29 @@
 </section>
 <!-- Why choose us-->
 <section class="section section-sm section-first bg-default text-md-left">
-    <div class="container">
-        <article class="title-classic">
-          <div class="title-classic-title">
-            <h3>Your Profile</h3>
-          </div>
-          
-        </article>
-        <div class="col-md-4 wow fadeInDown col-9" data-wow-delay=".2s">
-            <ul class="list-marked-2 box-categories-list">
-              <li>
-                <h5 class="box-categories-title">Your name: {{ user.username }}</h5>
-              </li>
-                <form method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button class="button button-primary button-pipaluk" type="submit">Logout</button>
-                </form>
-            </ul>
+  <div class="container">
+    <article class="title-classic">
+      <div class="title-classic-title">
+        <h3>Your Profile</h3>
+      </div>
+
+    </article>
+    <div class="col-md-4 wow fadeInDown col-9" data-wow-delay=".2s">
+      <ul class="list-marked-2 box-categories-list">
+        <li>
+          <h5 class="box-categories-title">Your name: {{ user.username }}</h5>
+        </li>
+        <div class="group-md group-middle justify-content-sm-start mb-3">
+          <a class="button button-primary button-pipaluk" href="{% url 'learning:my_courses' %}">Мої курси</a>
         </div>
-        
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button class="button button-primary button-pipaluk" type="submit">Logout</button>
+        </form>
+      </ul>
     </div>
+
+  </div>
 </section>
 <!-- What people Say-->
 
@@ -49,12 +52,15 @@
 {% endblock content %}
 
 {% block navbar %}
-  <li class="rd-nav-item"><a class="rd-nav-link" href="/">Головна</a>
-  </li>
-  <li class="rd-nav-item"><a class="rd-nav-link" href="/about/">Про нас</a>
-  </li>
-  <li class="rd-nav-item"><a class="rd-nav-link" href="/courses/">Курси</a>
-  </li>
-  <li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a>
-  </li>
+<li class="rd-nav-item active"><a class="rd-nav-link" href="/">Головна</a>
+</li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/about/">Про нас</a>
+</li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/courses/">Курси</a></li>
+<li class="rd-nav-item "><a class="rd-nav-link" href="/news/">Новини</a>
+</li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a>
+</li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/projects/">Проєкти</a>
+</li>
 {% endblock %}

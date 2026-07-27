@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title_name %}{{ test.title }} — {{ enrollment.course.name }} — KODIM{% endblock %}
+{% block description %}Підсумковий тест курсу «{{ enrollment.course.name }}».{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs -->
+<section class="breadcrumbs-custom-inset">
+  <div class="breadcrumbs-custom context-dark bg-overlay-60">
+    <div class="container">
+      <h2 class="breadcrumbs-custom-title">{{ test.title }}</h2>
+      <ul class="breadcrumbs-custom-path">
+        <li><a href="/">Дім</a></li>
+        <li><a href="{% url 'learning:my_courses' %}">Мої курси</a></li>
+        <li><a href="{% url 'learning:course_materials' enrollment.course.id %}">{{ enrollment.course.name }}</a></li>
+        <li class="active">{{ test.title }}</li>
+      </ul>
+    </div>
+    <div class="box-position" style="background-image: url({% static 'images/breadcrumbs-bg.png' %});"></div>
+  </div>
+</section>
+
+<section class="section section-lg bg-default">
+  <div class="container">
+    {% if messages %}
+      {% for message in messages %}
+      <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% else %}alert-info{% endif %}" role="alert">
+        {{ message }}
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+
+        <div class="learning-test-header d-flex align-items-center justify-content-between flex-wrap mb-4">
+          <p class="mb-0">Прохідний бал: <strong>{{ test.passing_score }}%</strong></p>
+          <p class="mb-0">Спроб залишилось: <strong>{{ attempts_left }}</strong> з {{ test.max_attempts }}</p>
+        </div>
+
+        <form method="post" action="{% url 'learning:take_test' enrollment.course.id %}">
+          {% csrf_token %}
+
+          {% for question_field in form %}
+          <div class="learning-question-box mb-4">
+            <h5 class="mb-3">{{ forloop.counter }}. {{ question_field.label }}</h5>
+            <div class="learning-question-options">
+              {% for choice in question_field %}
+              <div class="learning-option">
+                <label>
+                  {{ choice.tag }}
+                  <span>{{ choice.choice_label }}</span>
+                </label>
+              </div>
+              {% endfor %}
+            </div>
+            {% if question_field.errors %}
+            <div class="text-danger small mt-2">{{ question_field.errors }}</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+
+          <button type="submit" class="button button-lg button-primary button-ujarak">Завершити тест</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.learning-test-header { background: #f8f9fa; border-radius: 10px; padding: 16px 24px; }
+.learning-question-box { background: #fff; border: 1px solid #e9ecef; border-radius: 10px; padding: 20px 24px; }
+.learning-question-options { display: flex; flex-direction: column; gap: 10px; }
+.learning-option label { display: flex; align-items: center; gap: 10px; font-weight: 400; margin-bottom: 0; cursor: pointer; }
+.learning-option input[type="radio"], .learning-option input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; }
+</style>
+{% endblock content %}
+
+{% block navbar %}
+<li class="rd-nav-item"><a class="rd-nav-link" href="/">Головна</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/about/">Про нас</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/courses/">Курси</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/news/">Новини</a></li>
+<li class="rd-nav-item active"><a class="rd-nav-link" href="{% url 'learning:my_courses' %}">Мої курси</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a></li>
+{% endblock %}

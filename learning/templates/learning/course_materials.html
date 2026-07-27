@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title_name %}{{ enrollment.course.name }} — навчання — KODIM{% endblock %}
+{% block description %}Матеріали курсу «{{ enrollment.course.name }}» та ваш прогрес проходження.{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs -->
+<section class="breadcrumbs-custom-inset">
+  <div class="breadcrumbs-custom context-dark bg-overlay-60">
+    <div class="container">
+      <h2 class="breadcrumbs-custom-title">{{ enrollment.course.name }}</h2>
+      <ul class="breadcrumbs-custom-path">
+        <li><a href="/">Дім</a></li>
+        <li><a href="{% url 'learning:my_courses' %}">Мої курси</a></li>
+        <li class="active">{{ enrollment.course.name }}</li>
+      </ul>
+    </div>
+    <div class="box-position" style="background-image: url({% static 'images/breadcrumbs-bg.png' %});"></div>
+  </div>
+</section>
+
+<section class="section section-sm section-first bg-default">
+  <div class="container">
+    {% if messages %}
+      {% for message in messages %}
+      <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% else %}alert-info{% endif %}" role="alert">
+        {{ message }}
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+
+        <!-- Загальний прогрес курсу -->
+        <div class="learning-progress-box mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">Ваш прогрес</h5>
+            <span class="font-weight-bold">{{ enrollment.progress_percent }}%</span>
+          </div>
+          <div class="progress" style="height: 12px;">
+            <div class="progress-bar learning-progress-bar" role="progressbar"
+                 style="width: {{ enrollment.progress_percent }}%;"
+                 aria-valuenow="{{ enrollment.progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <p class="small text-muted mt-2 mb-0">
+            Прочитано {{ enrollment.read_materials_count }} з {{ enrollment.total_materials }} матеріалів
+          </p>
+        </div>
+
+        <!-- Список матеріалів -->
+        <h5 class="text-uppercase text-spacing-100 mb-3">Матеріали курсу</h5>
+        <ul class="list-group mb-4 learning-materials-list">
+          {% for item in materials_status %}
+          <li class="list-group-item d-flex align-items-center justify-content-between
+                      {% if item.is_read %}learning-item-read{% elif not item.is_unlocked %}learning-item-locked{% endif %}">
+            <div class="d-flex align-items-center">
+              <span class="learning-step-number
+                            {% if item.is_read %}learning-step-done{% elif not item.is_unlocked %}learning-step-locked{% endif %}">
+                {% if item.is_read %}&#10003;{% elif not item.is_unlocked %}&#128274;{% else %}{{ forloop.counter }}{% endif %}
+              </span>
+              <span class="ml-3 {% if not item.is_unlocked %}text-muted{% endif %}">
+                {{ item.material.title }}
+              </span>
+            </div>
+
+            {% if item.is_unlocked %}
+              <a href="{% url 'learning:material_detail' item.material.id %}"
+                 class="button button-sm {% if item.is_read %}button-default{% else %}button-primary{% endif %} button-pipaluk">
+                {% if item.is_read %}Переглянути{% else %}Розпочати{% endif %}
+              </a>
+            {% else %}
+              <span class="small text-muted">Заблоковано</span>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+
+        <!-- Підсумковий тест -->
+        {% if test %}
+        <div class="learning-test-box">
+          <h5 class="text-uppercase text-spacing-100 mb-3">Підсумковий тест</h5>
+          <div class="d-flex align-items-center justify-content-between flex-wrap">
+            <div>
+              <p class="mb-1"><strong>{{ test.title }}</strong></p>
+              <p class="small text-muted mb-0">
+                Прохідний бал: {{ test.passing_score }}% · Максимум спроб: {{ test.max_attempts }}
+              </p>
+            </div>
+            {% if enrollment.all_materials_read %}
+              <a href="{% url 'learning:take_test' enrollment.course.id %}"
+                 class="button button-primary button-ujarak mt-2 mt-sm-0">Пройти тест</a>
+            {% else %}
+              <span class="badge badge-pill learning-badge-progress">Спочатку пройдіть усі матеріали</span>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.learning-progress-box, .learning-test-box {
+  background: #f8f9fa; border-radius: 10px; padding: 24px;
+}
+.learning-progress-bar { background-color: #01b3a7; }
+.learning-materials-list .list-group-item { border-radius: 8px; margin-bottom: 8px; border: 1px solid #e9ecef; }
+.learning-item-read { background-color: #f0faf9; }
+.learning-item-locked { background-color: #fafafa; }
+.learning-step-number {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #e9ecef; color: #495057; font-weight: 600; flex-shrink: 0;
+}
+.learning-step-done { background: #01b3a7; color: #fff; }
+.learning-step-locked { background: #f1f1f1; color: #adb5bd; }
+.learning-badge-progress { background-color: #f2f2f2; color: #555; padding: 8px 14px; }
+</style>
+{% endblock content %}
+
+{% block navbar %}
+<li class="rd-nav-item"><a class="rd-nav-link" href="/">Головна</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/about/">Про нас</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/courses/">Курси</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/news/">Новини</a></li>
+<li class="rd-nav-item active"><a class="rd-nav-link" href="{% url 'learning:my_courses' %}">Мої курси</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a></li>
+{% endblock %}

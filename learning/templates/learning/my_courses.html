@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title_name %}Мої курси — KODIM{% endblock %}
+{% block description %}Ваші призначені курси та прогрес проходження.{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs -->
+<section class="breadcrumbs-custom-inset">
+  <div class="breadcrumbs-custom context-dark bg-overlay-60">
+    <div class="container">
+      <h2 class="breadcrumbs-custom-title">Мої курси</h2>
+      <ul class="breadcrumbs-custom-path">
+        <li><a href="/">Дім</a></li>
+        <li><a href="/users/profile/">Профіль</a></li>
+        <li class="active">Мої курси</li>
+      </ul>
+    </div>
+    <div class="box-position" style="background-image: url({% static 'images/breadcrumbs-bg.png' %});"></div>
+  </div>
+</section>
+
+{% if messages %}
+<section class="section section-sm section-first bg-default">
+  <div class="container">
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% else %}alert-info{% endif %}" role="alert">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="section section-lg section-top-1 bg-gray-4">
+  <div class="container">
+    {% if enrollments %}
+    <div class="row row-30 justify-content-center">
+      {% for enrollment in enrollments %}
+      <div class="col-md-6 col-lg-4 wow fadeInDown" data-wow-delay=".2s">
+        <div class="card h-100 shadow-sm learning-course-card">
+          {% if enrollment.course.image %}
+          <a href="{% url 'learning:course_materials' enrollment.course.id %}">
+            <img class="card-img-top" src="{{ enrollment.course.image.url }}" alt="{{ enrollment.course.name }}">
+          </a>
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ enrollment.course.name }}</h5>
+
+            {% if enrollment.all_materials_read %}
+            <span class="badge badge-pill learning-badge-done mb-2">Матеріали пройдено</span>
+            {% else %}
+            <span class="badge badge-pill learning-badge-progress mb-2">
+              {{ enrollment.read_materials_count }} / {{ enrollment.total_materials }} матеріалів
+            </span>
+            {% endif %}
+
+            <div class="progress mb-3" style="height: 10px;">
+              <div class="progress-bar learning-progress-bar" role="progressbar"
+                   style="width: {{ enrollment.progress_percent }}%;"
+                   aria-valuenow="{{ enrollment.progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <p class="small text-muted mb-3">Прогрес: {{ enrollment.progress_percent }}%</p>
+
+            <div class="mt-auto">
+              <a class="button button-primary button-pipaluk btn-block" href="{% url 'learning:course_materials' enrollment.course.id %}">
+                {% if enrollment.read_materials_count > 0 %}Продовжити навчання{% else %}Почати навчання{% endif %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+      <div class="col-md-8 text-center">
+        <h4>У вас поки немає призначених курсів</h4>
+        <p class="text-muted">Зверніться до адміністратора школи KODIM, щоб вам призначили курс.</p>
+        <a class="button button-primary button-pipaluk" href="/courses/">Переглянути всі курси</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+.learning-course-card { border-radius: 10px; overflow: hidden; transition: transform .2s ease; }
+.learning-course-card:hover { transform: translateY(-4px); }
+.learning-progress-bar { background-color: #01b3a7; }
+.learning-badge-done { background-color: #01b3a7; color: #fff; align-self: flex-start; }
+.learning-badge-progress { background-color: #f2f2f2; color: #555; align-self: flex-start; }
+</style>
+{% endblock content %}
+
+{% block navbar %}
+<li class="rd-nav-item"><a class="rd-nav-link" href="/">Головна</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/about/">Про нас</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/courses/">Курси</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/news/">Новини</a></li>
+<li class="rd-nav-item active"><a class="rd-nav-link" href="{% url 'learning:my_courses' %}">Мої курси</a></li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a></li>
+{% endblock %}
