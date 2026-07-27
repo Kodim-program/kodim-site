@@ -1,0 +1,33 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div id="content-main">
+  <h1>Імпорт питань з Excel — {{ test }}</h1>
+
+  <p>
+    Завантажте .xlsx-файл із питаннями за шаблоном
+    (<a href="{{ template_download_url }}">завантажити приклад шаблону</a>).
+  </p>
+
+  <ul>
+    <li><strong>order</strong> — порядковий номер питання (число).</li>
+    <li><strong>question_type</strong> — <code>одна</code> (одна правильна відповідь) або <code>кілька</code> (декілька правильних).</li>
+    <li><strong>question</strong> — текст питання.</li>
+    <li><strong>answer_1 / correct_1, answer_2 / correct_2, ...</strong> — варіанти відповідей та позначка правильності
+      (<code>так</code>, <code>+</code>, <code>true</code> або <code>1</code> = правильна відповідь; порожньо = неправильна).
+      Кількість пар необмежена, порожні пари пропускаються.</li>
+  </ul>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+      {{ form.as_table }}
+    </table>
+    <div class="submit-row">
+      <input type="submit" value="Імпортувати" class="default">
+      <a class="button" href="../../">Скасувати</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
