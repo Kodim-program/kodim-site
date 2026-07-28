@@ -2,8 +2,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title_name %}Результат тесту — {{ enrollment.course.name }} — KODIM{% endblock %}
-{% block description %}Результат проходження тесту курсу «{{ enrollment.course.name }}».{% endblock %}
+{% block title_name %}Результат тесту — {{ material.title }} — KODIM{% endblock %}
+{% block description %}Результат проходження тесту до уроку «{{ material.title }}».{% endblock %}
 
 {% block content %}
 <!-- Breadcrumbs -->
@@ -44,7 +44,7 @@
           {% else %}
             {% if attempts_left > 0 %}
             <p class="mb-3">Спроб залишилось: <strong>{{ attempts_left }}</strong></p>
-            <a class="button button-lg button-primary button-ujarak" href="{% url 'learning:take_test' enrollment.course.id %}">Спробувати ще раз</a>
+            <a class="button button-lg button-primary button-ujarak" href="{% url 'learning:take_test' material.id %}">Спробувати ще раз</a>
             {% else %}
             <p class="text-danger mb-3">Ви вичерпали кількість спроб для цього тесту.</p>
             <a class="button button-lg button-default button-pipaluk" href="{% url 'learning:course_materials' enrollment.course.id %}">Повернутись до курсу</a>
@@ -53,7 +53,7 @@
 
         {% else %}
         <h3>Ви ще не проходили цей тест</h3>
-        <a class="button button-lg button-primary button-ujarak mt-3" href="{% url 'learning:take_test' enrollment.course.id %}">Пройти тест</a>
+        <a class="button button-lg button-primary button-ujarak mt-3" href="{% url 'learning:take_test' material.id %}">Пройти тест</a>
         {% endif %}
 
       </div>

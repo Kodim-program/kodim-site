@@ -2,8 +2,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title_name %}{{ test.title }} — {{ enrollment.course.name }} — KODIM{% endblock %}
-{% block description %}Підсумковий тест курсу «{{ enrollment.course.name }}».{% endblock %}
+{% block title_name %}{{ test.title }} — {{ material.title }} — KODIM{% endblock %}
+{% block description %}Тест до уроку «{{ material.title }}», курс «{{ enrollment.course.name }}».{% endblock %}
 
 {% block content %}
 <!-- Breadcrumbs -->
@@ -35,12 +35,13 @@
     <div class="row justify-content-center">
       <div class="col-lg-9">
 
+        <p class="text-muted mb-2">Урок: {{ material.title }}</p>
         <div class="learning-test-header d-flex align-items-center justify-content-between flex-wrap mb-4">
           <p class="mb-0">Прохідний бал: <strong>{{ test.passing_score }}%</strong></p>
           <p class="mb-0">Спроб залишилось: <strong>{{ attempts_left }}</strong> з {{ test.max_attempts }}</p>
         </div>
 
-        <form method="post" action="{% url 'learning:take_test' enrollment.course.id %}">
+        <form method="post" action="{% url 'learning:take_test' material.id %}">
           {% csrf_token %}
 
           {% for question_field in form %}
