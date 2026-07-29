@@ -108,6 +108,16 @@ class Enrollment(models.Model):
                 'test_best_result': test.best_result(self.user) if test else None,
             })
         return result
+    def next_material(self):
+        """Перший ще не прочитаний, але вже відкритий матеріал курсу —
+        для блоку «Продовжити навчання» в профілі."""
+        for material in self.course.materials.all():
+            already_read = MaterialProgress.objects.filter(
+                user=self.user, material=material, is_read=True
+            ).exists()
+            if not already_read:
+                return material if material.is_unlocked_for(self.user) else None
+        return None  # усі матеріали курсу прочитано
 
 
 class MaterialProgress(models.Model):

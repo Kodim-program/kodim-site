@@ -64,11 +64,11 @@
                 </div>
                 {% if user.is_authenticated %}
                 <div>
-                  <a href="/users/profile/"><button class="btn"><i class="animation"></i>Профіль<i class="animation"></i></button></a>
+                  <a href="{% url 'users:profile' %}"><button class="btn"><i class="animation"></i>Профіль<i class="animation"></i></button></a>
                 </div>
                 {% else %}
                 <div>
-                  <a href="/users/login/"><button class="btn"><i class="animation"></i>Авторизація<i class="animation"></i></button></a>
+                  <a href="{% url 'users:login' %}"><button class="btn"><i class="animation"></i>Авторизація<i class="animation"></i></button></a>
                 </div>
                 {% endif %}
               </div>
