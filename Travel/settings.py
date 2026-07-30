@@ -170,5 +170,48 @@ CKEDITOR_5_CONFIGS = {
                 "imageStyle:side"
             ]
         }
+    },
+    "material": {
+        "toolbar": [
+            "heading",
+            "|",
+            "alignment",
+            "|",
+            "bold",
+            "italic",
+            "underline",
+            "strikethrough",
+            "|",
+            "fontColor",
+            "fontBackgroundColor",
+            "|",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "|",
+            "insertTable",
+            "blockQuote",
+            "imageUpload",
+            "|",
+            "undo",
+            "redo",
+        ],
+        "table": {
+            "contentToolbar": [
+                "tableColumn",
+                "tableRow",
+                "mergeTableCells",
+                "tableProperties",
+                "tableCellProperties",
+            ],
+        },
+        "image": {
+            "toolbar": [
+                "imageTextAlternative",
+                "imageStyle:inline",
+                "imageStyle:block",
+                "imageStyle:side"
+            ]
+        }
     }
 }

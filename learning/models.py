@@ -21,7 +21,8 @@ class Material(models.Model):
         'Порядок', default=0,
         help_text='Визначає послідовність проходження (1, 2, 3 ...).',
     )
-    content = CKEditor5Field('Текст матеріалу', config_name='news', blank=True)
+    
+    content = CKEditor5Field('Текст матеріалу', config_name='material', blank=True)
     video_url = models.URLField('Посилання на відео (YouTube)', blank=True, null=True)
     file = models.FileField(
         'Файл (PDF тощо)', upload_to='materials/', blank=True, null=True,
