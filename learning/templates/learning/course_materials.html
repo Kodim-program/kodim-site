@@ -54,9 +54,10 @@
         <h5 class="text-uppercase text-spacing-100 mb-3">Матеріали курсу</h5>
         <ul class="list-group mb-4 learning-materials-list">
           {% for item in materials_status %}
-          <li class="list-group-item {% if item.is_read %}learning-item-read{% elif not item.is_unlocked %}learning-item-locked{% endif %}">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
+          <li class="list-group-item {% if item.is_read %}learning-item-read{% elif not item.is_unlocked %}learning-item-locked{% endif %}">                <!-- стало -->
+                <div class="d-flex align-items-center justify-content-between flex-wrap learning-item-row">
+
+                <div class="d-flex align-items-center learning-item-title"></div>
                 <span class="learning-step-number
                               {% if item.is_read %}learning-step-done{% elif not item.is_unlocked %}learning-step-locked{% endif %}">
                   {% if item.is_read %}&#10003;{% elif not item.is_unlocked %}&#128274;{% else %}{{ forloop.counter }}{% endif %}
@@ -131,6 +132,13 @@
 .learning-badge-danger { background-color: #fdeceb; color: #f5543f; padding: 8px 14px; }
 .learning-lesson-test {
   margin-top: 12px; padding-top: 12px; border-top: 1px dashed #e0e0e0;
+}
+
+@media (max-width: 575.98px) {
+  .learning-item-row { flex-wrap: wrap; row-gap: 10px; }
+  .learning-item-title { width: 100%; }
+  .learning-item-row > a.button,
+  .learning-item-row > span.small { margin-left: 44px; }
 }
 </style>
 {% endblock content %}

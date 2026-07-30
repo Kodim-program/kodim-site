@@ -16,7 +16,35 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/news.css' %}">
     
-    <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style>
+    <style>
+    .ie-panel{
+      display: none;
+      background: #212121;
+      padding: 10px 0;
+      box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);
+      clear: both;
+      text-align:center;
+      position: relative;
+      z-index: 1;} 
+    html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}
+    .rd-navbar-brand{display:flex;align-items:center;gap:12px;}
+      .kodim-slogan{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2;}
+      .kodim-slogan-word{
+        font-size:11px;font-weight:700;letter-spacing:.03em;
+        color:#01b3a7;text-transform:uppercase;white-space:nowrap;
+      }
+      .kodim-letter{display:inline-block;}
+      .kodim-letter-fly{
+        position:fixed;font-size:11px;font-weight:700;text-transform:uppercase;
+        pointer-events:none;z-index:99999;
+        animation:kodim-fly 1.1s ease-out forwards;
+      }
+      @keyframes kodim-fly{
+        0%{transform:translate(0,0) rotate(0deg) scale(1);opacity:1;}
+        70%{opacity:1;}
+        100%{transform:translate(var(--tx),var(--ty)) rotate(var(--rot)) scale(1.7);opacity:0;}
+      }
+    </style>
   </head>
   <body>
     <div class="preloader">
@@ -41,7 +69,13 @@
                   <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                   <!-- RD Navbar Brand-->
                   <div class="rd-navbar-brand">
-                    <!--Brand--><a class="brand" href="/"><img src="{% static 'images/logo.png' %}" alt="" width="894" height="100"/></a>
+                    <!--Brand-->
+                    <a class="brand" href="/" id="kodim-logo"><img src="{% static 'images/logo.png' %}" alt="" width="894" height="100" /></a>
+                     <div class="kodim-slogan" id="kodim-slogan">
+                       <span class="kodim-slogan-word">Мрій</span>
+                       <span class="kodim-slogan-word">Навчайся</span>
+                       <span class="kodim-slogan-word">Створюй</span>
+                     </div>
                   </div>
                 </div>
                 <div class="rd-navbar-aside-right rd-navbar-collapse">
@@ -188,5 +222,60 @@
     <!-- Javascript-->
     <script src="{% static 'js/core.min.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
+
+    <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var slogan = document.getElementById('kodim-slogan');
+                var logo = document.getElementById('kodim-logo');
+                if (!slogan || !logo) return;
+        
+                  // розбиваємо кожне слово гасла на окремі літери-спани
+                  slogan.querySelectorAll('.kodim-slogan-word').forEach(function (word) {
+                      var text = word.textContent;
+                      word.textContent = '';
+                      text.split('').forEach(function (ch) {
+                          var letter = document.createElement('span');
+                          letter.className = 'kodim-letter';
+                          letter.textContent = ch;
+                          word.appendChild(letter);
+                        });
+                    });
+        
+                  var colors = ['#01b3a7', '#ff6b6b', '#ffd93d', '#6bc5ff', '#a06bff', '#ff8f4d'];
+                var flying = false;
+        
+                  logo.addEventListener('mouseenter', function () {
+                      if (flying) return;
+                      flying = true;
+            
+                        slogan.querySelectorAll('.kodim-letter').forEach(function (letter) {
+                            var rect = letter.getBoundingClientRect();
+                            var clone = document.createElement('span');
+                            clone.className = 'kodim-letter-fly';
+                            clone.textContent = letter.textContent;
+                           clone.style.left = rect.left + 'px';
+                           clone.style.top = rect.top + 'px';
+                           clone.style.color = colors[Math.floor(Math.random() * colors.length)];
+                                             var tx = (Math.random() - 0.5) * window.innerWidth * 0.9;
+                           var ty = (Math.random() - 0.5) * window.innerHeight * 0.8;
+                           var rot = (Math.random() - 0.5) * 720;
+                           clone.style.setProperty('--tx', tx + 'px');
+                           clone.style.setProperty('--ty', ty + 'px');
+                           clone.style.setProperty('--rot', rot + 'deg');
+                                             document.body.appendChild(clone);
+                           letter.style.opacity = '0';
+                                             clone.addEventListener('animationend', function () {
+                                 clone.remove();
+                                 letter.style.transition = 'opacity .4s ease';
+                                 letter.style.opacity = '1';
+                               });
+                         });
+                                    setTimeout(function () { flying = false; }, 1300);
+                    });
+            });
+          </script>
+    </body>
+    
+    </html>
   </body>
 </html>

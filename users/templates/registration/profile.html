@@ -78,7 +78,8 @@
     </div>
     {% endif %}
 
-    <form method="post" action="{% url 'logout' %}" class="mt-4">
+    <form method="post" action="{% url 'users:logout' %}" class="mt-4">
+
       {% csrf_token %}
       <button class="button button-primary button-pipaluk" type="submit">Вийти</button>
     </form>
