@@ -62,8 +62,11 @@
                 <span
                   class="learning-step-number
                                   {% if item.is_read %}learning-step-done{% elif not item.is_unlocked %}learning-step-locked{% endif %}">
-                  {% if item.is_read %}&#10003;{% elif not item.is_unlocked %}&#128274;{% else %}{{ forloop.counter }}{% endif
-                  %}
+                  {% if item.is_read %}&#10003;
+                  {% elif not item.is_unlocked %}&#128274;
+                  {% else %}
+                  {{ forloop.counter }}
+                  {% endif %}
                 </span>
                 <span class="ml-3 {% if not item.is_unlocked %}text-muted{% endif %}">
                   {{ item.material.title }}
@@ -101,7 +104,10 @@
                 {% else %}
                 <a href="{% url 'learning:take_test' item.material.id %}"
                   class="button button-sm button-primary button-ujarak mt-2 mt-sm-0">
-                  {% if item.test_best_result %}Пройти ще раз{% else %}Пройти тест{% endif %}
+                  {% if item.test_best_result %}
+                  Пройти ще раз
+                  {% else %}Пройти тест
+                  {% endif %}
                 </a>
                 {% endif %}
               </div>
