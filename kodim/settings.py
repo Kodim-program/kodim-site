@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Travel.urls'
+ROOT_URLCONF = 'kodim.urls'
 
 TEMPLATES = [
     {
@@ -80,7 +80,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Travel.wsgi.application'
+WSGI_APPLICATION = 'kodim.wsgi.application'
 
 
 # Database
