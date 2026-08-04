@@ -5,6 +5,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import get_template
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 
 
 # Create your views here.
@@ -62,3 +63,15 @@ def news_detail(request, slug):
         'news': news,
         'related_news': related_news,
     })
+
+def robots_txt(request):
+    lines = [
+        "User-agent: *",
+        "Disallow: /admin/",
+        "Disallow: /users/",
+        "Disallow: /learning/",
+        "Disallow: /ckeditor5/",
+        "",
+        "Sitemap: https://kodim.pp.ua/sitemap.xml",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")

@@ -21,6 +21,7 @@ from django.contrib import admin
 from django.urls import path, include
 from . import settings
 from django.conf.urls.static import static
+from Web_1.views import robots_txt
 
 
 sitemaps = {
@@ -37,5 +38,6 @@ urlpatterns = [
     path("psycho/", include("psycho.urls")),
     path("projects/", include("projects.urls")),  
     path("ckeditor5/", include("django_ckeditor_5.urls")),
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap')
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', robots_txt, name='robots_txt')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
