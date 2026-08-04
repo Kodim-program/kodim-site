@@ -4,7 +4,15 @@
 
 {% block title_name %}{{ news.title }} — Новини KODIM{% endblock %}
 {% block description %}{{ news.get_meta_description }}{% endblock %}
+{% block og_title %}{{ news.title }} — Новини KODIM {% endblock %}
 
+{% block og_description %}{{ news.get_meta_description }}{% endblock %}
+
+{% block og_image %}{% if news.image %}https://kodim.pp.ua
+{{ news.image.url }}
+{% else %}https://kodim.pp.ua{% static'images/logo.png' %}
+{% endif %}
+{% endblock %}
 {% block content %}
 <!-- Breadcrumbs -->
 <section class="breadcrumbs-custom-inset">

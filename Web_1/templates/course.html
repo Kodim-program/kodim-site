@@ -3,9 +3,19 @@
 
 {% block title_name %}{{ course.name }} — KODIM{% endblock %}
 
-{% block description %}{% if course.meta_description %}{{ course.meta_description }}{% elif course.description_short
-%}{{ course.description_short }}{% endif %}{% endblock %}
+{% block description %}{% if course.meta_description %}{{ course.meta_description }}
+{% elif course.description_short %}{{ course.description_short }}
+{% endif %}{% endblock %}
+{% block og_title %}{{ course.name }} — KODIM{% endblock %}
 
+{% block og_description %}
+{% if course.meta_description %}{{ course.meta_description }}
+{% elif course.description_short%}{{ course.description_short }}
+{% endif %}{% endblock %}
+
+{% block og_image %}{% if course.image %}
+https://kodim.pp.ua{{ course.image.url }}
+{% else %}https://kodim.pp.ua{% static 'images/logo.png' %}{% endif %}{% endblock %}
 
 {% block content %}
 <style>
