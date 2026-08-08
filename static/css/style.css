@@ -284,7 +284,14 @@ p [style*='max-width'] {
 .brand {
 	display: inline-block;
 }
-
+.brand#text {
+	font-size: 70px;
+	line-height: 1.33333;
+	font-weight: 500;
+	letter-spacing:1dvh;
+	text-transform: uppercase;
+	font-family: "Montserrat", sans-serif, Arial, sans-serif;
+}
 .brand .brand-logo-light {
 	display: none;
 }
@@ -11402,7 +11409,7 @@ h2.title-modern > span {
 	position: relative;
 	overflow: hidden;
 	min-height: 100vh;
-	text-align: center;
+	/*text-align: center;*/
 }
 
 [data-x-mode] .page {
