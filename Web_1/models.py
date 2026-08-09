@@ -281,31 +281,39 @@ class Course(models.Model):
 
     # ── Автоматична конвертація в WebP при збереженні ─────────
     def save(self, *args, **kwargs):
+    # Автогенерація name_url (slug) з назви курсу, якщо порожнє
+        if not self.name_url:
+            base_slug = slugify_uk(self.name) or 'kurs'
+            slug = base_slug
+            counter = 1
+            while Course.objects.filter(name_url=slug).exclude(pk=self.pk).exists():
+                counter += 1
+                slug = f'{base_slug}-{counter}'
+            self.name_url = slug
+
         # Перевіряємо, чи завантажено файл і чи є у нього об'єкт файлу
         if self.image and hasattr(self.image, 'file'):
             img = Image.open(self.image)
-            
+            desired_name = f'{self.name_url}.webp'
+
             # Якщо формат файлу не WEBP, конвертуємо його
             if img.format != 'WEBP':
                 img_io = BytesIO()
-                
+
                 # Конвертуємо в RGB, якщо зображення в RGBA (з прозорістю, наприклад PNG)
-                # WebP підтримує прозорість, але Pillow вимагає збереження режиму
                 if img.mode in ('RGBA', 'LA'):
                     background = Image.new('RGBA', img.size, (255, 255, 255, 0))
                     img = Image.alpha_composite(background, img)
-                
-                # Зберігаємо у буфер з оптимізацією якості
+
                 img.save(img_io, format='WEBP', quality=85)
-                
-                # Отримуємо чисте ім'я файлу без старого розширення (.jpg/.png)
-                current_name = os.path.splitext(self.image.name)[0]
-                new_name = f"{current_name}.webp"
-                
-                # Записуємо новий сконвертований файл назад у поле image
-                # Сягаємо save=False, щоб не викликати рекурсивний save()
-                self.image.save(new_name, File(img_io), save=False)
-                
+
+                # Ім'я файлу = slug курсу, а не оригінальна назва завантаженого файлу
+                self.image.save(desired_name, File(img_io), save=False)
+
+            elif os.path.basename(self.image.name) != desired_name:
+                # Файл уже WEBP, але назва не збігається зі slug — перейменовуємо без переконвертації
+                self.image.name = os.path.join(os.path.dirname(self.image.name), desired_name)
+
         super().save(*args, **kwargs)
 def slugify_uk(value):
     """Транслітерація кирилиці в латиницю для ЧПУ (slug), бо slugify()
@@ -392,9 +400,12 @@ class News(models.Model):
                 slug = f'{base_slug}-{counter}'
             self.slug = slug
 
-        # Автоконвертація зображення в WebP (як у Web_1.models.Course)
+        
+
+        # Автоконвертація зображення в WebP + перейменування під slug новини
         if self.image and hasattr(self.image, 'file'):
             img = Image.open(self.image)
+            desired_name = f'{self.slug}.webp'
 
             if img.format != 'WEBP':
                 img_io = BytesIO()
@@ -404,9 +415,9 @@ class News(models.Model):
                     img = Image.alpha_composite(background, img)
 
                 img.save(img_io, format='WEBP', quality=85)
+                self.image.save(desired_name, File(img_io), save=False)
 
-                current_name = os.path.splitext(self.image.name)[0]
-                new_name = f'{current_name}.webp'
-                self.image.save(new_name, File(img_io), save=False)
+            elif os.path.basename(self.image.name) != desired_name:
+                self.image.name = os.path.join(os.path.dirname(self.image.name), desired_name)
 
         super().save(*args, **kwargs)
