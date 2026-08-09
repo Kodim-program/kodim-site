@@ -19,6 +19,7 @@
       content="{% block og_description %}Школа програмування KODIM у Первомайську. Курси Python, Scratch, Roblox, Arduino для дітей.{% endblock %}">
     <meta property="og:image" content="{% block og_image %}https://kodim.pp.ua{% static 'images/logo.png' %}{% endblock %}">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="google-site-verification" content="{{ GOOGLE_VERIFICATION_CODE }}" />
     <!-- Stylesheets-->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:400,500,600,700%7CPoppins:400%7CTeko:300,400">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
@@ -106,7 +107,7 @@
                     <li>
                       <div class="unit unit-spacing-xs">
                         <div class="unit-left"><span class="icon fa fa-phone"></span></div>
-                        <div class="unit-body"><a class="link-phone" href="tel:#">+380-66-795-4374</a></div>
+                        <div class="unit-body"><a class="link-phone" href="tel:+380667954374">+380-66-795-4374</a></div>
                       </div>
                     </li>
                   </ul>
@@ -155,19 +156,22 @@
                       <li>
                         <div class="unit">
                           <div class="unit-left"><span class="icon fa fa-phone"></span></div>
-                          <div class="unit-body"><a class="link-phone" href="tel:#">+380-66-795-4374</a></div>
+                          <div class="unit-body"><a class="link-phone" href="tel:+380667954374">+380-66-795-4374</a></div>
                         </div>
                       </li>
                       <li>
                         <div class="unit">
                           <div class="unit-left"><span class="icon fa fa-envelope"></span></div>
-                          <div class="unit-body"><a class="link-aemail" href="mailto:#">kodim.pervomaisk@gmail.com</a></div>
+                          <div class="unit-body"><a class="link-aemail" href="mailto:kodim.pervomaisk@gmail.com">kodim.pervomaisk@gmail.com</a></div>
                         </div>
                       </li>
                       <li>
                         <div class="unit">
                           <div class="unit-left"><span class="icon fa fa-location-arrow"></span></div>
-                          <div class="unit-body"><a class="link-location" href="#">м. Первомайськ, Миколаївська область, вул. Леоніда Федорова 4А</a></div>
+                          <div class="unit-body">
+                          <a class="link-location" href="https://www.google.com/maps/search/?api=1&query=Первомайськ+вул.+Леоніда+Федорова+4А" target="_blank"
+                            rel="noopener">м. Первомайськ, Миколаївська область, вул. Леоніда Федорова 4А</a>
+                          </div>
                         </div>
                       </li>
                     </ul>
