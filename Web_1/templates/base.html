@@ -19,7 +19,44 @@
       content="{% block og_description %}Школа програмування KODIM у Первомайську. Курси Python, Scratch, Roblox, Arduino для дітей.{% endblock %}">
     <meta property="og:image" content="{% block og_image %}https://kodim.pp.ua{% static 'images/logo.png' %}{% endblock %}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="google-site-verification" content="{{ GOOGLE_VERIFICATION_CODE }}" />
+    {% if GOOGLE_VERIFICATION_CODE %}<meta name="google-site-verification" content="{{ GOOGLE_VERIFICATION_CODE }}" />{% endif %}
+    <!-- Organization / LocalBusiness schema — присутня на кожній сторінці,
+         щоб Google однозначно пов'язував сайт з локальним бізнесом KODIM
+         у Первомайську (потрібно для локальної видачі й Google Maps). -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["EducationalOrganization", "LocalBusiness"],
+      "name": "KODIM",
+      "alternateName": "KODIM — Курси програмування для дітей у Первомайську",
+      "url": "https://kodim.pp.ua/",
+      "logo": "https://kodim.pp.ua{% static 'images/logo.png' %}",
+      "image": "https://kodim.pp.ua{% static 'images/logo.png' %}",
+      "email": "kodim.pervomaisk@gmail.com",
+      "telephone": "+380667954374",
+      "priceRange": "$$",
+      "sameAs": [
+        "https://www.facebook.com/kodim.pervomaisk",
+        "https://www.instagram.com/kodim.pervomaisk/"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "вул. Леоніда Федорова 4А",
+        "addressLocality": "Первомайськ",
+        "addressRegion": "Миколаївська область",
+        "addressCountry": "UA"
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+        ],
+        "opens": "13:00",
+        "closes": "19:00"
+      }
+    }
+    </script>
+    {% block schema_extra %}{% endblock %}
     <!-- Stylesheets-->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:400,500,600,700%7CPoppins:400%7CTeko:300,400">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">

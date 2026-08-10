@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title_name %}{{ course.name }} — KODIM{% endblock %}
+{% block title_name %}{{ course.name }} у Первомайську — KODIM{% endblock %}
 
 {% block description %}{% if course.meta_description %}{{ course.meta_description }}
 {% elif course.description_short %}{{ course.description_short }}
 {% endif %}{% endblock %}
-{% block og_title %}{{ course.name }} — KODIM{% endblock %}
+{% block og_title %}{{ course.name }} у Первомайську — KODIM{% endblock %}
 
 {% block og_description %}
 {% if course.meta_description %}{{ course.meta_description }}
@@ -16,6 +16,69 @@
 {% block og_image %}{% if course.image %}
 https://kodim.pp.ua{{ course.image.url }}
 {% else %}https://kodim.pp.ua{% static 'images/logo.png' %}{% endif %}{% endblock %}
+
+{% block schema_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "{{ course.name|escapejs }}",
+  "description": "{% if course.meta_description %}{{ course.meta_description|escapejs }}{% elif course.description_short %}{{ course.description_short|escapejs }}{% else %}{{ course.name|escapejs }} — курс для дітей у школі KODIM (Первомайськ){% endif %}",
+  "provider": {
+    "@type": "EducationalOrganization",
+    "name": "KODIM",
+    "sameAs": "https://kodim.pp.ua/"
+  },
+  {% if course.image %}"image": "https://kodim.pp.ua{{ course.image.url }}",{% endif %}
+  "url": "https://kodim.pp.ua/course/{{ course.name_url }}/",
+  "hasCourseInstance": {
+    "@type": "CourseInstance",
+    "courseMode": "Offline",
+    "location": {
+      "@type": "Place",
+      "name": "KODIM",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "вул. Леоніда Федорова 4А",
+        "addressLocality": "Первомайськ",
+        "addressRegion": "Миколаївська область",
+        "addressCountry": "UA"
+      }
+    }
+    {% if course.duration %}, "courseWorkload": "{{ course.duration|escapejs }}"{% endif %}
+  }
+  {% if course.price_monthly or course.price_semester or course.price_full %}
+  ,"offers": {
+    "@type": "Offer",
+    "category": "Paid",
+    "priceCurrency": "UAH",
+    "price": "{{ course.price_monthly|default:course.price_semester|default:course.price_full|escapejs }}",
+    "url": "https://kodim.pp.ua/course/{{ course.name_url }}/"
+  }
+  {% endif %}
+}
+</script>
+{% if course.faq %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {% for item in course.faq %}
+    {
+      "@type": "Question",
+      "name": "{{ item.question|escapejs }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ item.answer|escapejs }}"
+      }
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}
+{% endblock schema_extra %}
 
 {% block content %}
 <style>
@@ -288,6 +351,13 @@ https://kodim.pp.ua{{ course.image.url }}
         font-weight: 700;
         color: rgba(255, 255, 255, .9);
         margin-bottom: 22px;
+    }
+
+    .cd-hero-h1-location {
+        font-size: .5em;
+        font-weight: 400;
+        opacity: .75;
+        display: inline-block;
     }
 
     .cd-hero-badge-dot {
@@ -1128,7 +1198,7 @@ https://kodim.pp.ua{{ course.image.url }}
                         {{ course.emoji_icon }} Курс для дітей
                     </div>
 
-                    <h1>{{ course.name }}</h1>
+                    <h1>{{ course.name }} <span class="cd-hero-h1-location">у Первомайську</span></h1>
 
                     {% if course.description_short %}
                     <p class="cd-hero-desc">{{ course.description_short }}</p>

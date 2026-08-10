@@ -1,0 +1,282 @@
+diff --git a/Web_1/migrations/0014_fill_missing_meta_descriptions.py b/Web_1/migrations/0014_fill_missing_meta_descriptions.py
+new file mode 100644
+index 0000000..9cbeb04
+--- /dev/null
++++ b/Web_1/migrations/0014_fill_missing_meta_descriptions.py
+@@ -0,0 +1,77 @@
++from django.db import migrations
++
++# Курси, у яких на момент SEO-аудиту (серпень 2026) було порожнє
++# поле meta_description — і, відповідно, порожній <meta name="description">
++# на живих проіндексованих сторінках /course/<name_url>/.
++META_DESCRIPTIONS = {
++    "photoshop": (
++        "Курс «Освоєння Photoshop» для дітей від 10 років у школі KODIM "
++        "у Первомайську. Обробка фото, колажі, ретуш і основи графічного "
++        "дизайну на практичних проєктах. Запишіться на курс!"
++    ),
++    "computer-basics": (
++        "Курс «Комп'ютерна грамотність» для дітей від 6 років у KODIM "
++        "(Первомайськ). Основи роботи з ПК, клавіатурою, файлами та "
++        "інтернетом — перший крок перед програмуванням. Запишіться!"
++    ),
++    "javascript-gamedev": (
++        "Курс JavaScript для дітей та підлітків від 11 років у школі "
++        "KODIM у Первомайську. Створення браузерних і мобільних ігор "
++        "з нуля: логіка, анімація, власні проєкти в портфоліо."
++    ),
++}
++
++
++# Ті самі 3 курси мали порожнім і description_short — коротший текст,
++# що показується безпосередньо під H1 на сторінці курсу
++# ({% if course.description_short %}<p class="cd-hero-desc">...{% endif %}).
++# Без нього H1 "висить" без жодного тексту — тонкий контент для Google.
++DESCRIPTION_SHORT = {
++    "photoshop": (
++        "Навчаємо дітей від 10 років обробляти фото, створювати колажі "
++        "та розуміти основи графічного дизайну в Adobe Photoshop."
++    ),
++    "computer-basics": (
++        "Базовий курс для дітей від 6 років: клавіатура, файли, "
++        "інтернет і безпечна робота за комп'ютером."
++    ),
++    "javascript-gamedev": (
++        "Створюємо перші браузерні та мобільні ігри на JavaScript — "
++        "від логіки гри до власного проєкту в портфоліо."
++    ),
++}
++
++
++def fill_meta_descriptions(apps, schema_editor):
++    Course = apps.get_model("Web_1", "Course")
++    for name_url, meta_description in META_DESCRIPTIONS.items():
++        Course.objects.filter(
++            name_url=name_url, meta_description__isnull=True
++        ).update(meta_description=meta_description)
++        Course.objects.filter(
++            name_url=name_url, meta_description=""
++        ).update(meta_description=meta_description)
++
++    for name_url, description_short in DESCRIPTION_SHORT.items():
++        Course.objects.filter(
++            name_url=name_url, description_short__isnull=True
++        ).update(description_short=description_short)
++        Course.objects.filter(
++            name_url=name_url, description_short=""
++        ).update(description_short=description_short)
++
++
++def noop_reverse(apps, schema_editor):
++    # Свідомо не відкочуємо контент назад до порожнього значення.
++    pass
++
++
++class Migration(migrations.Migration):
++
++    dependencies = [
++        ("Web_1", "0013_alter_news_content"),
++    ]
++
++    operations = [
++        migrations.RunPython(fill_meta_descriptions, noop_reverse),
++    ]
+diff --git a/Web_1/templates/base.html b/Web_1/templates/base.html
+index 0321d38..ed68fef 100755
+--- a/Web_1/templates/base.html
++++ b/Web_1/templates/base.html
+@@ -19,7 +19,44 @@
+       content="{% block og_description %}Школа програмування KODIM у Первомайську. Курси Python, Scratch, Roblox, Arduino для дітей.{% endblock %}">
+     <meta property="og:image" content="{% block og_image %}https://kodim.pp.ua{% static 'images/logo.png' %}{% endblock %}">
+     <meta name="twitter:card" content="summary_large_image">
+-    <meta name="google-site-verification" content="{{ GOOGLE_VERIFICATION_CODE }}" />
++    {% if GOOGLE_VERIFICATION_CODE %}<meta name="google-site-verification" content="{{ GOOGLE_VERIFICATION_CODE }}" />{% endif %}
++    <!-- Organization / LocalBusiness schema — присутня на кожній сторінці,
++         щоб Google однозначно пов'язував сайт з локальним бізнесом KODIM
++         у Первомайську (потрібно для локальної видачі й Google Maps). -->
++    <script type="application/ld+json">
++    {
++      "@context": "https://schema.org",
++      "@type": ["EducationalOrganization", "LocalBusiness"],
++      "name": "KODIM",
++      "alternateName": "KODIM — Курси програмування для дітей у Первомайську",
++      "url": "https://kodim.pp.ua/",
++      "logo": "https://kodim.pp.ua{% static 'images/logo.png' %}",
++      "image": "https://kodim.pp.ua{% static 'images/logo.png' %}",
++      "email": "kodim.pervomaisk@gmail.com",
++      "telephone": "+380667954374",
++      "priceRange": "$$",
++      "sameAs": [
++        "https://www.facebook.com/kodim.pervomaisk",
++        "https://www.instagram.com/kodim.pervomaisk/"
++      ],
++      "address": {
++        "@type": "PostalAddress",
++        "streetAddress": "вул. Леоніда Федорова 4А",
++        "addressLocality": "Первомайськ",
++        "addressRegion": "Миколаївська область",
++        "addressCountry": "UA"
++      },
++      "openingHoursSpecification": {
++        "@type": "OpeningHoursSpecification",
++        "dayOfWeek": [
++          "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
++        ],
++        "opens": "13:00",
++        "closes": "19:00"
++      }
++    }
++    </script>
++    {% block schema_extra %}{% endblock %}
+     <!-- Stylesheets-->
+     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:400,500,600,700%7CPoppins:400%7CTeko:300,400">
+     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+diff --git a/Web_1/templates/contact-us.html b/Web_1/templates/contact-us.html
+index a1d8f17..293eac0 100755
+--- a/Web_1/templates/contact-us.html
++++ b/Web_1/templates/contact-us.html
+@@ -8,6 +8,7 @@
+ 
+ {% block content %}
+ 
++<h1 class="sr-only">Контакти школи програмування KODIM у Первомайську</h1>
+ <!-- RD Google Map-->
+ <section class="section section-fluid">
+   <div class="google-map-container" data-zoom="5" data-icon="{% static 'images/gmap_marker.png' %}" data-icon-active="{% static 'images/gmap_marker.png' %}" data-center="9870 St Vincent Place, Glasgow, DC 45 Fr 45." data-styles="[{&quot;featureType&quot;:&quot;landscape&quot;,&quot;stylers&quot;:[{&quot;hue&quot;:&quot;#FFBB00&quot;},{&quot;saturation&quot;:43.400000000000006},{&quot;lightness&quot;:37.599999999999994},{&quot;gamma&quot;:1}]},{&quot;featureType&quot;:&quot;road.highway&quot;,&quot;stylers&quot;:[{&quot;hue&quot;:&quot;#FFC200&quot;},{&quot;saturation&quot;:-61.8},{&quot;lightness&quot;:45.599999999999994},{&quot;gamma&quot;:1}]},{&quot;featureType&quot;:&quot;road.arterial&quot;,&quot;stylers&quot;:[{&quot;hue&quot;:&quot;#FF0300&quot;},{&quot;saturation&quot;:-100},{&quot;lightness&quot;:51.19999999999999},{&quot;gamma&quot;:1}]},{&quot;featureType&quot;:&quot;road.local&quot;,&quot;stylers&quot;:[{&quot;hue&quot;:&quot;#FF0300&quot;},{&quot;saturation&quot;:-100},{&quot;lightness&quot;:52},{&quot;gamma&quot;:1}]},{&quot;featureType&quot;:&quot;water&quot;,&quot;stylers&quot;:[{&quot;hue&quot;:&quot;#0078FF&quot;},{&quot;saturation&quot;:-13.200000000000003},{&quot;lightness&quot;:2.4000000000000057},{&quot;gamma&quot;:1}]},{&quot;featureType&quot;:&quot;poi&quot;,&quot;stylers&quot;:[{&quot;hue&quot;:&quot;#00FF6A&quot;},{&quot;saturation&quot;:-1.0989010989011234},{&quot;lightness&quot;:11.200000000000017},{&quot;gamma&quot;:1}]}]">
+diff --git a/Web_1/templates/course.html b/Web_1/templates/course.html
+index 52cfe00..931de95 100644
+--- a/Web_1/templates/course.html
++++ b/Web_1/templates/course.html
+@@ -1,12 +1,12 @@
+ {% extends "base.html" %}
+ {% load static %}
+ 
+-{% block title_name %}{{ course.name }} — KODIM{% endblock %}
++{% block title_name %}{{ course.name }} у Первомайську — KODIM{% endblock %}
+ 
+ {% block description %}{% if course.meta_description %}{{ course.meta_description }}
+ {% elif course.description_short %}{{ course.description_short }}
+ {% endif %}{% endblock %}
+-{% block og_title %}{{ course.name }} — KODIM{% endblock %}
++{% block og_title %}{{ course.name }} у Первомайську — KODIM{% endblock %}
+ 
+ {% block og_description %}
+ {% if course.meta_description %}{{ course.meta_description }}
+@@ -17,6 +17,69 @@
+ https://kodim.pp.ua{{ course.image.url }}
+ {% else %}https://kodim.pp.ua{% static 'images/logo.png' %}{% endif %}{% endblock %}
+ 
++{% block schema_extra %}
++<script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "Course",
++  "name": "{{ course.name|escapejs }}",
++  "description": "{% if course.meta_description %}{{ course.meta_description|escapejs }}{% elif course.description_short %}{{ course.description_short|escapejs }}{% else %}{{ course.name|escapejs }} — курс для дітей у школі KODIM (Первомайськ){% endif %}",
++  "provider": {
++    "@type": "EducationalOrganization",
++    "name": "KODIM",
++    "sameAs": "https://kodim.pp.ua/"
++  },
++  {% if course.image %}"image": "https://kodim.pp.ua{{ course.image.url }}",{% endif %}
++  "url": "https://kodim.pp.ua/course/{{ course.name_url }}/",
++  "hasCourseInstance": {
++    "@type": "CourseInstance",
++    "courseMode": "Offline",
++    "location": {
++      "@type": "Place",
++      "name": "KODIM",
++      "address": {
++        "@type": "PostalAddress",
++        "streetAddress": "вул. Леоніда Федорова 4А",
++        "addressLocality": "Первомайськ",
++        "addressRegion": "Миколаївська область",
++        "addressCountry": "UA"
++      }
++    }
++    {% if course.duration %}, "courseWorkload": "{{ course.duration|escapejs }}"{% endif %}
++  }
++  {% if course.price_monthly or course.price_semester or course.price_full %}
++  ,"offers": {
++    "@type": "Offer",
++    "category": "Paid",
++    "priceCurrency": "UAH",
++    "price": "{{ course.price_monthly|default:course.price_semester|default:course.price_full|escapejs }}",
++    "url": "https://kodim.pp.ua/course/{{ course.name_url }}/"
++  }
++  {% endif %}
++}
++</script>
++{% if course.faq %}
++<script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "FAQPage",
++  "mainEntity": [
++    {% for item in course.faq %}
++    {
++      "@type": "Question",
++      "name": "{{ item.question|escapejs }}",
++      "acceptedAnswer": {
++        "@type": "Answer",
++        "text": "{{ item.answer|escapejs }}"
++      }
++    }{% if not forloop.last %},{% endif %}
++    {% endfor %}
++  ]
++}
++</script>
++{% endif %}
++{% endblock schema_extra %}
++
+ {% block content %}
+ <style>
+     /* ════════════════════════════════════════════
+@@ -290,6 +353,13 @@ https://kodim.pp.ua{{ course.image.url }}
+         margin-bottom: 22px;
+     }
+ 
++    .cd-hero-h1-location {
++        font-size: .5em;
++        font-weight: 400;
++        opacity: .75;
++        display: inline-block;
++    }
++
+     .cd-hero-badge-dot {
+         width: 7px;
+         height: 7px;
+@@ -1128,7 +1198,7 @@ https://kodim.pp.ua{{ course.image.url }}
+                         {{ course.emoji_icon }} Курс для дітей
+                     </div>
+ 
+-                    <h1>{{ course.name }}</h1>
++                    <h1>{{ course.name }} <span class="cd-hero-h1-location">у Первомайську</span></h1>
+ 
+                     {% if course.description_short %}
+                     <p class="cd-hero-desc">{{ course.description_short }}</p>
+diff --git a/Web_1/templates/courses.html b/Web_1/templates/courses.html
+index d4ba83b..32ca628 100755
+--- a/Web_1/templates/courses.html
++++ b/Web_1/templates/courses.html
+@@ -11,7 +11,7 @@
+ <section class="breadcrumbs-custom-inset">
+   <div class="breadcrumbs-custom context-dark bg-overlay-60">
+     <div class="container">
+-      <h2 class="breadcrumbs-custom-title">Курси</h2>
++      <h1 class="breadcrumbs-custom-title">Курси програмування для дітей у Первомайську</h1>
+       <ul class="breadcrumbs-custom-path">
+         <li><a href="/">Дім</a></li>
+         <li class="active">Курси</li>
+diff --git a/Web_1/templates/index.html b/Web_1/templates/index.html
+index f2b808a..8c76040 100755
+--- a/Web_1/templates/index.html
++++ b/Web_1/templates/index.html
+@@ -54,6 +54,7 @@
+ <!-- Section Box Categories-->
+ <section class="section section-lg section-top-1 bg-gray-4">
+   <div class="container offset-negative-1">
++    <h1 class="oh-desktop text-center"><span class="d-inline-block wow slideInDown" data-wow-delay="0s">Курси програмування для дітей у Первомайську</span></h1>
+     <div class="box-categories cta-box-wrap">
+       <div class="box-categories-content">
+         <div class="row justify-content-center">
