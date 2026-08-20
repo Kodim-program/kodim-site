@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Customer, Category, Course, News
+from django.utils.html import format_html
+from .models import Customer, Category, Course, News, GalleryImage
 from django import forms
 from django_ckeditor_5.widgets import CKEditor5Widget
 
@@ -67,3 +68,21 @@ class NewsAdmin(admin.ModelAdmin):
     search_fields = ('title', 'description_short', 'content')
     prepopulated_fields = {} # slug генерується автоматично у моделі, якщо порожній
     date_hierarchy = 'published_date'
+
+
+@admin.register(GalleryImage)
+class GalleryImageAdmin(admin.ModelAdmin):
+    list_display = ('thumbnail_preview', 'alt_text', 'order', 'is_active', 'created_at')
+    list_editable = ('order', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('alt_text',)
+    ordering = ('order', '-created_at')
+
+    @admin.display(description='Прев\'ю')
+    def thumbnail_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="height:60px;width:auto;border-radius:6px;" />',
+                obj.image.url,
+            )
+        return '—'

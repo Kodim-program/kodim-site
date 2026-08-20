@@ -315,6 +315,87 @@ class Course(models.Model):
                 self.image.name = os.path.join(os.path.dirname(self.image.name), desired_name)
 
         super().save(*args, **kwargs)
+
+
+class GalleryImage(models.Model):
+    image = models.ImageField(
+        upload_to='gallery_images',
+        verbose_name='Зображення',
+        help_text='Будь-який формат (jpg, png, heic тощо) — при збереженні '
+                   'автоматично конвертується у WebP і обрізається під єдиний формат галереї.',
+        validators=[validate_image_size],
+    )
+    alt_text = models.CharField(
+        max_length=150,
+        verbose_name='Alt-текст (SEO)',
+        blank=True,
+        help_text='Короткий опис фото для пошукових систем і скрінрідерів. '
+                   'Якщо порожньо — використовується загальний опис "Галерея КОДІМ".',
+    )
+    order = models.PositiveIntegerField(
+        verbose_name='Порядок показу',
+        default=0,
+        help_text='Менше число — раніше в каруселі. Фото з однаковим числом сортуються за датою додавання.',
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name='Показувати на сайті',
+        help_text='Якщо знято — фото завантажене, але не відображається в галереї на головній.',
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Додано')
+
+    class Meta:
+        verbose_name = 'Фото галереї'
+        verbose_name_plural = 'Галерея (головна сторінка)'
+        ordering = ['order', '-created_at']
+
+    def __str__(self):
+        return self.alt_text or f'Фото галереї #{self.pk}'
+
+    # ── Автоконвертація у WebP + обрізка під єдиний формат каруселі ──
+    def save(self, *args, **kwargs):
+        if self.image and hasattr(self.image, 'file'):
+            img = Image.open(self.image)
+
+            # Приводимо до RGB (WEBP не любить палітрові/CMYK режими,
+            # а RGBA/LA конвертуємо на білому тлі, як і в інших моделях)
+            if img.mode in ('RGBA', 'LA'):
+                background = Image.new('RGBA', img.size, (255, 255, 255, 255))
+                img = Image.alpha_composite(background, img.convert('RGBA')).convert('RGB')
+            elif img.mode != 'RGB':
+                img = img.convert('RGB')
+
+            # Обрізаємо по центру під співвідношення сторін карток галереї (270:195 ≈ 1.3846),
+            # щоб карусель виглядала рівно незалежно від пропорцій завантаженого фото
+            target_ratio = 270 / 195
+            width, height = img.size
+            current_ratio = width / height
+
+            if current_ratio > target_ratio:
+                new_width = int(height * target_ratio)
+                offset = (width - new_width) // 2
+                img = img.crop((offset, 0, offset + new_width, height))
+            elif current_ratio < target_ratio:
+                new_height = int(width / target_ratio)
+                offset = (height - new_height) // 2
+                img = img.crop((0, offset, width, offset + new_height))
+
+            # Обмежуємо максимальну ширину, щоб файли не були зайво важкими
+            max_width = 900
+            if img.width > max_width:
+                new_height = int(img.height * (max_width / img.width))
+                img = img.resize((max_width, new_height), Image.LANCZOS)
+
+            img_io = BytesIO()
+            img.save(img_io, format='WEBP', quality=82)
+
+            import uuid
+            desired_name = f'gallery-{slugify_uk(self.alt_text) or "photo"}-{uuid.uuid4().hex[:8]}.webp'
+            self.image.save(desired_name, File(img_io), save=False)
+
+        super().save(*args, **kwargs)
+
+
 def slugify_uk(value):
     """Транслітерація кирилиці в латиницю для ЧПУ (slug), бо slugify()
     сам по собі вирізає кириличні символи і лишає порожній рядок."""

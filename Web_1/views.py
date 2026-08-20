@@ -3,7 +3,6 @@ from .forms import ContactForm
 from django.http import HttpResponseRedirect
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, get_object_or_404
-from django.conf import settings
 from django.template.loader import get_template
 from django.core.paginator import Paginator
 from django.http import HttpResponse
@@ -38,10 +37,7 @@ def contact_us(request):
             customer.message = request.POST.get('text')
             customer.save()
             return HttpResponseRedirect("/contact-us/")
-    return render(request, 'contact-us.html', {
-        "form": ContactForm(),
-        "google_maps_api_key": settings.GOOGLE_MAPS_API_KEY,
-    })
+    return render(request, 'contact-us.html', {"form": ContactForm()})
 
 def send_message(name, email, text, phone):
     text_send = get_template('message.html')
