@@ -3,8 +3,12 @@
 {% load static %}
 
 {% block title_name %}Про нас — Школа програмування KODIM у Первомайську{% endblock %}
-{% block description %}Дізнайтеся більше про школу KODIM. Працюємо 5 років, допомагаємо дітям опановувати програмування через практичні
-проекти. Первомайськ, Миколаївська область.{% endblock %}
+{% block description %}КОДІМ веде Ольга Максименко — інженер комп'ютерних систем з 18-річним досвідом у мережах,
+серверах і Python/Django. 5 років навчаємо дітей програмування в Первомайську.{% endblock %}
+{% block og_title %}Про нас — KODIM, IT-школа для дітей у Первомайську{% endblock %}
+{% block og_description %}Дітей вчить практикуючий інженер, а не блогер із курсом за вихідні. Дізнайтесь, хто веде
+КОДІМ.{% endblock %}
+{% block og_image %}https://kodim.pp.ua{% static 'images/about-olga-maksymenko.jpg' %}{% endblock %}
 
 {% block content %}
 <!-- Breadcrumbs -->
@@ -20,219 +24,776 @@
     <div class="box-position" style="background-image: url({% static 'images/breadcrumbs-bg.png' %});"></div>
   </div>
 </section>
-<!-- Why choose us-->
-<section class="section section-sm section-first bg-default text-md-left">
-  <div class="container">
-    <div class="row row-50 justify-content-center align-items-xl-center">
-      <div class="col-md-10 col-lg-5 col-xl-6"><img src="{% static 'images/about-1-519x564.jpg' %}" alt="" width="519" height="564"/>
-      </div>
-      <div class="col-md-10 col-lg-7 col-xl-6">
-        <h1 class="text-spacing-25 font-weight-normal title-opacity-9">Чому саме ми</h1>
-        <!-- Bootstrap tabs-->
-        <div class="tabs-custom tabs-horizontal tabs-line" id="tabs-4">
-          <!-- Nav tabs-->
-          <ul class="nav nav-tabs">
-            <li class="nav-item" role="presentation"><a class="nav-link active" href="#tabs-4-1" data-toggle="tab">Досвід</a></li>
-            <li class="nav-item" role="presentation"><a class="nav-link" href="#tabs-4-2" data-toggle="tab">Знання</a></li>
-            <li class="nav-item" role="presentation"><a class="nav-link" href="#tabs-4-3" data-toggle="tab">Амбіції</a></li>
-          </ul>
-          <!-- Tab panes-->
-          <div class="tab-content">
-            <div class="tab-pane fade show active" id="tabs-4-1">
-              <p>Викладач має великий досвід у своїй сфері. Вона пояснить тобі твою дорогу помилку, якщо така з'явиться!</p>
-              <!-- Linear progress bar-->
-              <article class="progress-linear progress-secondary">
-                <div class="progress-header">
-                  <p>Варіативність курсів</p>
-                </div>
-                <div class="progress-bar-linear-wrap">
-                  <div class="progress-bar-linear" data-gradient=""><span class="progress-value">79</span><span class="progress-marker"></span></div>
-                </div>
-              </article>
-              <!-- Linear progress bar-->
-              <article class="progress-linear progress-orange">
-                <div class="progress-header">
-                  <p>Практика</p>
-                </div>
-                <div class="progress-bar-linear-wrap">
-                  <div class="progress-bar-linear" data-gradient=""><span class="progress-value">72</span><span class="progress-marker"></span></div>
-                </div>
-              </article>
-              <!-- Linear progress bar-->
-              <article class="progress-linear">
-                <div class="progress-header">
-                  <p>Теорія</p>
-                </div>
-                <div class="progress-bar-linear-wrap">
-                  <div class="progress-bar-linear" data-gradient=""><span class="progress-value">88</span><span class="progress-marker"></span></div>
-                </div>
-              </article>
-            </div>
-            <div class="tab-pane fade" id="tabs-4-2">
-              <div class="row row-40 justify-content-center text-center inset-top-10">
-                <div class="col-sm-4">
-                  <!-- Circle Progress Bar-->
-                  <div class="progress-bar-circle" data-value="0.79" data-gradient="#01b3a7" data-empty-fill="transparent" data-size="150" data-thickness="12" data-reverse="true"><span></span></div>
-                  <p class="progress-bar-circle-title">Варіативність курсів</p>
-                </div>
-                <div class="col-sm-4">
-                  <!-- Circle Progress Bar-->
-                  <div class="progress-bar-circle" data-value="0.72" data-gradient="#01b3a7" data-empty-fill="transparent" data-size="150" data-thickness="12" data-reverse="true"><span></span></div>
-                  <p class="progress-bar-circle-title">Практика</p>
-                </div>
-                <div class="col-sm-4">
-                  <!-- Circle Progress Bar-->
-                  <div class="progress-bar-circle" data-value="0.88" data-gradient="#01b3a7" data-empty-fill="transparent" data-size="150" data-thickness="12" data-reverse="true"><span></span></div>
-                  <p class="progress-bar-circle-title">Теорія</p>
-                </div>
-              </div>
-              <div class="group-md group-middle"><a class="button button-width-xl-230 button-primary button-pipaluk" href="/contact-us/">Get in touch</a></div>
-            </div>
-            <div class="tab-pane fade" id="tabs-4-3">
-              <p>Наші місії не є чимось конкретним, адже їх багато!</p>
-              <div class="text-center text-sm-left offset-top-30 tab-height">
-                <ul class="row-16 list-0 list-custom list-marked list-marked-sm list-marked-secondary">
-                  <li>Якісне навчання</li>
-                  <li>Достатньо практики</li>
-                  <li>Якісна теорія</li>
-                  <li>Гарне ставлення до учнів</li>
-                  <li>Адекватне пояснення</li>
-                  <li>Зручність навчання</li>
-                </ul>
-              </div>
-              <div class="group-md group-middle"><a class="button button-width-xl-230 button-primary button-pipaluk" href="/contact-us/">Get in touch</a></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- Latest Projects-->
-<section class="section section-sm section-fluid bg-default">
-  <div class="container">
-    <h3>Destinations</h3>
-  </div>
-  <!-- Owl Carousel-->
-  <div class="owl-carousel owl-classic owl-timeline" data-items="1" data-md-items="2" data-lg-items="3" data-xl-items="4" data-margin="30" data-autoplay="false" data-nav="true" data-dots="true">
-    <div class="owl-item">
-      <!-- Thumbnail Classic-->
-      <article class="thumbnail thumbnail-mary">
-        <div class="thumbnail-mary-figure"><img src="{% static 'images/gallery-image-12-420x308.jpg' %}" alt="" width="420" height="308"/>
-        </div>
-        <div class="thumbnail-mary-caption"><a class="icon fl-bigmug-line-zoom60" href="{% static 'images/gallery-image-12-1200x800-original.jpg' %}" data-lightgallery="item"><img src="{% static 'images/gallery-image-12-420x308.jpg' %}" alt="" width="420" height="308"/></a>
-        </div>
-      </article>
-      <div class="thumbnail-mary-description">
-        <h5 class="thumbnail-mary-project"><a href="/course/python/">Програмування на Python</a></h5><span class="thumbnail-mary-decor"></span>
-        <h5 class="thumbnail-mary-time">
-        </h5>
-      </div>
-    </div>
-    <div class="owl-item">
-      <!-- Thumbnail Classic-->
-      <article class="thumbnail thumbnail-mary">
-        <div class="thumbnail-mary-figure"><img src="{% static 'images/gallery-image-13-420x308.jpg' %}" alt="" width="420" height="308"/>
-        </div>
-        <div class="thumbnail-mary-caption"><a class="icon fl-bigmug-line-zoom60" href="{% static 'images/gallery-image-13-1200x800-original.jpg' %}" data-lightgallery="item"><img src="{% static 'images/gallery-image-13-420x308.jpg' %}" alt="" width="420" height="308"/></a>
-        </div>
-      </article>
-      <div class="thumbnail-mary-description">
-        <h5 class="thumbnail-mary-project"><a href="/course/minecraft-python/">Програмування Minecraft на Python</a></h5><span class="thumbnail-mary-decor"></span>
-        <h5 class="thumbnail-mary-time">
-        </h5>
-      </div>
-    </div>
-    <div class="owl-item">
-      <!-- Thumbnail Classic-->
-      <article class="thumbnail thumbnail-mary">
-        <div class="thumbnail-mary-figure"><img src="{% static 'images/gallery-image-14-420x308.jpg' %}" alt="" width="420" height="308"/>
-        </div>
-        <div class="thumbnail-mary-caption"><a class="icon fl-bigmug-line-zoom60" href="{% static 'images/gallery-image-14-1200x800-original.jpg' %}" data-lightgallery="item"><img src="{% static 'images/gallery-image-14-420x308.jpg' %}" alt="" width="420" height="308"/></a>
-        </div>
-      </article>
-      <div class="thumbnail-mary-description">
-        <h5 class="thumbnail-mary-project"><a href="/course/photoshop/">Освоєння Photoshop</a></h5><span class="thumbnail-mary-decor"></span>
-        <h5 class="thumbnail-mary-time">
-        </h5>
-      </div>
-    </div>
-    <div class="owl-item">
-      <!-- Thumbnail Classic-->
-      <article class="thumbnail thumbnail-mary">
-        <div class="thumbnail-mary-figure"><img src="{% static 'images/gallery-image-15-420x308.jpg' %}" alt="" width="420" height="308"/>
-        </div>
-        <div class="thumbnail-mary-caption"><a class="icon fl-bigmug-line-zoom60" href="{% static 'images/gallery-image-15-1200x800-original.jpg' %}" data-lightgallery="item"><img src="{% static 'images/gallery-image-15-420x308.jpg' %}" alt="" width="420" height="308"/></a>
-        </div>
-      </article>
-      <div class="thumbnail-mary-description">
-        <h5 class="thumbnail-mary-project"><a href="/course/robotics-lego/">Робототехніка LeGoWEDO</a></h5><span class="thumbnail-mary-decor"></span>
-        <h5 class="thumbnail-mary-time">
-        </h5>
-      </div>
-    </div>
 
-    <div class="owl-item">
-      <!-- Thumbnail Classic-->
-      <article class="thumbnail thumbnail-mary">
-        <div class="thumbnail-mary-figure"><img src="{% static 'images/gallery-image-16-420x308.jpg' %}" alt="" width="420" height="308"/>
+<div class="kodim-about">
+  <style>
+    .kodim-about {
+      --ink: #132A46;
+      --ink-soft: #345070;
+      --paper: #EAEEF0;
+      --paper-warm: #F3F1EA;
+      --card: #FFFFFF;
+      --maroon: #8C3A34;
+      --blue: #2C5AA0;
+      --green: #3F7D53;
+      --gold: #D9A230;
+      --line: rgba(19, 42, 70, 0.14);
+      --shadow: 0 20px 50px -25px rgba(19, 42, 70, 0.35);
+      font-family: 'IBM Plex Sans', sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+    .kodim-about * {
+      box-sizing: border-box;
+    }
+
+    .kodim-about h1,
+    .kodim-about h2,
+    .kodim-about h3 {
+      font-family: 'Fraunces', serif;
+      margin: 0;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+
+    .kodim-about .eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      display: inline-block;
+    }
+
+    .kodim-about a {
+      color: inherit;
+    }
+
+    .kodim-about .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .kodim-about img {
+      max-width: 100%;
+      display: block;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .kodim-about * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ---------- HERO ---------- */
+    .kodim-about .hero {
+      padding: 64px 0 40px;
+      position: relative;
+    }
+
+    .kodim-about .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 56px;
+      align-items: center;
+    }
+
+    .kodim-about .hero h1 {
+      font-size: clamp(30px, 4.2vw, 50px);
+      font-weight: 600;
+      margin-top: 14px;
+    }
+
+    .kodim-about .hero h1 em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--maroon);
+    }
+
+    .kodim-about .hero p.lede {
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--ink-soft);
+      max-width: 46ch;
+      margin-top: 20px;
+    }
+
+    .kodim-about .hero-ctas {
+      margin-top: 32px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .kodim-about .btn-primary {
+      background: var(--ink);
+      color: var(--paper-warm);
+      padding: 14px 26px;
+      border-radius: 100px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: transform .25s ease, background .25s ease;
+      box-shadow: var(--shadow);
+      display: inline-block;
+      border: none;
+    }
+
+    .kodim-about .btn-primary:hover {
+      background: var(--maroon);
+      transform: translateY(-2px);
+      color: var(--paper-warm);
+    }
+
+    .kodim-about .btn-ghost {
+      padding: 14px 22px;
+      border-radius: 100px;
+      border: 1px solid var(--line);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--ink);
+      transition: border-color .25s ease, background .25s ease;
+      display: inline-block;
+    }
+
+    .kodim-about .btn-ghost:hover {
+      border-color: var(--ink);
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .kodim-about .hex-frame {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      aspect-ratio: 0.865;
+    }
+
+    .kodim-about .hex-clip {
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(50% 0%, 100% 26%, 100% 74%, 50% 100%, 0% 74%, 0% 26%);
+      overflow: hidden;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .kodim-about .hex-clip img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .kodim-about .facet {
+      position: absolute;
+      width: 34px;
+      height: 39px;
+      clip-path: polygon(50% 0%, 100% 26%, 100% 74%, 50% 100%, 0% 74%, 0% 26%);
+      opacity: 0;
+      transform: scale(0.4);
+      animation: kodimPop .5s cubic-bezier(.2, .8, .3, 1.2) forwards;
+    }
+
+    .kodim-about .facet.f1 {
+      background: var(--maroon);
+      top: -14px;
+      left: 16%;
+      animation-delay: .15s;
+    }
+
+    .kodim-about .facet.f2 {
+      background: var(--blue);
+      top: 6%;
+      right: -16px;
+      animation-delay: .32s;
+    }
+
+    .kodim-about .facet.f3 {
+      background: var(--green);
+      bottom: 4%;
+      right: -14px;
+      animation-delay: .48s;
+    }
+
+    .kodim-about .facet.f4 {
+      background: var(--gold);
+      bottom: -16px;
+      left: 22%;
+      animation-delay: .64s;
+    }
+
+    @keyframes kodimPop {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .kodim-about .hero-caption {
+      text-align: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      margin-top: 18px;
+      letter-spacing: 0.03em;
+    }
+
+    /* ---------- SECTION shared ---------- */
+    .kodim-about section.kb-section {
+      padding: 80px 0;
+    }
+
+    .kodim-about .section-head {
+      max-width: 640px;
+      margin-bottom: 52px;
+    }
+
+    .kodim-about .section-head h2 {
+      font-size: clamp(24px, 3.2vw, 34px);
+      font-weight: 600;
+      margin-top: 12px;
+    }
+
+    .kodim-about .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .kodim-about .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---------- INTRO ---------- */
+    .kodim-about .intro {
+      background: var(--paper-warm);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kodim-about .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .kodim-about .intro p {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--ink-soft);
+      margin: 0 0 18px;
+    }
+
+    .kodim-about .intro strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .kodim-about .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .kodim-about .badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid var(--line);
+      padding: 8px 13px;
+      border-radius: 8px;
+      background: var(--card);
+    }
+
+    /* ---------- TIMELINE ---------- */
+    .kodim-about .timeline-track {
+      position: relative;
+      padding-left: 44px;
+      border-left: 2px solid var(--line);
+    }
+
+    .kodim-about .t-item {
+      position: relative;
+      padding-bottom: 44px;
+    }
+
+    .kodim-about .t-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .kodim-about .t-hex {
+      position: absolute;
+      left: -53px;
+      top: 2px;
+      width: 22px;
+      height: 25px;
+      clip-path: polygon(50% 0%, 100% 26%, 100% 74%, 50% 100%, 0% 74%, 0% 26%);
+    }
+
+    .kodim-about .t-item:nth-child(4n+1) .t-hex {
+      background: var(--maroon);
+    }
+
+    .kodim-about .t-item:nth-child(4n+2) .t-hex {
+      background: var(--blue);
+    }
+
+    .kodim-about .t-item:nth-child(4n+3) .t-hex {
+      background: var(--green);
+    }
+
+    .kodim-about .t-item:nth-child(4n+4) .t-hex {
+      background: var(--gold);
+    }
+
+    .kodim-about .t-period {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      color: var(--ink-soft);
+    }
+
+    .kodim-about .t-role {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 5px 0 6px;
+      font-family: 'Fraunces', serif;
+    }
+
+    .kodim-about .t-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink-soft);
+      max-width: 56ch;
+    }
+
+    /* ---------- TRUST ---------- */
+    .kodim-about .trust {
+      background: var(--ink);
+      color: var(--paper-warm);
+    }
+
+    .kodim-about .trust .eyebrow {
+      color: #9FB3C9;
+    }
+
+    .kodim-about .trust .section-head h2 {
+      color: var(--paper-warm);
+    }
+
+    .kodim-about .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .kodim-about .trust-card {
+      background: #0F2038;
+      padding: 32px 30px;
+      transition: background .3s ease;
+    }
+
+    .kodim-about .trust-card:hover {
+      background: #173355;
+    }
+
+    .kodim-about .trust-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: #7E93AC;
+      margin-bottom: 14px;
+    }
+
+    .kodim-about .trust-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--paper-warm);
+      margin-bottom: 10px;
+    }
+
+    .kodim-about .trust-card p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: #B9C6D6;
+      margin: 0;
+    }
+
+    /* ---------- APPROACH ---------- */
+    .kodim-about .approach-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .kodim-about .approach-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 28px 26px;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+
+    .kodim-about .approach-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow);
+    }
+
+    .kodim-about .approach-hex {
+      width: 30px;
+      height: 34px;
+      clip-path: polygon(50% 0%, 100% 26%, 100% 74%, 50% 100%, 0% 74%, 0% 26%);
+      margin-bottom: 18px;
+    }
+
+    .kodim-about .approach-card:nth-child(1) .approach-hex {
+      background: var(--maroon);
+    }
+
+    .kodim-about .approach-card:nth-child(2) .approach-hex {
+      background: var(--blue);
+    }
+
+    .kodim-about .approach-card:nth-child(3) .approach-hex {
+      background: var(--green);
+    }
+
+    .kodim-about .approach-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .kodim-about .approach-card p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--ink-soft);
+      margin: 0;
+    }
+    .kodim-about .badge {
+    color: var(--ink-soft);
+    }
+    /* ---------- QUOTE ---------- */
+    .kodim-about .quote-section {
+      background: var(--paper-warm);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kodim-about .quote-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .kodim-about .quote-wrap blockquote {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(20px, 2.8vw, 28px);
+      line-height: 1.5;
+      margin: 0 0 24px;
+      color: var(--ink);
+    }
+
+    .kodim-about .quote-attr {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
+
+    /* ---------- CTA ---------- */
+    .kodim-about .cta-final {
+      text-align: center;
+    }
+
+    .kodim-about .cta-final h2 {
+      font-size: clamp(26px, 3.6vw, 38px);
+      font-weight: 600;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .kodim-about .cta-final p {
+      color: var(--ink-soft);
+      font-size: 16px;
+      margin: 18px auto 34px;
+      max-width: 50ch;
+    }
+
+    .kodim-about .contact-row {
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 38px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13.5px;
+      color: var(--ink-soft);
+    }
+
+    @media (max-width:860px) {
+      .kodim-about .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .kodim-about .intro-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .kodim-about .trust-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .kodim-about .approach-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .kodim-about section.kb-section {
+        padding: 56px 0;
+      }
+
+      .kodim-about .hex-frame {
+        max-width: 280px;
+      }
+    }
+  </style>
+
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Хто веде школу</span>
+        <h1>Дітей вчить не блогер із курсом за вихідні, а <em>інженер, який 18 років будує реальні системи.</em></h1>
+        <p class="lede">КОДІМ заснувала й веде Ольга Максименко — практикуючий програміст і системний адміністратор. Те,
+          що вона показує дітям, вона щодня застосовує на справжній роботі.</p>
+        <div class="hero-ctas">
+          <a class="btn-primary" href="/contact-us/">Записати дитину на пробне заняття</a>
+          <a class="btn-ghost" href="#story">Дізнатись більше про викладача</a>
         </div>
-        <div class="thumbnail-mary-caption"><a class="icon fl-bigmug-line-zoom60" href="{% static 'images/gallery-image-16-1200x800-original.jpg' %}" data-lightgallery="item"><img src="{% static 'images/gallery-image-16-420x308.jpg' %}" alt="" width="420" height="308"/></a>
+      </div>
+      <div>
+        <div class="hex-frame">
+          <div class="hex-clip"><img src="{% static 'images/about-olga-maksymenko.jpg' %}"
+              alt="Ольга Максименко, засновниця КОДІМ" width="380" height="439" loading="eager"></div>
+          <div class="facet f1"></div>
+          <div class="facet f2"></div>
+          <div class="facet f3"></div>
+          <div class="facet f4"></div>
         </div>
-      </article>
-      <div class="thumbnail-mary-description">
-        <h5 class="thumbnail-mary-project"><a href="/course/computer-basics/">Комп'ютерна грамотність</a></h5><span class="thumbnail-mary-decor"></span>
-        <h5 class="thumbnail-mary-time">
-        </h5>
+        <div class="hero-caption">ОЛЬГА МАКСИМЕНКО — ЗАСНОВНИЦЯ ТА КЕРІВНИК ПРОЄКТУ КОДІМ</div>
       </div>
     </div>
-  </div>
-</section>
-<!--Counters-->
-<!-- Counter Classic-->
-<section class="section section-fluid bg-default">
-  <div class="parallax-container" data-parallax-img="{% static 'images/bg-counter-2.jpg' %}">
-    <div class="parallax-content section-xl context-dark bg-overlay-26">
-      <div class="container">
-        <div class="row row-50 justify-content-center border-classic">
-          <div class="col-sm-6 col-md-5 col-lg-3">
-            <div class="counter-classic">
-              <div class="counter-classic-number"><span class="counter">12</span>
-              </div>
-              <h5 class="counter-classic-title">Нагороди</h5>
-            </div>
+  </header>
+
+  <section class="kb-section intro" id="story">
+    <div class="wrap intro-grid">
+      <div class="reveal">
+        <span class="eyebrow">Хто веде школу</span>
+        <h2>Не «викладач програмування». Інженер, який досі в проді.</h2>
+      </div>
+      <div class="reveal">
+        <p>Ольга — <strong>інженер комп'ютерних систем</strong> з дипломом з відзнакою Одеського національного
+          університету ім. І. І. Мечникова. Останні 18 років вона щодня працює з тим самим стеком технологій, якому
+          вчить дітей у КОДІМ.</p>
+        <p>Зараз вона — <strong>провідний програміст</strong> на харчопереробному підприємстві: адмініструє мережі
+          MikroTik, віртуалізацію VMware/Proxmox, сервери Windows та автоматизує процеси на Bash. Паралельно розробляє
+          власний веб-проєкт на <strong>Python/Django</strong> і сама налаштовує його SEO — тобто те, чого навчає дітей,
+          вона застосовує на практиці щотижня.</p>
+        <p>У 2014–2015 вона викладала інформаційні технології у Первомайському коледжі — тому знає не лише технології, а
+          й те, як пояснювати їх людині, яка бачить це вперше.</p>
+        <div class="badge-row">
+          <span class="badge">Диплом з відзнакою</span>
+          <span class="badge">18 років в IT</span>
+          <span class="badge">Python · Django</span>
+          <span class="badge">Мережі та сервери</span>
+          <span class="badge">Досвід викладання</span>
+          <span class="badge">КОДІМ з 2021</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kb-section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Шлях, крок за кроком</span>
+        <h2>Досвід, який складався 18 років — не за один курс на вихідних</h2>
+      </div>
+      <div class="reveal">
+        <div class="timeline-track">
+          <div class="t-item">
+            <div class="t-hex"></div>
+            <div class="t-period">2008 — 2013</div>
+            <div class="t-role">Інженер-програміст</div>
+            <div class="t-desc">Завод «Фрегат»: перші промислові системи — програмування баз даних 1С. Початок шляху в
+              реальному виробництві.</div>
           </div>
-          <div class="col-sm-6 col-md-5 col-lg-3">
-            <div class="counter-classic">
-              <div class="counter-classic-number"><span class="counter">10</span>
-              </div>
-              <h5 class="counter-classic-title">Курси</h5>
-            </div>
+          <div class="t-item">
+            <div class="t-hex"></div>
+            <div class="t-period">2013 — 2015</div>
+            <div class="t-role">Системний адміністратор → викладач</div>
+            <div class="t-desc">Обслуговування мережі з понад 100 пристроїв, Active Directory, резервне копіювання — а
+              потім рік викладання інформаційних технологій у коледжі.</div>
           </div>
-          <div class="col-sm-6 col-md-5 col-lg-3">
-            <div class="counter-classic">
-              <div class="counter-classic-number"><span class="counter">200</span>
-              </div>
-              <h5 class="counter-classic-title">Учні</h5>
-            </div>
+          <div class="t-item">
+            <div class="t-hex"></div>
+            <div class="t-period">2015 — 2022</div>
+            <div class="t-role">Інженер з комп'ютерних систем</div>
+            <div class="t-desc">Ливарний завод: адміністрування мереж і серверів, а також написання й розміщення
+              власного сайту на PHP/HTML/CSS/JavaScript.</div>
+          </div>
+          <div class="t-item">
+            <div class="t-hex"></div>
+            <div class="t-period">2018 — дотепер</div>
+            <div class="t-role">Спеціаліст з IT</div>
+            <div class="t-desc">«Реал Фарм»: обслуговування розподілених баз 1С, VPN, віртуальних серверів VMware —
+              інфраструктура, що працює щодня.</div>
+          </div>
+          <div class="t-item">
+            <div class="t-hex"></div>
+            <div class="t-period">2021 — дотепер</div>
+            <div class="t-role">Засновниця й керівник проєкту КОДІМ</div>
+            <div class="t-desc">П'ять років веде IT-школу для дітей у Первомайську — паралельно з реальною інженерною
+              роботою, а не замість неї.</div>
+          </div>
+          <div class="t-item">
+            <div class="t-hex"></div>
+            <div class="t-period">2024 — дотепер</div>
+            <div class="t-role">Провідний програміст</div>
+            <div class="t-desc">Молочноконсервний комбінат: мережі, віртуалізація, Windows Server, автоматизація —
+              актуальний досвід, який щодня переноситься на заняття.</div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-{% endblock content %}
+  </section>
+
+  <section class="kb-section trust">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Чому батьки нам довіряють</span>
+        <h2>Довіра — це не обіцянка, а перевірені факти</h2>
+      </div>
+      <div class="trust-grid reveal">
+        <div class="trust-card">
+          <div class="trust-num">01</div>
+          <h3>Справжній інженер, а не ведучий курсу</h3>
+          <p>Ольга щодня адмініструє реальні сервери й мережі на діючому підприємстві. Дітям вона показує не завчений
+            матеріал, а те, з чим працює сама.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-num">02</div>
+          <h3>Педагогічний досвід</h3>
+          <p>Рік викладання в коледжі навчив пояснювати складне простою мовою — навичка, яку не дає жоден технічний
+            диплом сам по собі.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-num">03</div>
+          <h3>П'ять років стабільної роботи школи</h3>
+          <p>КОДІМ працює з 2021 року. Це не разовий експеримент, а проєкт, який Ольга веде поряд з основною інженерною
+            кар'єрою.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-num">04</div>
+          <h3>Відповідальність — не гасло</h3>
+          <p>Пунктуальність, дисципліна й відповідальність — принципи, з якими Ольга працює на кожному робочому місці за
+            останні 18 років.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kb-section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Чого вчаться діти</span>
+        <h2>Знання, перевірені на реальних задачах</h2>
+      </div>
+      <div class="approach-grid reveal">
+        <div class="approach-card">
+          <div class="approach-hex"></div>
+          <h3>Програмування з нуля</h3>
+          <p>Python та веб-розробка на Django — та сама технологія, на якій Ольга веде власний робочий проєкт із
+            налаштованою SEO-оптимізацією.</p>
+        </div>
+        <div class="approach-card">
+          <div class="approach-hex"></div>
+          <h3>Як влаштовані комп'ютери й мережі</h3>
+          <p>Основи мереж, серверів і адміністрування — пояснені людиною, яка щодня налаштовує MikroTik, VPN і Active
+            Directory на роботі.</p>
+        </div>
+        <div class="approach-card">
+          <div class="approach-hex"></div>
+          <h3>Мислення інженера</h3>
+          <p>Не просто «написати код, щоб запрацювало», а звичка розбиратись, чому щось працює саме так — підхід із 18
+            років практики.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kb-section quote-section">
+    <div class="wrap quote-wrap reveal">
+      <blockquote>«Я не розповідаю дітям про IT — я показую те, з чим сама щодня працюю на реальних серверах і проєктах.
+        Тому вони вчаться на правді, а не на спрощеній версії».</blockquote>
+      <div class="quote-attr">ОЛЬГА МАКСИМЕНКО, ЗАСНОВНИЦЯ КОДІМ</div>
+    </div>
+  </section>
+
+  <section class="kb-section cta-final" id="contact">
+    <div class="wrap reveal">
+      <span class="eyebrow">Наступний крок</span>
+      <h2>Приведіть дитину на пробне заняття — і подивіться самі, як ми вчимо</h2>
+      <p>Без зобов'язань. Одне заняття покаже більше, ніж будь-який опис на сайті.</p>
+      <a class="btn-primary" href="/contact-us/">Записатись на пробне заняття</a>
+      <div class="contact-row">
+        <span>kodim.pervomaisk@gmail.com</span>
+        <span>066 795-43-74</span>
+        <span>м. Первомайськ, Миколаївська обл.</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  (function () {
+    var els = document.querySelectorAll('.kodim-about .reveal');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.15 });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+</script>
+{% endblock %}
+
 {% block navbar %}
-<li class="rd-nav-item "><a class="rd-nav-link" href="/">Головна</a>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/">Головна</a>
 </li>
 <li class="rd-nav-item active"><a class="rd-nav-link" href="/about/">Про нас</a>
 </li>
-<li class="rd-nav-item"><a class="rd-nav-link" href="/courses/">Курси</a>
-
-</li>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/courses/">Курси</a></li>
 <li class="rd-nav-item "><a class="rd-nav-link" href="/news/">Новини</a>
 </li>
-<li class="rd-nav-item "><a class="rd-nav-link" href="/contact-us/">Зв'язок</a>
+<li class="rd-nav-item"><a class="rd-nav-link" href="/contact-us/">Зв'язок</a>
 </li>
 <li class="rd-nav-item"><a class="rd-nav-link" href="/projects/">Проєкти</a>
 </li>
