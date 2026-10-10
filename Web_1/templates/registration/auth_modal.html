@@ -1,0 +1,107 @@
+{% comment %}
+Параметри: mode = '' | 'login' | 'register' (яка вкладка відкрита одразу)
+form — потрібен лише на сторінках login/registration для показу помилок.
+{% endcomment %}
+<div class="kd-auth" id="kdAuth" data-open="{{ mode }}" aria-hidden="true">
+    <div class="kd-auth__backdrop" data-auth-close></div>
+
+    <div class="kd-auth__dialog" role="dialog" aria-modal="true" aria-labelledby="kdAuthTitle">
+        <button type="button" class="kd-auth__close" data-auth-close aria-label="Закрити">&times;</button>
+
+        <div class="kd-auth__head">
+            <span class="kd-auth__logo">KODiM</span>
+            <h3 id="kdAuthTitle">Ласкаво просимо!</h3>
+            <p>Мрій · Навчайся · Створюй</p>
+        </div>
+
+        <div class="kd-auth__tabs" role="tablist">
+            <button type="button" class="kd-auth__tab" data-auth-tab="login" role="tab">Вхід</button>
+            <button type="button" class="kd-auth__tab" data-auth-tab="register" role="tab">Реєстрація</button>
+        </div>
+
+        <!-- ВХІД -->
+        <form class="kd-auth__pane" data-auth-pane="login" method="post" action="{% url 'users:login' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next"
+                value="{% if mode == 'login' %}{{ next }}{% else %}{{ request.get_full_path }}{% endif %}">
+
+            {% if mode == 'login' and form.errors %}
+            <div class="kd-auth__error">Невірний логін або пароль. Спробуйте ще раз.</div>
+            {% endif %}
+
+            <label class="kd-auth__field">
+                <span class="kd-auth__label">Логін</span>
+                <span class="kd-auth__input-wrap">
+                    <i class="fa fa-user"></i>
+                    <input type="text" name="username" autocomplete="username" placeholder="Ваш логін" required
+                        value="{% if mode == 'login' %}{{ form.username.value|default:'' }}{% endif %}">
+                </span>
+            </label>
+
+            <label class="kd-auth__field">
+                <span class="kd-auth__label">Пароль</span>
+                <span class="kd-auth__input-wrap">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" name="password" autocomplete="current-password" placeholder="Ваш пароль"
+                        required>
+                    <button type="button" class="kd-auth__eye" data-auth-eye aria-label="Показати пароль"><i
+                            class="fa fa-eye"></i></button>
+                </span>
+            </label>
+
+            <button type="submit" class="kd-auth__submit">Увійти</button>
+
+            <div class="kd-auth__foot">
+                <a href="{% url 'users:password_reset' %}">Забули пароль?</a>
+                <span>Немає акаунта? <a href="#" data-auth-tab="register">Зареєструватись</a></span>
+            </div>
+        </form>
+
+        <!-- РЕЄСТРАЦІЯ -->
+        <form class="kd-auth__pane" data-auth-pane="register" method="post" action="{% url 'users:registration' %}">
+            {% csrf_token %}
+
+            {% if mode == 'register' and form.errors %}
+            <div class="kd-auth__error">
+                {% for field in form %}{% for e in field.errors %}<div>{{ e }}</div>{% endfor %}{% endfor %}
+                {% for e in form.non_field_errors %}<div>{{ e }}</div>{% endfor %}
+            </div>
+            {% endif %}
+
+            <label class="kd-auth__field">
+                <span class="kd-auth__label">Логін</span>
+                <span class="kd-auth__input-wrap">
+                    <i class="fa fa-user"></i>
+                    <input type="text" name="username" autocomplete="username" placeholder="Придумайте логін" required
+                        value="{% if mode == 'register' %}{{ form.username.value|default:'' }}{% endif %}">
+                </span>
+            </label>
+
+            <label class="kd-auth__field">
+                <span class="kd-auth__label">Пароль</span>
+                <span class="kd-auth__input-wrap">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" name="password1" autocomplete="new-password" placeholder="Мінімум 8 символів"
+                        required>
+                    <button type="button" class="kd-auth__eye" data-auth-eye aria-label="Показати пароль"><i
+                            class="fa fa-eye"></i></button>
+                </span>
+            </label>
+
+            <label class="kd-auth__field">
+                <span class="kd-auth__label">Повторіть пароль</span>
+                <span class="kd-auth__input-wrap">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" name="password2" autocomplete="new-password"
+                        placeholder="Ще раз той самий пароль" required>
+                </span>
+            </label>
+
+            <button type="submit" class="kd-auth__submit">Створити акаунт</button>
+
+            <div class="kd-auth__foot">
+                <span>Вже є акаунт? <a href="#" data-auth-tab="login">Увійти</a></span>
+            </div>
+        </form>
+    </div>
+</div>

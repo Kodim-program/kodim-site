@@ -63,6 +63,7 @@
     <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/news.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth-modal.css' %}">
     <link rel="stylesheet" href="{% static 'django_ckeditor_5/dist/styles.css' %}">
     
     <style>
@@ -146,7 +147,7 @@
                         <div class="unit-left"><span class="icon fa fa-phone"></span></div>
                         <div class="unit-body"><a class="link-phone" href="tel:+380667954374">+380-66-795-4374</a></div>
                       </div>
-                    </li>
+                    </li>і
                   </ul>
                 </div>
                 {% if user.is_authenticated %}
@@ -154,8 +155,10 @@
                   <a href="{% url 'users:profile' %}"><button class="btn"><i class="animation"></i>Профіль<i class="animation"></i></button></a>
                 </div>
                 {% else %}
-                <div>
-                  <a href="{% url 'users:login' %}"><button class="btn"><i class="animation"></i>Авторизація<i class="animation"></i></button></a>
+                <div data-auth-slot>
+                  <button type="button" class="btn" data-auth-open="login"><i class="animation"></i>Авторизація<i
+                      class="animation"></i></button>
+                  <noscript><a href="{% url 'users:login' %}">Авторизація</a></noscript>
                 </div>
                 {% endif %}
               </div>
@@ -275,9 +278,13 @@
     </div>
     <!-- Global Mailform Output-->
     <div class="snackbars" id="form-output-global"></div>
+    {% if not user.is_authenticated %}
+        {% block auth_modal %}{% include 'registration/auth_modal.html' with mode='' %}{% endblock %}
+    {% endif %}
     <!-- Javascript-->
     <script src="{% static 'js/core.min.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/auth-modal.js' %}"></script>
 
     <script>
             document.addEventListener('DOMContentLoaded', function () {

@@ -5,6 +5,41 @@ from django.contrib.auth import authenticate, login
 from users.forms import UserRegisterForm
 from learning.models import Enrollment, MaterialProgress
 
+from django.http import JsonResponse
+from django.contrib.auth.views import LoginView
+
+from django.middleware.csrf import get_token
+from django.urls import reverse
+
+
+def _is_ajax(request):
+    return request.headers.get('x-requested-with') == 'XMLHttpRequest'
+
+def _auth_ok(request, redirect_url='/'):
+    """JSON-відповідь після успішного входу/реєстрації."""
+    return JsonResponse({
+        'ok': True,
+        'redirect': redirect_url,
+        'profile_url': reverse('users:profile'),
+        'csrf': get_token(request),   # Django міняє CSRF-токен після входу
+    })
+
+class AjaxLoginView(LoginView):
+    """Звичайний LoginView, але для AJAX повертає JSON замість редіректу/HTML."""
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        if _is_ajax(self.request):
+            return _auth_ok(self.request, redirect_url=self.get_success_url())
+        return response
+
+    def form_invalid(self, form):
+        if _is_ajax(self.request):
+            return JsonResponse(
+                {'ok': False, 'errors': ['Невірний логін або пароль. Спробуйте ще раз.']},
+                status=400,
+            )
+        return super().form_invalid(form)
 
 @login_required
 def profile(request):
@@ -55,5 +90,11 @@ class Register(View):
             password = form.cleaned_data['password1']
             user = authenticate(username=username, password=password)
             login(request, user)
+            if _is_ajax(request):
+                return _auth_ok(request, '/')
             return redirect('/')
+
+        if _is_ajax(request):
+            errors = [e for errs in form.errors.values() for e in errs]
+            return JsonResponse({'ok': False, 'errors': errors}, status=400)
         return render(request, self.template_name, {'form': form})
