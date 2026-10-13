@@ -30,8 +30,7 @@
             {% for s in services %}
             <div class="model-card">
                 <a href="{{ s.get_absolute_url }}" style="text-decoration:none;color:inherit;">
-                    <div class="model-thumb">{% if s.thumbnail %}<img src="{{ s.thumbnail.url }}" alt="{{ s.title }}">{%
-                        endif %}</div>
+                    <div class="model-thumb">{% if s.thumbnail %}<img src="{{ s.thumbnail.url }}" alt="{{ s.title }}">{% endif %}</div>
                     <div class="model-body">
                         <span class="model-tag {{ s.kind }}">{{ s.get_kind_display }}</span>
                         <div class="model-name">{{ s.title }}</div>

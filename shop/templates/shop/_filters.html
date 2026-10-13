@@ -1,22 +1,29 @@
 <aside class="sidebar">
     <form method="get">
+
         <div class="f-block">
             <h4>Категорія</h4>
-            <label class="f-opt"><input type="radio" name="category" value="" {% if not request.GET.category %}checked{%
-                    endif %}> Усі</label>
+            <label class="f-opt">
+                <input type="radio" name="category" value="" {% if not request.GET.category %}checked{% endif %}> Усі
+            </label>
             {% for c in categories %}
-            <label class="f-opt"><input type="radio" name="category" value="{{ c.slug }}" {% if
-                    request.GET.category==c.slug %}checked{% endif %}> {{ c.name }}</label>
+            <label class="f-opt">
+                <input type="radio" name="category" value="{{ c.slug }}" 
+                {% if request.GET.category == c.slug %}checked{% endif %}> {{ c.name }}
+            </label>
             {% endfor %}
         </div>
 
         <div class="f-block">
             <h4>Тип</h4>
-            <label class="f-opt"><input type="radio" name="kind" value="" {% if not request.GET.kind %}checked{% endif
-                    %}> Усі</label>
+            <label class="f-opt">
+                <input type="radio" name="kind" value="" {% if not request.GET.kind %}checked{% endif %}> Усі
+            </label>
             {% for value, label in kinds %}
-            <label class="f-opt"><input type="radio" name="kind" value="{{ value }}" {% if request.GET.kind==value
-                    %}checked{% endif %}> {{ label }}</label>
+            <label class="f-opt">
+                <input type="radio" name="kind" value="{{ value }}" {% if request.GET.kind == value %}checked{% endif %}>
+                {{ label }}
+            </label>
             {% endfor %}
         </div>
 
@@ -35,7 +42,7 @@
             <select class="f-select" name="days_max">
                 <option value="">Будь-який</option>
                 {% for d in days_options %}
-                <option value="{{ d }}" {% if request.GET.days_max==d|stringformat:"s" %}selected{% endif %}>до {{ d }}
+                <option value="{{ d }}" {% if request.GET.days_max == d|stringformat:"s" %}selected{% endif %}>до {{ d }}
                     днів</option>
                 {% endfor %}
             </select>
@@ -45,8 +52,10 @@
         <div class="f-block">
             <h4>{{ tech_title }}</h4>
             {% for t in technologies %}
-            <label class="f-opt"><input type="checkbox" name="tech" value="{{ t.slug }}" {% if t.slug in selected_techs
-                    %}checked{% endif %}> {{ t.name }}</label>
+            <label class="f-opt">
+                <input type="checkbox" name="tech" value="{{ t.slug }}" {% if t.slug in selected_techs %}checked
+                {% endif %}> {{ t.name }}
+            </label>
             {% endfor %}
         </div>
         {% endif %}

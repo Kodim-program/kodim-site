@@ -22,8 +22,8 @@
                 <h1>{{ service.title }}</h1>
                 {% if service.description %}<p class="desc">{{ service.description|linebreaksbr }}</p>{% endif %}
                 {% if service.technologies.all %}
-                <p class="author">Технології: {% for t in service.technologies.all %}{{ t.name }}{% if not forloop.last
-                    %}, {% endif %}{% endfor %}</p>
+                <p class="author">Технології: {% for t in service.technologies.all %}{{ t.name }}
+                    {% if not forloop.last %}, {% endif %}{% endfor %}</p>
                 {% endif %}
             </div>
 
@@ -37,8 +37,8 @@
                         {% for p in packages %}
                         <label class="pkg">
                             <div class="pkg-head">
-                                <span><input type="radio" name="package" value="{{ p.pk }}" {% if forloop.first
-                                        %}checked{% endif %}> {{ p.name }}</span>
+                                <span><input type="radio" name="package" value="{{ p.pk }}" 
+                                    {% if forloop.first %}checked{% endif %}> {{ p.name }}</span>
                                 <span>{{ p.price|floatformat:0 }} грн</span>
                             </div>
                             <div class="pkg-meta">Строк: {{ p.delivery_days }} дн.</div>
