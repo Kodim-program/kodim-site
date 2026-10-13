@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
+    <title>{{ service.title }} — KODIM</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'shop/shop.css' %}">
+</head>
+
+<body>
+    <div class="wrap">
+        <a href="{% url 'shop:services_catalog' %}" class="back">← Усі послуги</a>
+        <div class="layout">
+            <div>
+                <span class="tag {{ service.kind }}">{{ service.get_kind_display }}</span>
+                <h1>{{ service.title }}</h1>
+                {% if service.description %}<p class="desc">{{ service.description|linebreaksbr }}</p>{% endif %}
+                {% if service.technologies.all %}
+                <p class="author">Технології: {% for t in service.technologies.all %}{{ t.name }}{% if not forloop.last
+                    %}, {% endif %}{% endfor %}</p>
+                {% endif %}
+            </div>
+
+            <div class="order-box">
+                {% if sent %}<div class="success-banner">Дякуємо! Заявку прийнято, ми зв'яжемось з вами найближчим
+                    часом.</div>{% endif %}
+                <h3>Оберіть пакет і залиште заявку</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="pkg-grid">
+                        {% for p in packages %}
+                        <label class="pkg">
+                            <div class="pkg-head">
+                                <span><input type="radio" name="package" value="{{ p.pk }}" {% if forloop.first
+                                        %}checked{% endif %}> {{ p.name }}</span>
+                                <span>{{ p.price|floatformat:0 }} грн</span>
+                            </div>
+                            <div class="pkg-meta">Строк: {{ p.delivery_days }} дн.</div>
+                            <ul>{% for f in p.features_list %}<li>{{ f }}</li>{% endfor %}</ul>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {{ form.package.errors }}
+                    {{ form.name }}{{ form.name.errors }}
+                    {{ form.phone }}{{ form.phone.errors }}
+                    {{ form.email }}
+                    {{ form.comment }}
+                    <button type="submit" class="submit-btn">Надіслати заявку</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

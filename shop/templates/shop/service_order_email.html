@@ -1,0 +1,6 @@
+<p>Нова заявка на послугу: <strong>{{ service.title }}</strong></p>
+<p>Пакет: {{ package.name }} — {{ package.price }} грн, {{ package.delivery_days }} дн.</p>
+<p>Ім'я: {{ name }}</p>
+<p>Телефон: {{ phone }}</p>
+{% if email %}<p>Email: {{ email }}</p>{% endif %}
+{% if comment %}<p>Коментар: {{ comment }}</p>{% endif %}

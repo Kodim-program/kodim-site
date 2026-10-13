@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
+    <title>Каталог 3D-моделей — KODIM</title>
+    <meta name="description"
+        content="Друк і продаж 3D-моделей від KODIM: власні розробки та відібрані моделі з MakerWorld.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'shop/shop.css' %}">
+</head>
+
+<body>
+
+    <div class="hero">
+        <h1 class="hero-title">Каталог 3D-моделей</h1>
+        <p class="hero-sub">Власні розробки KODIM та відібрані моделі з MakerWorld — друк і продаж під ключ</p>
+        <div class="section-switch">
+            <a href="{% url 'shop:services_catalog' %}" class="filter-tab">Послуги</a>
+            <a href="{% url 'shop:models_catalog' %}" class="filter-tab active">Готові моделі</a>
+        </div>
+    </div>
+
+    <div class="shop-layout">
+        {% include "shop/_filters.html" %}
+
+        <div class="model-grid">
+            {% for m in models %}
+            <div class="model-card">
+                <a href="{{ m.get_absolute_url }}" style="text-decoration:none;color:inherit;">
+                    <div class="model-thumb">
+                        {% if m.thumbnail %}<img src="{{ m.thumbnail.url }}" alt="{{ m.title }}">{% endif %}
+                    </div>
+                    <div class="model-body">
+                        <span class="model-tag {{ m.source_type }}">
+                            {% if m.source_type == 'own' %}Власна{% else %}MakerWorld{% endif %}
+                        </span>
+                        <div class="model-name">{{ m.title }}</div>
+                        {% if m.author_name %}<div class="model-author">Автор: {{ m.author_name }}</div>{% endif %}
+                    </div>
+                </a>
+
+                <div class="model-body" style="padding-top:0;">
+                    <div class="model-footer">
+                        {% if m.can_sell_print %}
+                        <span class="model-price">{{ m.print_price|default:m.file_price }} грн</span>
+                        <a href="{{ m.get_absolute_url }}" class="btn btn-buy">Замовити друк</a>
+                        {% elif m.source_type == 'makerworld' %}
+                        <span class="model-author" style="margin:0;">Показ, без продажу</span>
+                        <a href="{{ m.get_absolute_url }}" class="btn btn-link">Детальніше</a>
+                        {% else %}
+                        <span class="model-price">{{ m.file_price }} грн</span>
+                        <a href="{{ m.get_absolute_url }}" class="btn btn-buy">Купити</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty">За цими критеріями моделей не знайдено</div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+
+</html>

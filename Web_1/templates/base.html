@@ -173,7 +173,23 @@
                   <!-- RD Navbar Nav-->
                   <ul class="rd-navbar-nav">
                     
-                    {% block navbar %}{% endblock %}
+                    {% block navbar %}
+                    <li class="rd-nav-item {% if request.path == '/' %}active{% endif %}"><a class="rd-nav-link" href="/">Головна</a></li>
+                    <li class="rd-nav-item {% if request.path == '/about/' %}active{% endif %}"><a class="rd-nav-link" href="/about/">Про
+                        нас</a></li>
+                    <li class="rd-nav-item {% if '/course' in request.path %}active{% endif %}"><a class="rd-nav-link"
+                        href="/courses/">Курси</a></li>
+                    <li class="rd-nav-item {% if '/news' in request.path %}active{% endif %}"><a class="rd-nav-link"
+                        href="/news/">Новини</a></li>
+                    <li class="rd-nav-item {% if request.path == '/contact-us/' %}active{% endif %}"><a class="rd-nav-link"
+                        href="/contact-us/">Зв'язок</a></li>
+                    <li class="rd-nav-item {% if '/projects' in request.path %}active{% endif %}"><a class="rd-nav-link"
+                        href="/projects/">Проєкти</a></li>
+                    <li class="rd-nav-item {% if '/services' in request.path %}active{% endif %}"><a class="rd-nav-link"
+                        href="/services/">Послуги</a></li>
+                    <li class="rd-nav-item {% if '/models' in request.path %}active{% endif %}"><a class="rd-nav-link"
+                        href="/models/">3D-моделі</a></li>
+                    {% endblock %}
                   
                   </ul>
                 </div>

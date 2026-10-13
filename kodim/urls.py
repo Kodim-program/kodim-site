@@ -36,7 +36,8 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path("learning/", include("learning.urls")),
     path("psycho/", include("psycho.urls")),
-    path("projects/", include("projects.urls")),  
+    path("projects/", include("projects.urls")),
+    path("", include("shop.urls")),
     path("ckeditor5/", include("django_ckeditor_5.urls")),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots_txt')

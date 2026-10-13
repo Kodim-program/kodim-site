@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
+    <title>Послуги — KODIM</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'shop/shop.css' %}">
+</head>
+
+<body>
+    <div class="hero">
+        <h1 class="hero-title">Послуги KODIM</h1>
+        <p class="hero-sub">Розробка додатків і 3D-моделювання — пакети з фіксованою ціною та строками</p>
+        <div class="section-switch">
+            <a href="{% url 'shop:services_catalog' %}" class="filter-tab active">Послуги</a>
+            <a href="{% url 'shop:models_catalog' %}" class="filter-tab">Готові моделі</a>
+        </div>
+    </div>
+
+    <div class="shop-layout">
+        {% include "shop/_filters.html" %}
+
+        <div class="model-grid">
+            {% for s in services %}
+            <div class="model-card">
+                <a href="{{ s.get_absolute_url }}" style="text-decoration:none;color:inherit;">
+                    <div class="model-thumb">{% if s.thumbnail %}<img src="{{ s.thumbnail.url }}" alt="{{ s.title }}">{%
+                        endif %}</div>
+                    <div class="model-body">
+                        <span class="model-tag {{ s.kind }}">{{ s.get_kind_display }}</span>
+                        <div class="model-name">{{ s.title }}</div>
+                        <div class="model-author">{{ s.short_description }}</div>
+                    </div>
+                </a>
+                <div class="model-body" style="padding-top:0;">
+                    <div class="model-footer">
+                        <div>
+                            <div class="model-price">від {{ s.min_price|floatformat:0 }} грн</div>
+                            <div class="model-author" style="margin:0;">від {{ s.min_days }} дн.</div>
+                        </div>
+                        <a href="{{ s.get_absolute_url }}" class="btn btn-buy">Обрати пакет</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty">За цими критеріями послуг не знайдено</div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>
