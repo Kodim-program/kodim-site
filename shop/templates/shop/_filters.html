@@ -16,8 +16,8 @@
                 </label>
                 {% for c in categories %}
                 <label class="f-opt">
-                    <input type="radio" name="category" value="{{ c.slug }}" {% if request.GET.category==c.slug
-                        %}checked{% endif %}> {{ c.name }}
+                    <input type="radio" name="category" value="{{ c.slug }}" 
+                    {% if request.GET.category==c.slug %}checked{% endif %}> {{ c.name }}
                 </label>
                 {% endfor %}
             </div>
@@ -50,8 +50,8 @@
                 <select class="f-select" name="days_max">
                     <option value="">Будь-який</option>
                     {% for d in days_options %}
-                    <option value="{{ d }}" {% if request.GET.days_max==d|stringformat:"s" %}selected{% endif %}>до {{ d
-                        }} днів</option>
+                    <option value="{{ d }}" {% if request.GET.days_max==d|stringformat:"s" %}
+                    selected{% endif %}>до {{ d  }} днів</option>
                     {% endfor %}
                 </select>
             </div>
@@ -61,8 +61,9 @@
                 <h4>{{ tech_title }}</h4>
                 {% for t in technologies %}
                 <label class="f-opt">
-                    <input type="checkbox" name="tech" value="{{ t.slug }}" {% if t.slug in selected_techs %}checked{%
-                        endif %}> {{ t.name }}
+                    <input type="checkbox" name="tech" value="{{ t.slug }}" 
+                    {% if t.slug in selected_techs %}checked
+                    {% endif %}> {{ t.name }}
                 </label>
                 {% endfor %}
             </div>
