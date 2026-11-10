@@ -17,7 +17,7 @@
                 {% for c in categories %}
                 <label class="f-opt">
                     <input type="radio" name="category" value="{{ c.slug }}" 
-                    {% if request.GET.category==c.slug %}checked{% endif %}> {{ c.name }}
+                    {% if request.GET.category == c.slug %}checked{% endif %}> {{ c.name }}
                 </label>
                 {% endfor %}
             </div>
@@ -29,8 +29,8 @@
                 </label>
                 {% for value, label in kinds %}
                 <label class="f-opt">
-                    <input type="radio" name="kind" value="{{ value }}" {% if request.GET.kind==value %}checked{% endif
-                        %}> {{ label }}
+                    <input type="radio" name="kind" value="{{ value }}" {% if request.GET.kind == value %}checked
+                    {% endif %}> {{ label }}
                 </label>
                 {% endfor %}
             </div>
@@ -50,7 +50,7 @@
                 <select class="f-select" name="days_max">
                     <option value="">Будь-який</option>
                     {% for d in days_options %}
-                    <option value="{{ d }}" {% if request.GET.days_max==d|stringformat:"s" %}
+                    <option value="{{ d }}" {% if request.GET.days_max == d|stringformat:"s" %}
                     selected{% endif %}>до {{ d  }} днів</option>
                     {% endfor %}
                 </select>
