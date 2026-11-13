@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.contrib.auth import authenticate, login
-from users.forms import UserRegisterForm
+
 from learning.models import Enrollment, MaterialProgress
 
 from django.http import JsonResponse
@@ -11,6 +11,11 @@ from django.contrib.auth.views import LoginView
 from django.middleware.csrf import get_token
 from django.urls import reverse
 
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.views.decorators.http import require_POST
+from users.forms import UserRegisterForm, ProfileUpdateForm   # замінити наявний імпорт
 
 def _is_ajax(request):
     return request.headers.get('x-requested-with') == 'XMLHttpRequest'
@@ -71,7 +76,33 @@ def profile(request):
     }
     return render(request, 'registration/profile.html', context)
 
+@login_required
+@require_POST
+def profile_settings(request):
+    """Збереження налаштувань профілю (дані або пароль) зі сторінки профілю."""
+    back = reverse('users:profile') + '#settings'
 
+    if request.POST.get('form_type') == 'password':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # щоб не розлогінило
+            messages.success(request, 'Пароль змінено.')
+        else:
+            for errs in form.errors.values():
+                for e in errs:
+                    messages.error(request, e)
+    else:
+        form = ProfileUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Дані профілю збережено.')
+        else:
+            for errs in form.errors.values():
+                for e in errs:
+                    messages.error(request, e)
+
+    return redirect(back)
 class Register(View):
     template_name = 'registration/registration.html'
 
