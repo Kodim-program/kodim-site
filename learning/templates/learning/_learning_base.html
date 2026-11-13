@@ -1,0 +1,520 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<script>
+    // Та сама тема, що й у профілі (спільний ключ у localStorage)
+    (function () {
+        var t = 'light';
+        try { t = localStorage.getItem('kodim-theme') || 'light'; } catch (e) { }
+        document.documentElement.setAttribute('data-profile-theme', t);
+    })();
+</script>
+
+<!-- ===== Ліва іконкова панель (така сама, як у профілі) ===== -->
+<aside class="pf-sidebar" aria-label="Меню кабінету">
+    <div class="pf-avatar" title="{{ user.get_full_name|default:user.username }}">
+        {{ user.first_name|default:user.username|slice:":1"|upper }}
+    </div>
+
+    <a class="pf-item active" href="{% url 'users:profile' %}">
+        <i class="fa fa-graduation-cap"></i><span>Навчання</span>
+    </a>
+    <a class="pf-item" href="{% url 'users:profile' %}#settings">
+        <i class="fa fa-cog"></i><span>Налаштування</span>
+    </a>
+    <button type="button" class="pf-item" id="pf-theme-toggle" aria-label="Змінити тему">
+        <i class="fa fa-moon-o" id="pf-theme-icon"></i><span id="pf-theme-label">Тема</span>
+    </button>
+    <a class="pf-item" href="/">
+        <i class="fa fa-home"></i><span>На сайт</span>
+    </a>
+
+    <form method="post" action="{% url 'users:logout' %}" class="pf-logout">
+        {% csrf_token %}
+        <button type="submit" class="pf-item">
+            <i class="fa fa-sign-out"></i><span>Вийти</span>
+        </button>
+    </form>
+</aside>
+
+<!-- ===== Друга панель: уроки курсу ===== -->
+<aside class="ln-lessons" aria-label="Уроки курсу">
+    <details class="ln-details" id="ln-details">
+        <summary class="ln-summary">
+            <i class="fa fa-list-ul"></i> Уроки курсу
+            <span class="ln-summary-pct">{{ enrollment.progress_percent }}%</span>
+        </summary>
+
+        <div class="ln-course">
+            <a class="ln-course-name" href="{% url 'learning:course_materials' enrollment.course.id %}">
+                {{ enrollment.course.emoji_icon }} {{ enrollment.course.name }}
+            </a>
+            <div class="progress ln-progress">
+                <div class="progress-bar learning-progress-bar" style="width: {{ enrollment.progress_percent }}%;">
+                </div>
+            </div>
+            <p class="ln-course-meta">
+                Пройдено {{ enrollment.read_materials_count }} з {{ enrollment.total_materials }}
+                · {{ enrollment.progress_percent }}%
+            </p>
+        </div>
+
+        <ol class="ln-list">
+            {% for item in materials_status %}
+            <li
+                class="ln-lesson {% if item.is_read %}is-done{% elif not item.is_unlocked %}is-locked{% endif %}{% if material and item.material.id == material.id %} is-current{% endif %}">
+                {% if item.is_unlocked %}
+                <a class="ln-lesson-link" href="{% url 'learning:material_detail' item.material.id %}" {% if material
+                    and item.material.id==material.id %}aria-current="page" {% endif %}>
+                    {% else %}
+                    <span class="ln-lesson-link" title="Спочатку пройдіть попередній урок">
+                        {% endif %}
+                        <span class="ln-num">{% if item.is_read %}&#10003;{% elif not item.is_unlocked %}&#128274;{%
+                            else %}{{ forloop.counter }}{% endif %}</span>
+                        <span class="ln-ltitle">{{ item.material.title }}</span>
+                        {% if item.is_unlocked %}</a>{% else %}</span>{% endif %}
+
+                {% if item.test and item.is_read %}
+                {% if item.test_attempts_left %}
+                <a class="ln-test" href="{% url 'learning:take_test' item.material.id %}">
+                    &#128221; {{ item.test.title }}{% if item.test_best_result %} · {{ item.test_best_result.score }}%{%
+                    endif %}
+                </a>
+                {% else %}
+                <span class="ln-test ln-test-off">&#128221; {{ item.test.title }} · спроби вичерпано</span>
+                {% endif %}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ol>
+    </details>
+</aside>
+
+<div class="ln-shell">
+    <div class="container ln-container">
+        {% block learning_content %}{% endblock %}
+    </div>
+</div>
+
+<style>
+    /* Верхнє меню сайту замінюють бічні панелі */
+    .page-header {
+        display: none !important;
+    }
+
+    :root,
+    html[data-profile-theme="light"] {
+        --pf-bg: #f5f5f5;
+        --pf-card: #ffffff;
+        --pf-text: #333333;
+        --pf-muted: #6c757d;
+        --pf-border: #e6e6e6;
+        --pf-input: #ffffff;
+        --pf-panel: #ffffff;
+        --pf-hover: #f0faf9;
+    }
+
+    html[data-profile-theme="dark"] {
+        --pf-bg: #121212;
+        --pf-card: #1e1e1e;
+        --pf-text: #e8e8e8;
+        --pf-muted: #a0a0a0;
+        --pf-border: #333333;
+        --pf-input: #2a2a2a;
+        --pf-panel: #181818;
+        --pf-hover: #243532;
+    }
+
+    /* ----- Іконкова панель ----- */
+    .pf-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 110px;
+        z-index: 1100;
+        background: #222;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        font-family: Montserrat, sans-serif;
+    }
+
+    .pf-avatar {
+        height: 110px;
+        flex: 0 0 110px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #01b3a7;
+        color: #fff;
+        font-size: 44px;
+        font-weight: 700;
+    }
+
+    .pf-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 92px;
+        padding: 0 4px;
+        overflow: hidden;
+        background: transparent;
+        border: 0;
+        color: #fff;
+        font-size: 10.5px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background .2s ease, color .2s ease;
+    }
+
+    .pf-item i {
+        font-size: 30px;
+        margin-bottom: 8px;
+    }
+
+    .pf-item:hover {
+        background: #333;
+        color: #01b3a7;
+        text-decoration: none;
+    }
+
+    .pf-item.active {
+        background: #000;
+        color: #fff;
+    }
+
+    .pf-item.active i {
+        color: #01b3a7;
+    }
+
+    .pf-logout {
+        margin-top: auto;
+    }
+
+    /* ----- Панель уроків ----- */
+    .ln-lessons {
+        position: fixed;
+        top: 0;
+        left: 110px;
+        bottom: 0;
+        width: 300px;
+        z-index: 1050;
+        overflow-y: auto;
+        background: var(--pf-panel);
+        color: var(--pf-text);
+        border-right: 1px solid var(--pf-border);
+        font-family: Montserrat, sans-serif;
+        transition: background .25s ease;
+    }
+
+    .ln-summary {
+        list-style: none;
+        display: none;
+    }
+
+    .ln-summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .ln-course {
+        padding: 26px 22px 18px;
+        border-bottom: 1px solid var(--pf-border);
+    }
+
+    .ln-course-name {
+        display: block;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--pf-text);
+        text-decoration: none;
+        margin-bottom: 14px;
+    }
+
+    .ln-course-name:hover {
+        color: #01b3a7;
+    }
+
+    .ln-progress {
+        height: 8px;
+        background: var(--pf-border);
+        border-radius: 4px;
+    }
+
+    .ln-course-meta {
+        margin: 8px 0 0;
+        font-size: 12px;
+        color: var(--pf-muted);
+    }
+
+    .ln-list {
+        list-style: none;
+        margin: 0;
+        padding: 8px 0 24px;
+    }
+
+    .ln-lesson {
+        border-left: 3px solid transparent;
+    }
+
+    .ln-lesson-link {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 18px 12px 19px;
+        color: var(--pf-text);
+        text-decoration: none;
+        font-size: 14px;
+        line-height: 1.35;
+    }
+
+    a.ln-lesson-link:hover {
+        background: var(--pf-hover);
+        color: var(--pf-text);
+    }
+
+    .ln-num {
+        flex: 0 0 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--pf-border);
+        color: var(--pf-text);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .ln-lesson.is-done .ln-num {
+        background: #01b3a7;
+        color: #fff;
+    }
+
+    .ln-lesson.is-locked .ln-lesson-link {
+        color: var(--pf-muted);
+        cursor: not-allowed;
+    }
+
+    .ln-lesson.is-current {
+        border-left-color: #01b3a7;
+        background: var(--pf-hover);
+    }
+
+    .ln-lesson.is-current .ln-ltitle {
+        font-weight: 700;
+    }
+
+    .ln-test {
+        display: block;
+        margin: -4px 18px 10px 59px;
+        font-size: 12px;
+        color: #01b3a7;
+        text-decoration: none;
+    }
+
+    .ln-test:hover {
+        text-decoration: underline;
+        color: #01b3a7;
+    }
+
+    .ln-test-off {
+        color: var(--pf-muted);
+    }
+
+    /* ----- Контент ----- */
+    .ln-shell {
+        margin-left: 410px;
+        min-height: 100vh;
+        padding: 40px 0 70px;
+        background: var(--pf-bg);
+        color: var(--pf-text);
+        transition: background .25s ease, color .25s ease;
+    }
+
+    .ln-container {
+        max-width: 1000px;
+    }
+
+    footer.footer-corporate {
+        margin-left: 410px;
+    }
+
+    .ln-shell .section,
+    .ln-shell .bg-default {
+        background: transparent;
+    }
+
+    .ln-shell .section-lg,
+    .ln-shell .section-sm {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .ln-shell h1,
+    .ln-shell h2,
+    .ln-shell h3,
+    .ln-shell h4,
+    .ln-shell h5,
+    .ln-shell h6,
+    .ln-shell p,
+    .ln-shell label,
+    .ln-shell strong,
+    .ln-shell .lead,
+    .ln-shell .ck-content {
+        color: var(--pf-text);
+    }
+
+    .ln-shell .text-muted {
+        color: var(--pf-muted) !important;
+    }
+
+    .ln-shell .learning-progress-box,
+    .ln-shell .learning-test-header,
+    .ln-shell .learning-question-box,
+    .ln-shell .list-group-item {
+        background: var(--pf-card);
+        border-color: var(--pf-border);
+        color: var(--pf-text);
+    }
+
+    .ln-shell .learning-item-read {
+        background: var(--pf-hover);
+    }
+
+    .ln-shell .learning-item-locked {
+        opacity: .75;
+    }
+
+    .ln-shell .learning-lesson-test,
+    .ln-shell .learning-actions-box {
+        border-color: var(--pf-border);
+    }
+
+    .ln-shell .progress {
+        background: var(--pf-border);
+    }
+
+    .ln-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin: 0 0 6px;
+        color: var(--pf-text);
+    }
+
+    .ln-crumbs {
+        font-size: 13px;
+        color: var(--pf-muted);
+        margin-bottom: 26px;
+    }
+
+    .ln-crumbs a {
+        color: #01b3a7;
+    }
+
+    .learning-progress-bar {
+        background-color: #01b3a7;
+    }
+
+    /* ----- Мобільні ----- */
+    @media (max-width: 767px) {
+        .pf-sidebar {
+            top: auto;
+            width: 100%;
+            height: 64px;
+            flex-direction: row;
+        }
+
+        .pf-avatar {
+            display: none;
+        }
+
+        .pf-item {
+            height: 64px;
+            flex: 1;
+            font-size: 9px;
+        }
+
+        .pf-item i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .pf-logout {
+            margin-top: 0;
+            flex: 1;
+            display: flex;
+        }
+
+        .ln-lessons {
+            position: static;
+            width: 100%;
+            border-right: 0;
+            border-bottom: 1px solid var(--pf-border);
+        }
+
+        .ln-summary {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 16px 20px;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .ln-summary-pct {
+            margin-left: auto;
+            color: #01b3a7;
+        }
+
+        .ln-shell,
+        footer.footer-corporate {
+            margin-left: 0;
+        }
+
+        .ln-shell {
+            min-height: 0;
+            padding: 28px 0 100px;
+        }
+
+        footer.footer-corporate {
+            padding-bottom: 64px;
+        }
+    }
+</style>
+
+<script>
+    (function () {
+        var root = document.documentElement;
+        var icon = document.getElementById('pf-theme-icon');
+        var label = document.getElementById('pf-theme-label');
+        function paintTheme() {
+            var dark = root.getAttribute('data-profile-theme') === 'dark';
+            icon.className = 'fa ' + (dark ? 'fa-sun-o' : 'fa-moon-o');
+            label.textContent = dark ? 'Світла' : 'Темна';
+        }
+        document.getElementById('pf-theme-toggle').addEventListener('click', function () {
+            var next = root.getAttribute('data-profile-theme') === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-profile-theme', next);
+            try { localStorage.setItem('kodim-theme', next); } catch (e) { }
+            paintTheme();
+        });
+        paintTheme();
+
+        // На комп'ютері список уроків завжди розгорнутий; на телефоні — згортається
+        var details = document.getElementById('ln-details');
+        if (window.matchMedia('(min-width: 768px)').matches) { details.open = true; }
+        // Поточний урок — у зону видимості панелі
+        var cur = document.querySelector('.ln-lesson.is-current');
+        if (cur && details.open) { cur.scrollIntoView({ block: 'center' }); }
+    })();
+</script>
+{% endblock content %}

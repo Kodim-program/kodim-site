@@ -57,6 +57,7 @@ def material_detail(request, material_id):
         'material': material,
         'enrollment': enrollment,
         'is_read': is_read,
+        'materials_status': enrollment.materials_with_status(),   # ← додати
     })
 
 
@@ -95,6 +96,7 @@ def take_test(request, material_id):
         'form': form,
         'enrollment': enrollment,
         'attempts_left': test.attempts_left(request.user),
+        'materials_status': enrollment.materials_with_status(),   # ← додати
     })
 
 
@@ -111,4 +113,5 @@ def test_result(request, material_id):
         'test': test,
         'result': last_result,
         'attempts_left': test.attempts_left(request.user),
+        'materials_status': enrollment.materials_with_status(),   # ← додати
     })
